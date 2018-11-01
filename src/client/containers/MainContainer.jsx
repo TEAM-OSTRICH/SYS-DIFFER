@@ -327,7 +327,9 @@ db.any(query)
 
     return (
       <div>
-        <button onClick={(event) => {}}>go home</button>
+        <button onClick={() => {
+          console.log(this.props,'workkk')
+          return this.props.history.push('/')}}>go home</button>
         <button id="oldDbDisplay" onClick={(event) => { changeDisplay(event); }}>Old DB</button>
         <button id="newDbDisplay" onClick={(event) => { changeDisplay(event); }}>New DB</button>
         <button id="diffDbDisplay" onClick={(event) => { changeDisplay(event); }}>DB Diff</button>
@@ -341,4 +343,4 @@ db.any(query)
   }
 }
 
-export default MainContainer;
+export default withRouter(MainContainer);

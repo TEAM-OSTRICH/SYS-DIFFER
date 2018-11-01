@@ -49,7 +49,7 @@ class App extends Component {
         <div>
           <Switch>
             <Route
-              path="/"
+              path="/kevin"
               render={
                 props => (
                   <MainContainer
@@ -60,7 +60,7 @@ class App extends Component {
                 )
               }
             />
-            {/* <Route
+            <Route
               path="/"
               render={
                 props => (
@@ -78,7 +78,7 @@ class App extends Component {
                   />
                 )
               }
-            /> */}
+            />
           </Switch>
         </div>
       </BrowserRouter>
