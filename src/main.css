@@ -1,0 +1,19 @@
+.list-group-item {
+  position: relative;
+  display: block;
+  padding: .75rem 1.25rem;
+  margin-bottom: -1px;
+  background-color: #fff;
+  border: 2px solid rgba(0,0,0,.125);
+}
+
+#dbDisplayContainer {
+  display: grid;
+  /* background-color: red; */
+  grid-template-columns: auto auto auto;
+}
+
+.column-property {
+  border: 2px solid rgba(0,0,0,.125);
+  border-radius: 25px;
+}
