@@ -324,8 +324,8 @@ db.any(query)
 
     return (
       <div>
-        <button id="oldDbDisplay" onClick={(event) => { changeDisplay(event); }}>Old DB</button>
-        <button id="newDbDisplay" onClick={(event) => { changeDisplay(event); }}>New DB</button>
+        <button id="oldDbDisplay" onClick={(event) => { changeDisplay(event); }}>New DB</button>
+        <button id="newDbDisplay" onClick={(event) => { changeDisplay(event); }}>Current DB</button>
         <button id="diffDbDisplay" onClick={(event) => { changeDisplay(event); }}>DB Diff</button>
         <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button>
         {oldDbDisplay ? <DbDisplayContainer db={oldDb} /> : null}
