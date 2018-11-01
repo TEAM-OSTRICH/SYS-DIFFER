@@ -3,6 +3,8 @@ import _ from 'lodash';
 import { diff } from 'deep-diff';
 import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
+import { NavLink, Redirect, withRouter } from 'react-router-dom';
+
 
 
 class MainContainer extends Component {
@@ -223,6 +225,7 @@ db.any(query)
                 diffDb.push(table);
                 // Add color scheme.
                 diffDbColors[`${table.name}`] = 'green';
+
                 // table.columns.forEach((column) => {
                 //   diffDbColors[`${table.name}-${column.name}`] = 'green';
                 // });
@@ -318,12 +321,13 @@ db.any(query)
 
   render() {
     const {
-      oldDb, newDb, diffDb, oldDbDisplay, newDbDisplay, diffDbDisplay, scriptDisplay, diffDbColors,
+      oldDb, newDb, diffDb, oldDbDisplay, newDbDisplay, diffDbDisplay, scriptDisplay, diffDbColors, clickable,
     } = this.state;
     const { changeDisplay } = this;
 
     return (
       <div>
+        <button onClick={(event) => {}}>go home</button>
         <button id="oldDbDisplay" onClick={(event) => { changeDisplay(event); }}>Old DB</button>
         <button id="newDbDisplay" onClick={(event) => { changeDisplay(event); }}>New DB</button>
         <button id="diffDbDisplay" onClick={(event) => { changeDisplay(event); }}>DB Diff</button>
