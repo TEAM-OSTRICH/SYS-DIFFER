@@ -32,27 +32,27 @@ class MainContainer extends Component {
 
     const initOptions = {
       connect(client, dc, useCount) {
-          const cp = client.connectionParameters;
-          // console.log('Connected to database:', cp.database);
+        const cp = client.connectionParameters;
+        // console.log('Connected to database:', cp.database);
       },
       disconnect(client, dc) {
-          const cp = client.connectionParameters;
-          // console.log('Disconnecting from database:', cp.database);
+        const cp = client.connectionParameters;
+        // console.log('Disconnecting from database:', cp.database);
       },
       query(e) {
-          // console.log('QUERY:', e.query);
+        // console.log('QUERY:', e.query);
       },
       receive(data, result, e) {
-          // console.log('DATA: ', data);
+        // console.log('DATA: ', data);
       },
-      };
+    };
 
-  const pgp = require('pg-promise')(initOptions);
+    const pgp = require('pg-promise')(initOptions);
 
 
-const db = pgp(input1);
+    const db = pgp(input1);
 
-const query = `SELECT
+    const query = `SELECT
 t.table_name,
 c.column_name,
 c.is_nullable,
@@ -96,14 +96,14 @@ WHERE table_type = 'BASE TABLE'
 AND t.table_schema = 'public'
 AND constraint_type = 'FOREIGN KEY'
 ORDER BY table_name`
-db.any(query)
+    db.any(query)
       .then((schemaInfo) => {
         const { oldDb } = this.state;
         const oldDbCopy = oldDb.slice();
 
         let currentTableName;
         let table = {};
-        console.log(schemaInfo,'schema');
+        console.log(schemaInfo, 'schema');
         schemaInfo.forEach((row) => {
           const {
             table_name, column_name, is_nullable, data_type, character_maximum_length, constraint_type, foreign_table_name, foreign_column_name,
@@ -143,29 +143,29 @@ db.any(query)
         // Get new db info.
         const initOptions = {
           connect(client, dc, useCount) {
-              const cp = client.connectionParameters;
-              // console.log('Connected to database:', cp.database);
+            const cp = client.connectionParameters;
+            // console.log('Connected to database:', cp.database);
           },
           disconnect(client, dc) {
-              const cp = client.connectionParameters;
-              // console.log('Disconnecting from database:', cp.database);
+            const cp = client.connectionParameters;
+            // console.log('Disconnecting from database:', cp.database);
           },
           query(e) {
-              // console.log('QUERY:', e.query);
+            // console.log('QUERY:', e.query);
           },
           receive(data, result, e) {
-              // console.log('DATA: ', data);
+            // console.log('DATA: ', data);
           },
-          };
-    
-      const pgp = require('pg-promise')(initOptions);
-    
-    
-    // const { url } = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
-    
-    const db2 = pgp(input2);
-    db2.any(query)
-    // .then(data=>console.log(data))
+        };
+
+        const pgp = require('pg-promise')(initOptions);
+
+
+        // const { url } = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
+
+        const db2 = pgp(input2);
+        db2.any(query)
+          // .then(data=>console.log(data))
           // .then(data => data.json())
           .then((schemaInfo2) => {
             console.log(schemaInfo2)
@@ -264,45 +264,45 @@ db.any(query)
               }
             });
 
-           // Check deletions.
-           diffDb.forEach((table, index) => {
-            const foundTable = _.find(oldDb, { name: table.name });
+            // Check deletions.
+            diffDb.forEach((table, index) => {
+              const foundTable = _.find(oldDb, { name: table.name });
 
-            if (foundTable === undefined) {
-              // Table does not exist.
-              // Add color scheme.
-              diffDbColors[`${table.name}`] = 'red';
-              // table.columns.forEach((column) => {
-              //   diffDbColors[`${table.name}-${column.name}`] = 'green';
-              // });
-            } else {
-              // Table exists.
-              // Check columns.
-              table.columns.forEach((column) => {
-                const foundColumn = _.find(foundTable.columns, { name: column.name });
+              if (foundTable === undefined) {
+                // Table does not exist.
+                // Add color scheme.
+                diffDbColors[`${table.name}`] = 'red';
+                // table.columns.forEach((column) => {
+                //   diffDbColors[`${table.name}-${column.name}`] = 'green';
+                // });
+              } else {
+                // Table exists.
+                // Check columns.
+                table.columns.forEach((column) => {
+                  const foundColumn = _.find(foundTable.columns, { name: column.name });
 
-                if (foundColumn === undefined) {
-                  // Column does not exist.
-                  // Add color scheme.
-                  diffDbColors[`${table.name}-${column.name}`] = 'red';
-                } else {
-                  // Column exists.
-                  // Check properties.
-                  const keys = Object.keys(column);
+                  if (foundColumn === undefined) {
+                    // Column does not exist.
+                    // Add color scheme.
+                    diffDbColors[`${table.name}-${column.name}`] = 'red';
+                  } else {
+                    // Column exists.
+                    // Check properties.
+                    const keys = Object.keys(column);
 
-                  keys.forEach((key) => {
-                    if (foundColumn[key] === undefined) {
-                      // Property does not exist.
-                      // Add color scheme.
-                      diffDbColors[`${table.name}-${column.name}-${column[key]}`] = 'red';
-                    }
-                  });
-                }
-              });
-            }
-          });
-          // console.log(diffDbColors);
-          this.setState({ diffDb, diffDbColors });
+                    keys.forEach((key) => {
+                      if (foundColumn[key] === undefined) {
+                        // Property does not exist.
+                        // Add color scheme.
+                        diffDbColors[`${table.name}-${column.name}-${column[key]}`] = 'red';
+                      }
+                    });
+                  }
+                });
+              }
+            });
+            // console.log(diffDbColors);
+            this.setState({ diffDb, diffDbColors });
           });
       });
   }
@@ -327,9 +327,9 @@ db.any(query)
 
     return (
       <div>
-        <button onClick={(event) => {}}>go home</button>
-        <button id="oldDbDisplay" onClick={(event) => { changeDisplay(event); }}>Old DB</button>
-        <button id="newDbDisplay" onClick={(event) => { changeDisplay(event); }}>New DB</button>
+        <button onClick={(event) => { }}>go home</button>
+        <button id="oldDbDisplay" onClick={(event) => { changeDisplay(event); }}>New DB</button>
+        <button id="newDbDisplay" onClick={(event) => { changeDisplay(event); }}>Current DB</button>
         <button id="diffDbDisplay" onClick={(event) => { changeDisplay(event); }}>DB Diff</button>
         <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button>
         {oldDbDisplay ? <DbDisplayContainer db={oldDb} /> : null}
