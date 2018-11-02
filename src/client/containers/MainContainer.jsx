@@ -335,9 +335,9 @@ ORDER BY table_name`;
 
   render() {
     const {
-      oldDb, newDb, diffDb, script, oldDbDisplay, newDbDisplay, diffDbDisplay, scriptDisplay, diffDbColors, clickable, addScript, removeScript,
+      oldDb, newDb, diffDb, script, oldDbDisplay, newDbDisplay, diffDbDisplay, scriptDisplay, diffDbColors, clickable,
     } = this.state;
-    const { changeDisplay } = this;
+    const { changeDisplay, addScript, removeScript } = this;
 
     return (
       <div>
