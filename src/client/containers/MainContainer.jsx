@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { diff } from 'deep-diff';
+import { NavLink, Redirect, withRouter } from 'react-router-dom';
 import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
-import { NavLink, Redirect, withRouter } from 'react-router-dom';
-
-
+import ScriptContainer from './ScriptContainer.jsx';
 
 class MainContainer extends Component {
   constructor(props) {
@@ -15,6 +14,7 @@ class MainContainer extends Component {
       oldDb: [],
       newDb: [],
       diffDb: [],
+      script: [],
       oldDbDisplay: true,
       newDbDisplay: false,
       diffDbDisplay: false,
@@ -22,6 +22,8 @@ class MainContainer extends Component {
     };
 
     this.changeDisplay = this.changeDisplay.bind(this);
+    this.addScript = this.addScript.bind(this);
+    this.removeScript = this.removeScript.bind(this);
   }
 
   componentWillMount() {
@@ -95,7 +97,7 @@ LEFT JOIN information_schema.constraint_column_usage AS ccu
 WHERE table_type = 'BASE TABLE'
 AND t.table_schema = 'public'
 AND constraint_type = 'FOREIGN KEY'
-ORDER BY table_name`
+ORDER BY table_name`;
     db.any(query)
       .then((schemaInfo) => {
         const { oldDb } = this.state;
@@ -168,7 +170,7 @@ ORDER BY table_name`
           // .then(data=>console.log(data))
           // .then(data => data.json())
           .then((schemaInfo2) => {
-            console.log(schemaInfo2)
+            // console.log(schemaInfo2)
             const { newDb } = this.state;
             const newDbCopy = newDb.slice();
 
@@ -246,17 +248,17 @@ ORDER BY table_name`
                     const keys = Object.keys(column);
 
                     keys.forEach((key) => {
-                      console.log(foundColumn[key], column[key]);
+                      // console.log(foundColumn[key], column[key]);
                       if (foundColumn[key] === undefined) {
                         // Property does not exist.
                         foundColumn[key] = column[key];
                         // Add color scheme.
-                        diffDbColors[`${table.name}-${column.name}-${column[key]}`] = 'green';
+                        diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'green';
                       } else if (foundColumn[key] !== column[key]) {
                         // Property has been modified.
                         foundColumn[key] = column[key];
                         // Add color scheme.
-                        diffDbColors[`${table.name}-${column.name}-${column[key]}`] = 'yellow';
+                        diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'yellow';
                       }
                     });
                   }
@@ -294,7 +296,7 @@ ORDER BY table_name`
                       if (foundColumn[key] === undefined) {
                         // Property does not exist.
                         // Add color scheme.
-                        diffDbColors[`${table.name}-${column.name}-${column[key]}`] = 'red';
+                        diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'red';
                       }
                     });
                   }
@@ -319,9 +321,21 @@ ORDER BY table_name`
     this.setState({ [display]: true });
   }
 
+  addScript(query) {
+    const { script } = this.state;
+    script.push(query);
+    this.setState({ script });
+  }
+
+  removeScript(query) {
+    const { script } = this.state;
+    script.filter(element => element !== query);
+    this.setState({ script });
+  }
+
   render() {
     const {
-      oldDb, newDb, diffDb, oldDbDisplay, newDbDisplay, diffDbDisplay, scriptDisplay, diffDbColors, clickable,
+      oldDb, newDb, diffDb, script, oldDbDisplay, newDbDisplay, diffDbDisplay, scriptDisplay, diffDbColors, clickable, addScript, removeScript,
     } = this.state;
     const { changeDisplay } = this;
 
@@ -334,8 +348,17 @@ ORDER BY table_name`
         <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button>
         {oldDbDisplay ? <DbDisplayContainer db={oldDb} /> : null}
         {newDbDisplay ? <DbDisplayContainer db={newDb} /> : null}
-        {diffDbDisplay ? <DiffDbDisplayContainer db={diffDb} diffDbColors={diffDbColors} /> : null}
-        {/* {oldDbDisplay ? <DbDisplayContainer script={script} /> : null} */}
+        {diffDbDisplay
+          ? (
+            <DiffDbDisplayContainer
+              db={diffDb}
+              diffDbColors={diffDbColors}
+              addScript={addScript}
+              removeScript={removeScript}
+            />
+          )
+          : null}
+        {scriptDisplay ? <ScriptContainer script={script} /> : null}
       </div>
     );
   }
