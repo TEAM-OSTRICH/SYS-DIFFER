@@ -13,22 +13,24 @@ const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) =>
   //   event.target.style.background = 'purple';
   // }
 
-  if (diffDbColors[event.target.id] !== undefined) {
-    if (event.target.style.backgroundColor === diffDbColors[event.target.id]) {
+  const { id } = event.target;
+
+  if (diffDbColors[id] !== undefined) {
+    if (event.target.style.backgroundColor === diffDbColors[id]) {
       // Deselect change.
       event.target.style.backgroundColor = 'white';
     } else {
       // Select change.
-      event.target.style.backgroundColor = diffDbColors[event.target.id];
+      event.target.style.backgroundColor = diffDbColors[id];
 
       // Create query.
-      const queryParams = event.target.id.split('-');
+      const queryParams = id.split('-');
       // console.log('queryParams', queryParams);
       // One query param means add or delete a table.
       if (queryParams.length === 1) {
-        if (diffDbColors[event.target.id] === 'green') {
+        const { name, columns } = tableInfo;
+        if (diffDbColors[id] === 'green') {
           // Add a table.
-          const { name, columns } = tableInfo;
           let columnString = '';
 
           columns.forEach((column, index) => {
@@ -40,14 +42,14 @@ const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) =>
           columnString = columnString.slice(0, columnString.length - 2);
           // console.log('columnString', columnString);
 
-          addScript(`
-            CREATE TABLE ${name} (${columnString});
-          `);
-        } else {
+          addScript({
+            [id]: `CREATE TABLE ${name} (${columnString});`,
+          });
+        } else if (diffDbColors[id] === 'red') {
           // Delete a table.
-          addScript(`
-
-          `);
+          addScript({
+            [id]: `DROP TABLE ${name};`,
+          });
         }
       }
     }

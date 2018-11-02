@@ -5,7 +5,7 @@ const ScriptDisplay = (props) => {
 
   return (
     <div>
-      {script.map(query => (
+      {Object.values(script).map(query => (
         <p>{query}</p>
       ))}
     </div>

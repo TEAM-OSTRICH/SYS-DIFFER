@@ -14,7 +14,7 @@ class MainContainer extends Component {
       oldDb: [],
       newDb: [],
       diffDb: [],
-      script: [],
+      script: {},
       oldDbDisplay: true,
       newDbDisplay: false,
       diffDbDisplay: false,
@@ -321,16 +321,13 @@ ORDER BY table_name`;
     this.setState({ [display]: true });
   }
 
-  addScript(query) {
+  addScript(id, query) {
     const { script } = this.state;
-    script.push(query);
+    script[id] = query;
     this.setState({ script });
   }
 
-  removeScript(query) {
-    const { script } = this.state;
-    script.filter(element => element !== query);
-    this.setState({ script });
+  removeScript(id, query) {
   }
 
   render() {
