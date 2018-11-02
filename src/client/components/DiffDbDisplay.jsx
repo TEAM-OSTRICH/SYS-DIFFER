@@ -44,12 +44,23 @@ const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) =>
             CREATE TABLE ${name} (${columnString});
           `);
         } else {
-          // Delete a table.
+          // Must be 'red' so delete a table.
           addScript(`
 
           `);
         }
       }
+      // Two query params means add or delete column from table
+      if (queryParams.length === 2) {
+        if (diffDbColors[event.target.id] === 'green') {
+          // Add a column
+
+        } else {
+          // Must be 'red' so delete a column
+
+        }
+      }
+
     }
   }
 };
