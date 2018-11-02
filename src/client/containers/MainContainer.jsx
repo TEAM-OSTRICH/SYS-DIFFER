@@ -25,10 +25,10 @@ class MainContainer extends Component {
   }
 
   componentWillMount() {
-    // const { input1, input2 } = this.props;
-    // console.log(this.props, input1, input2);
-    const input1 = 'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk';
-    const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
+    const { input1, input2 } = this.props;
+    console.log(this.props, input1, input2,'heyyy');
+    // const input1 = 'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk';
+    // const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
 
     const initOptions = {
       connect(client, dc, useCount) {
@@ -71,7 +71,7 @@ LEFT JOIN information_schema.table_constraints AS tc
 LEFT JOIN information_schema.constraint_column_usage AS ccu 
   ON tc.constraint_name = ccu.constraint_name
 WHERE table_type = 'BASE TABLE'
-AND t.table_schema = 'public'
+AND t.table_schema = 'game.dbo'
 AND (constraint_type is null OR constraint_type <> 'FOREIGN KEY')
 UNION ALL
 SELECT
@@ -93,7 +93,7 @@ LEFT JOIN information_schema.table_constraints as tc
 LEFT JOIN information_schema.constraint_column_usage AS ccu
   ON tc.constraint_name = ccu.constraint_name
 WHERE table_type = 'BASE TABLE'
-AND t.table_schema = 'public'
+AND t.table_schema = 'game.dbo'
 AND constraint_type = 'FOREIGN KEY'
 ORDER BY table_name`
     db.any(query)

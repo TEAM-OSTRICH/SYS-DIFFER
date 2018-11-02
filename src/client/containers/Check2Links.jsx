@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { NavLink, Redirect, withRouter } from 'react-router-dom';
 
+
+
 const initOptions = {
   connect(client, dc, useCount) {
     const cp = client.connectionParameters;
@@ -115,24 +117,63 @@ class Check2Links extends Component {
       input1, input2, change1, change2,
     } = this.props;
     const { checkBoth } = this;
+    
 
+    
     return (
       <div>
         <h1>DBiffer</h1>
+
         <form>
-          <input id="DbUrl1" value={input1} onChange={change1} />
-          <br />
-          <br />
-          <input id="DbUrl2" value={input2} onChange={change2} />
+          <span>link1: </span><input id="DbUrl1" value={input1} onChange={change1} />
+          {/* <br />
+          <br /> */}
+          <span>link2: </span><input id="DbUrl2" value={input2} onChange={change2} />
           <br />
           <br />
           <button type="submit" onClick={checkBoth}>GO</button>
           {/* <NavLink to="/kevin"><button>kevin</button></NavLink> */}
           {/* <button type="button"><NavLink to="/kevin2"> kevin </NavLink></button> */}
         </form>
+        <h2>OR</h2>
+        <form>
+          db1<br></br>
+          <input value="username"/>
+          <input value="password"/>
+          <input value="host"/>
+          <input value="dbname"/>
+          <input value="port"/>
+
+          <br></br>
+          db2<br></br>
+          <input value="username"/>
+          <input value="password"/>
+          <input value="host"/>
+          <input value="dbname"/>
+          <input value="port"/>
+
+          <br></br>
+          <button type="submit">gooo</button>
+          {/* <NavLink to="/kevin"><button>kevin</button></NavLink> */}
+          {/* <button type="button"><NavLink to="/kevin2"> kevin </NavLink></button> */}
+        </form>
+
+        
       </div>
     );
   }
 }
 
+//const cn = {
+//  host: ‘namethatcard-dev.cgbcdoczmmnf.us-east-1.rds.amazonaws.com’,
+//  port: 5432,
+//  database: ‘namecard’,
+//  user: ‘root’,
+//  password: ‘12345678’,
+
+// };
+
+
+// const input1 = ‘postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk’;
+//  const input2 = postgres://root:12345678@namethatcard-dev.cgbcdoczmmnf.us-east-1.rds.amazonaws.com:5432/namecard
 export default withRouter(Check2Links);
