@@ -16,4 +16,5 @@
 .column-property {
   border: 2px solid rgba(0,0,0,.125);
   border-radius: 25px;
+  cursor: default;
 }
