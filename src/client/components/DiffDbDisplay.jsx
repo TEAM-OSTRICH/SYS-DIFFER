@@ -26,9 +26,9 @@ const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) =>
       // console.log('queryParams', queryParams);
       // One query param means add or delete a table.
       if (queryParams.length === 1) {
+        const { name, columns } = tableInfo;
         if (diffDbColors[event.target.id] === 'green') {
           // Add a table.
-          const { name, columns } = tableInfo;
           let columnString = '';
 
           columns.forEach((column, index) => {
@@ -46,7 +46,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) =>
         } else {
           // Must be 'red' so delete a table.
           addScript(`
-
+            DROP TABLE ${name}
           `);
         }
       }
