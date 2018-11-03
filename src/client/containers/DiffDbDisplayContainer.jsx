@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import DiffDbDisplay from '../components/DiffDbDisplay.jsx';
+import ScriptContainer from './ScriptContainer.jsx';
 
 const DiffDbDisplayContainer = (props) => {
   const {
-    db, diffDbColors, addScript, removeScript,
+    db, diffDbColors, addScript, removeScript, script,
   } = props;
 
   const tables = db.map(tableInfo => (
@@ -17,8 +18,11 @@ const DiffDbDisplayContainer = (props) => {
   ));
 
   return (
-    <div id="dbDisplayContainer">
-      {tables}
+    <div>
+      <div id="dbDisplayContainer">
+        {tables}
+      </div>
+      <ScriptContainer script={script} />
     </div>
   );
 };
