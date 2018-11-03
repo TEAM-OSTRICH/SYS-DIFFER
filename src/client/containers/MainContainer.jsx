@@ -329,10 +329,10 @@ ORDER BY table_name`;
   }
 
   removeScript(id) {
-    const newState = Object.assign({}, this.state);
-    const { script } = newState;
+    const { script } = this.state;
+    const scriptCopy = Object.assign({}, script);
     delete script[id];
-    this.setState({ script });
+    this.setState({ script: scriptCopy });
   }
 
   render() {
