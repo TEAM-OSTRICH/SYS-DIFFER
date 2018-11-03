@@ -19,6 +19,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) =>
     if (event.target.style.backgroundColor === diffDbColors[id]) {
       // Deselect change.
       event.target.style.backgroundColor = 'white';
+      removeScript(id);
     } else {
       // Select change.
       event.target.style.backgroundColor = diffDbColors[id];
@@ -42,14 +43,10 @@ const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) =>
           columnString = columnString.slice(0, columnString.length - 2);
           // console.log('columnString', columnString);
 
-          addScript({
-            [id]: `CREATE TABLE ${name} (${columnString});`,
-          });
+          addScript(id, `CREATE TABLE ${name} (${columnString});`);
         } else if (diffDbColors[id] === 'red') {
           // Delete a table.
-          addScript({
-            [id]: `DROP TABLE ${name};`,
-          });
+          addScript(id, `DROP TABLE ${name};`);
         }
       }
     }

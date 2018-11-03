@@ -323,11 +323,16 @@ ORDER BY table_name`;
 
   addScript(id, query) {
     const { script } = this.state;
-    script[id] = query;
-    this.setState({ script });
+    const scriptCopy = JSON.parse(JSON.stringify(script));
+    scriptCopy.id = query;
+    this.setState({ script: scriptCopy });
   }
 
-  removeScript(id, query) {
+  removeScript(id) {
+    const newState = Object.assign({}, this.state);
+    const { script } = newState;
+    delete script[id];
+    this.setState({ script });
   }
 
   render() {
