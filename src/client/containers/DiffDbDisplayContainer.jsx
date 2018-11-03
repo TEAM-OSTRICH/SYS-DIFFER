@@ -5,6 +5,7 @@ const DiffDbDisplayContainer = (props) => {
   const {
     db, diffDbColors, addScript, removeScript,
   } = props;
+
   const tables = db.map(tableInfo => (
     <DiffDbDisplay
       key={tableInfo.name}

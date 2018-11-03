@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
 // added function to change clicked element's background color
-const handleClick = (event, diffDbColors, addScript, removeScript) => {
-  console.log('hey', event.target.style.borderColor);
-
+const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) => {
+  // console.log('hey', event.target.style.borderColor);
+  console.log(event.target.id);
   // // below is not correct!
   // // if click on just a little part, not the whole list,
   // if (event.target.parentNode.tagName === 'LI' && event.target.style.borderColor !== 'yellow') {
@@ -13,25 +13,45 @@ const handleClick = (event, diffDbColors, addScript, removeScript) => {
   //   event.target.style.background = 'purple';
   // }
 
-  if (diffDbColors[event.target.id] !== undefined) {
-    if (event.target.style.backgroundColor === diffDbColors[event.target.id]) {
-      // Create query.
-      const queryParams = event.target.id.split('-');
+  const { id } = event.target;
 
-      // One query param means add or delete a table.
-      if (queryParams === 1) {
-        if (diffDbColors[event.target.id] === 'green') {
-          addScript(`
-            '
-          `);
-        }
-      }
-
+  if (diffDbColors[id] !== undefined) {
+    if (event.target.style.backgroundColor === diffDbColors[id]) {
       // Deselect change.
       event.target.style.backgroundColor = 'white';
     } else {
       // Select change.
-      event.target.style.backgroundColor = diffDbColors[event.target.id];
+      event.target.style.backgroundColor = diffDbColors[id];
+
+      // Create query.
+      const queryParams = id.split('-');
+      // console.log('queryParams', queryParams);
+      // One query param means add or delete a table.
+      if (queryParams.length === 1) {
+        const { name, columns } = tableInfo;
+        if (diffDbColors[id] === 'green') {
+          // Add a table.
+          let columnString = '';
+
+          columns.forEach((column, index) => {
+            const { name, dataType, constraintType } = column;
+            columnString += `${name} ${dataType} ${constraintType}, `;
+          });
+
+          // Remove last comma.
+          columnString = columnString.slice(0, columnString.length - 2);
+          // console.log('columnString', columnString);
+
+          addScript({
+            [id]: `CREATE TABLE ${name} (${columnString});`,
+          });
+        } else if (diffDbColors[id] === 'red') {
+          // Delete a table.
+          addScript({
+            [id]: `DROP TABLE ${name};`,
+          });
+        }
+      }
     }
   }
 };
@@ -41,7 +61,7 @@ const DiffDbDisplay = (props) => {
     tableInfo, diffDbColors, addScript, removeScript,
   } = props;
   const { name, columns } = tableInfo;
-  console.log(diffDbColors);
+  // console.log(diffDbColors);
 /* eslint-disable */
   return (
     <ul className="list-group-item">
@@ -57,7 +77,7 @@ const DiffDbDisplay = (props) => {
         }
         onClick={
           diffDbColors[name]
-            ? (event) => {handleClick(event, diffDbColors, addScript, removeScript)}
+            ? (event) => {handleClick(event, diffDbColors, addScript, removeScript, tableInfo)}
             : null
         }
       >
