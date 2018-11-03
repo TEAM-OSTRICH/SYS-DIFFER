@@ -1,10 +1,24 @@
 import React, { Component } from 'react';
 
 // added function to change clicked element's background color
+<<<<<<< HEAD
 const handleClick = (event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo) => {
   let id;
   let target;
   const { parentNode } = event.target;
+=======
+const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo, column) => {
+  // console.log('hey', event.target.style.borderColor);
+  console.log(event.target.id);
+  // // below is not correct!
+  // // if click on just a little part, not the whole list,
+  // if (event.target.parentNode.tagName === 'LI' && event.target.style.borderColor !== 'yellow') {
+  //   event.target.parentNode.style.background = 'purple';
+  //   // if click on the list, just turn list purple
+  // } else if (event.target.parentNode.tagName === 'UL' || event.target.style.borderColor === 'yellow') {
+  //   event.target.style.background = 'purple';
+  // }
+>>>>>>> 860c20daba963a7381f0812c0dac15d233420405
 
   if (diffDbColors[event.target.id] !== undefined) {
     id = event.target.id;
@@ -50,6 +64,21 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           addScript(id, `DROP TABLE ${name};`);
         }
       }
+      // Two query params means add or delete column from table
+      if (queryParams.length === 2) {
+        console.log('tableInfo', tableInfo);
+        const { name, dataType, constraintType } = column;
+        const tableName = tableInfo.name;
+        //console.log('tableName', tableName);
+        if (diffDbColors[event.target.id] === 'green') {
+          // Add a column
+          addScript(id, `ALTER TABLE ${tableName} ADD COLUMN ${name} ${dataType} ${constraintType};`);
+        } else {
+          // Must be 'red' so delete a column
+          addScript(id, `ALTER TABLE ${tableName} REMOVE COLUMN ${name};`);
+        }
+      }
+
     }
   }
 };
@@ -95,7 +124,15 @@ const DiffDbDisplay = (props) => {
                 : null,
             }
           }
+<<<<<<< HEAD
           onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
+=======
+          onClick={
+            diffDbColors[`${name}-${column.name}`]
+              ? (event) => {handleClick(event, diffDbColors, addScript, removeScript, tableInfo, column)}
+              : null
+          }
+>>>>>>> 860c20daba963a7381f0812c0dac15d233420405
         >
           <span>{column.name}</span>
           {' '}
