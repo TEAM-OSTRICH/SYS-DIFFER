@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 // added function to change clicked element's background color
-const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) => {
+const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo, column) => {
   // console.log('hey', event.target.style.borderColor);
   console.log(event.target.id);
   // // below is not correct!
@@ -49,6 +49,21 @@ const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) =>
           addScript(id, `DROP TABLE ${name};`);
         }
       }
+      // Two query params means add or delete column from table
+      if (queryParams.length === 2) {
+        console.log('tableInfo', tableInfo);
+        const { name, dataType, constraintType } = column;
+        const tableName = tableInfo.name;
+        //console.log('tableName', tableName);
+        if (diffDbColors[event.target.id] === 'green') {
+          // Add a column
+          addScript(id, `ALTER TABLE ${tableName} ADD COLUMN ${name} ${dataType} ${constraintType};`);
+        } else {
+          // Must be 'red' so delete a column
+          addScript(id, `ALTER TABLE ${tableName} REMOVE COLUMN ${name};`);
+        }
+      }
+
     }
   }
 };
@@ -94,7 +109,7 @@ const DiffDbDisplay = (props) => {
           }
           onClick={
             diffDbColors[`${name}-${column.name}`]
-              ? (event) => {handleClick(event, diffDbColors, addScript, removeScript)}
+              ? (event) => {handleClick(event, diffDbColors, addScript, removeScript, tableInfo, column)}
               : null
           }
         >

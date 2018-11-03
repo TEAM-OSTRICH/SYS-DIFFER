@@ -324,14 +324,15 @@ ORDER BY table_name`;
   addScript(id, query) {
     const { script } = this.state;
     const scriptCopy = JSON.parse(JSON.stringify(script));
-    scriptCopy.id = query;
+
+    scriptCopy[id] = query;
     this.setState({ script: scriptCopy });
   }
 
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = Object.assign({}, script);
-    delete script[id];
+    delete scriptCopy[id];
     this.setState({ script: scriptCopy });
   }
 
@@ -347,7 +348,7 @@ ORDER BY table_name`;
         <button id="oldDbDisplay" onClick={(event) => { changeDisplay(event); }}>New DB</button>
         <button id="newDbDisplay" onClick={(event) => { changeDisplay(event); }}>Current DB</button>
         <button id="diffDbDisplay" onClick={(event) => { changeDisplay(event); }}>DB Diff</button>
-        <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button>
+        {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
         {oldDbDisplay ? <DbDisplayContainer db={oldDb} /> : null}
         {newDbDisplay ? <DbDisplayContainer db={newDb} /> : null}
         {diffDbDisplay
@@ -357,10 +358,11 @@ ORDER BY table_name`;
               diffDbColors={diffDbColors}
               addScript={addScript}
               removeScript={removeScript}
+              script={script}
             />
           )
           : null}
-        {scriptDisplay ? <ScriptContainer script={script} /> : null}
+        {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
       </div>
     );
   }
