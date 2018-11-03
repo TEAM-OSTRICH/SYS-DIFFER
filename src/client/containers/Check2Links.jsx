@@ -35,14 +35,7 @@ class Check2Links extends Component {
     const {
       input1, input2, u1, u2, updateU1, updateU2,
     } = this.props;
-    // part1
-    // fetch('/check1', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json; charset=utf-8' },
-    //   body: JSON.stringify({
-    //     test: input1,
-    //   }),
-    // })
+    
     const db1 = pgp(input1);
     db1.connect()
       .then((obj) => {
@@ -138,19 +131,19 @@ class Check2Links extends Component {
         <h2>OR</h2>
         <form>
           db1<br></br>
-          <input value="username"/>
-          <input value="password"/>
-          <input value="host"/>
-          <input value="dbname"/>
-          <input value="port"/>
+          <input id="inp1-1" value="username"/>
+          <input id="inp1-2" value="password"/>
+          <input id="inp1-3" value="host"/>
+          <input id="inp1-4" value="dbname"/>
+          <input id="inp1-5" value="port"/>
 
           <br></br>
           db2<br></br>
-          <input value="username"/>
-          <input value="password"/>
-          <input value="host"/>
-          <input value="dbname"/>
-          <input value="port"/>
+          <input id="inp2-1" value="username"/>
+          <input id="inp2-2" value="password"/>
+          <input id="inp2-3" value="host"/>
+          <input id="inp2-4" value="dbname"/>
+          <input id="inp2-5" value="port"/>
 
           <br></br>
           <button type="submit">gooo</button>
@@ -176,4 +169,14 @@ class Check2Links extends Component {
 
 // const input1 = ‘postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk’;
 //  const input2 = postgres://root:12345678@namethatcard-dev.cgbcdoczmmnf.us-east-1.rds.amazonaws.com:5432/namecard
+//  const input3 = postgres://test:12345678@ostriches.cevlz1oddeme.us-east-2.rds.amazonaws.com:5432/ostrich
+
+const cn = {
+  host: ‘ostriches.cevlz1oddeme.us-east-2.rds.amazonaws.com’,
+  port: 5432,
+  database: ‘ostrich’,
+  user: ‘test’,
+  password: ‘12345678’,
+ 
+ };
 export default withRouter(Check2Links);
