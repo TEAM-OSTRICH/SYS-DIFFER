@@ -19,11 +19,13 @@ class MainContainer extends Component {
       newDbDisplay: false,
       diffDbDisplay: false,
       scriptDisplay: false,
+      backgroundColors: {},
     };
 
     this.changeDisplay = this.changeDisplay.bind(this);
     this.addScript = this.addScript.bind(this);
     this.removeScript = this.removeScript.bind(this);
+    this.setBackgroundColor = this.setBackgroundColor.bind(this);
   }
 
   componentWillMount() {
@@ -131,6 +133,7 @@ ORDER BY table_name`;
           column.dataType = data_type;
           if (data_type === 'character varying') column.dataType = `varchar (${character_maximum_length})`;
           if (constraint_type !== null) column.constraintType = constraint_type;
+          if (constraint_type === 'FOREIGN KEY') column.constraintType = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`;
 
           // Add new column object to table.
           if (table.columns === undefined) table.columns = [column];
@@ -217,6 +220,7 @@ ORDER BY table_name`;
             const { oldDb, newDb } = this.state;
             const diffDb = JSON.parse(JSON.stringify(newDb));
             const diffDbColors = {};
+            const backgroundColors = {};
 
             // Check additions.
             oldDb.forEach((table, index) => {
@@ -227,7 +231,7 @@ ORDER BY table_name`;
                 diffDb.push(table);
                 // Add color scheme.
                 diffDbColors[`${table.name}`] = 'green';
-
+                backgroundColors[`${table.name}`] = false;
                 // table.columns.forEach((column) => {
                 //   diffDbColors[`${table.name}-${column.name}`] = 'green';
                 // });
@@ -242,6 +246,7 @@ ORDER BY table_name`;
                     foundTable.columns.push(column);
                     // Add color scheme.
                     diffDbColors[`${table.name}-${column.name}`] = 'green';
+                    backgroundColors[`${table.name}-${column.name}`] = false;
                   } else {
                     // Column exists.
                     // Check properties.
@@ -254,11 +259,13 @@ ORDER BY table_name`;
                         foundColumn[key] = column[key];
                         // Add color scheme.
                         diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'green';
+                        backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
                       } else if (foundColumn[key] !== column[key]) {
                         // Property has been modified.
                         foundColumn[key] = column[key];
                         // Add color scheme.
                         diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'yellow';
+                        backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
                       }
                     });
                   }
@@ -274,6 +281,7 @@ ORDER BY table_name`;
                 // Table does not exist.
                 // Add color scheme.
                 diffDbColors[`${table.name}`] = 'red';
+                backgroundColors[`${table.name}`] = false;
                 // table.columns.forEach((column) => {
                 //   diffDbColors[`${table.name}-${column.name}`] = 'green';
                 // });
@@ -287,6 +295,7 @@ ORDER BY table_name`;
                     // Column does not exist.
                     // Add color scheme.
                     diffDbColors[`${table.name}-${column.name}`] = 'red';
+                    backgroundColors[`${table.name}-${column.name}`] = false;
                   } else {
                     // Column exists.
                     // Check properties.
@@ -297,6 +306,7 @@ ORDER BY table_name`;
                         // Property does not exist.
                         // Add color scheme.
                         diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'red';
+                        backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
                       }
                     });
                   }
@@ -304,7 +314,7 @@ ORDER BY table_name`;
               }
             });
             // console.log(diffDbColors);
-            this.setState({ diffDb, diffDbColors });
+            this.setState({ diffDb, diffDbColors, backgroundColors });
           });
       });
   }
@@ -336,11 +346,21 @@ ORDER BY table_name`;
     this.setState({ script: scriptCopy });
   }
 
+  setBackgroundColor(id) {
+    const { backgroundColors } = this.state;
+    const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
+
+    backgroundColorsCopy[id] = !backgroundColorsCopy[id];
+    this.setState({ backgroundColors: backgroundColorsCopy });
+  }
+
   render() {
     const {
-      oldDb, newDb, diffDb, script, oldDbDisplay, newDbDisplay, diffDbDisplay, scriptDisplay, diffDbColors, clickable,
+      oldDb, newDb, diffDb, script, oldDbDisplay, newDbDisplay, diffDbDisplay, scriptDisplay, diffDbColors, backgroundColors,
     } = this.state;
-    const { changeDisplay, addScript, removeScript } = this;
+    const {
+      changeDisplay, addScript, removeScript, setBackgroundColor,
+    } = this;
 
     return (
       <div>
@@ -359,6 +379,8 @@ ORDER BY table_name`;
               addScript={addScript}
               removeScript={removeScript}
               script={script}
+              backgroundColors={backgroundColors}
+              setBackgroundColor={setBackgroundColor}
             />
           )
           : null}

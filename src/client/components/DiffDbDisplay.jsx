@@ -1,33 +1,34 @@
 import React, { Component } from 'react';
 
 // added function to change clicked element's background color
-const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) => {
-  // console.log('hey', event.target.style.borderColor);
-  console.log(event.target.id);
-  // // below is not correct!
-  // // if click on just a little part, not the whole list,
-  // if (event.target.parentNode.tagName === 'LI' && event.target.style.borderColor !== 'yellow') {
-  //   event.target.parentNode.style.background = 'purple';
-  //   // if click on the list, just turn list purple
-  // } else if (event.target.parentNode.tagName === 'UL' || event.target.style.borderColor === 'yellow') {
-  //   event.target.style.background = 'purple';
-  // }
+const handleClick = (event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo) => {
+  let id;
+  let target;
+  const { parentNode } = event.target;
 
-  const { id } = event.target;
+  if (diffDbColors[event.target.id] !== undefined) {
+    id = event.target.id;
+    target = event.target;
+  } else if (diffDbColors[parentNode.id] !== undefined) {
+    id = parentNode.id;
+    target = parentNode;
+  }
 
   if (diffDbColors[id] !== undefined) {
     if (event.target.style.backgroundColor === diffDbColors[id]) {
-      // Deselect change.
-      event.target.style.backgroundColor = 'white';
+      // Background color is set meaning change is selected so deselect change and remove query from script.
+      target.style.backgroundColor = null;
       removeScript(id);
+      setBackgroundColor(id);
     } else {
       // Select change.
-      event.target.style.backgroundColor = diffDbColors[id];
+      target.style.backgroundColor = diffDbColors[id];
+      setBackgroundColor(id);
 
       // Create query.
       const queryParams = id.split('-');
-      // console.log('queryParams', queryParams);
-      // One query param means add or delete a table.
+
+      // One query parameter means add or delete a table.
       if (queryParams.length === 1) {
         const { name, columns } = tableInfo;
         if (diffDbColors[id] === 'green') {
@@ -41,11 +42,11 @@ const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) =>
 
           // Remove last comma.
           columnString = columnString.slice(0, columnString.length - 2);
-          // console.log('columnString', columnString);
 
+          // Add script to create a table.
           addScript(id, `CREATE TABLE ${name} (${columnString});`);
         } else if (diffDbColors[id] === 'red') {
-          // Delete a table.
+          // Add script to delete a table.
           addScript(id, `DROP TABLE ${name};`);
         }
       }
@@ -55,10 +56,10 @@ const handleClick = (event, diffDbColors, addScript, removeScript, tableInfo) =>
 
 const DiffDbDisplay = (props) => {
   const {
-    tableInfo, diffDbColors, addScript, removeScript,
+    tableInfo, diffDbColors, addScript, removeScript, backgroundColors, setBackgroundColor,
   } = props;
   const { name, columns } = tableInfo;
-  // console.log(diffDbColors);
+
 /* eslint-disable */
   return (
     <ul className="list-group-item">
@@ -70,15 +71,14 @@ const DiffDbDisplay = (props) => {
             borderColor: diffDbColors[name]
               ? diffDbColors[name]
               : 'rgba(0,0,0,.125)',
+            backgroundColor: backgroundColors[name]
+              ? diffDbColors[name]
+              : null,
           }
         }
-        onClick={
-          diffDbColors[name]
-            ? (event) => {handleClick(event, diffDbColors, addScript, removeScript, tableInfo)}
-            : null
-        }
+        onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo)}}
       >
-        {name}
+        <span>{name}</span>
       </li>
 
       {columns.map(column => (
@@ -90,13 +90,12 @@ const DiffDbDisplay = (props) => {
               borderColor: diffDbColors[`${name}-${column.name}`]
                 ? diffDbColors[`${name}-${column.name}`]
                 : 'rgba(0,0,0,.125)',
+              backgroundColor: backgroundColors[`${name}-${column.name}`]
+                ? diffDbColors[`${name}-${column.name}`]
+                : null,
             }
           }
-          onClick={
-            diffDbColors[`${name}-${column.name}`]
-              ? (event) => {handleClick(event, diffDbColors, addScript, removeScript)}
-              : null
-          }
+          onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
         >
           <span>{column.name}</span>
           {' '}
@@ -109,13 +108,12 @@ const DiffDbDisplay = (props) => {
                   diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
                     ? diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
                     : 'rgba(0,0,0,.125)',
+                  backgroundColor: backgroundColors[`${name}-${column.name}-dataType-${column.dataType}`]
+                    ? diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
+                    : null,
               }
             }
-            onClick={
-              diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
-                ? (event) => {handleClick(event, diffDbColors, addScript, removeScript)}
-                : null
-            }
+            onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
           >
             {column.dataType}
           </span>
@@ -132,9 +130,12 @@ const DiffDbDisplay = (props) => {
                         diffDbColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
                           ? diffDbColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
                           : 'rgba(0,0,0,.125)',
+                      backgroundColor: backgroundColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
+                          ? diffDbColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
+                          : null,
                     }
                   }
-                  onClick={diffDbColors[`${name}-${column.name}-constraintType-${column.constraintType}`] ? (event) => {handleClick(event, diffDbColors, addScript, removeScript)} : null}
+                  onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
                 >
                   {column.constraintType}
                 </span>)
@@ -146,4 +147,5 @@ const DiffDbDisplay = (props) => {
   );
   /* eslint-enable */
 };
+
 export default DiffDbDisplay;
