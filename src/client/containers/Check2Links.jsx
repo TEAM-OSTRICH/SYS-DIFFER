@@ -171,12 +171,12 @@ class Check2Links extends Component {
 //  const input2 = postgres://root:12345678@namethatcard-dev.cgbcdoczmmnf.us-east-1.rds.amazonaws.com:5432/namecard
 //  const input3 = postgres://test:12345678@ostriches.cevlz1oddeme.us-east-2.rds.amazonaws.com:5432/ostrich
 
-const cn = {
-  host: ‘ostriches.cevlz1oddeme.us-east-2.rds.amazonaws.com’,
-  port: 5432,
-  database: ‘ostrich’,
-  user: ‘test’,
-  password: ‘12345678’,
+// const cn = {
+//   host: ‘ostriches.cevlz1oddeme.us-east-2.rds.amazonaws.com’,
+//   port: 5432,
+//   database: ‘ostrich’,
+//   user: ‘test’,
+//   password: ‘12345678’,
  
- };
+//  };
 export default withRouter(Check2Links);
