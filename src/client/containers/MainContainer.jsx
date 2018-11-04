@@ -19,11 +19,13 @@ class MainContainer extends Component {
       newDbDisplay: false,
       diffDbDisplay: false,
       scriptDisplay: false,
+      backgroundColors: {},
     };
 
     this.changeDisplay = this.changeDisplay.bind(this);
     this.addScript = this.addScript.bind(this);
     this.removeScript = this.removeScript.bind(this);
+    this.setBackgroundColor = this.setBackgroundColor.bind(this);
   }
 
   componentWillMount() {
@@ -136,6 +138,7 @@ db.any(query)
           column.dataType = data_type;
           if (data_type === 'character varying') column.dataType = `varchar (${character_maximum_length})`;
           if (constraint_type !== null) column.constraintType = constraint_type;
+          if (constraint_type === 'FOREIGN KEY') column.constraintType = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`;
 
           // Add new column object to table.
           if (table.columns === undefined) table.columns = [column];
@@ -222,6 +225,7 @@ db.any(query)
             const { oldDb, newDb } = this.state;
             const diffDb = JSON.parse(JSON.stringify(newDb));
             const diffDbColors = {};
+            const backgroundColors = {};
 
             // Check additions.
             oldDb.forEach((table, index) => {
@@ -232,7 +236,7 @@ db.any(query)
                 diffDb.push(table);
                 // Add color scheme.
                 diffDbColors[`${table.name}`] = 'green';
-
+                backgroundColors[`${table.name}`] = false;
                 // table.columns.forEach((column) => {
                 //   diffDbColors[`${table.name}-${column.name}`] = 'green';
                 // });
@@ -247,6 +251,7 @@ db.any(query)
                     foundTable.columns.push(column);
                     // Add color scheme.
                     diffDbColors[`${table.name}-${column.name}`] = 'green';
+                    backgroundColors[`${table.name}-${column.name}`] = false;
                   } else {
                     // Column exists.
                     // Check properties.
@@ -258,12 +263,14 @@ db.any(query)
                         // Property does not exist.
                         foundColumn[key] = column[key];
                         // Add color scheme.
-                        diffDbColors[`${table.name}-${column.name}-${column[key]}`] = 'green';
+                        diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'green';
+                        backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
                       } else if (foundColumn[key] !== column[key]) {
                         // Property has been modified.
                         foundColumn[key] = column[key];
                         // Add color scheme.
-                        diffDbColors[`${table.name}-${column.name}-${column[key]}`] = 'yellow';
+                        diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'yellow';
+                        backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
                       }
                     });
                   }
@@ -271,45 +278,48 @@ db.any(query)
               }
             });
 
-           // Check deletions.
-           diffDb.forEach((table, index) => {
-            const foundTable = _.find(oldDb, { name: table.name });
+            // Check deletions.
+            diffDb.forEach((table, index) => {
+              const foundTable = _.find(oldDb, { name: table.name });
 
-            if (foundTable === undefined) {
-              // Table does not exist.
-              // Add color scheme.
-              diffDbColors[`${table.name}`] = 'red';
-              // table.columns.forEach((column) => {
-              //   diffDbColors[`${table.name}-${column.name}`] = 'green';
-              // });
-            } else {
-              // Table exists.
-              // Check columns.
-              table.columns.forEach((column) => {
-                const foundColumn = _.find(foundTable.columns, { name: column.name });
+              if (foundTable === undefined) {
+                // Table does not exist.
+                // Add color scheme.
+                diffDbColors[`${table.name}`] = 'red';
+                backgroundColors[`${table.name}`] = false;
+                // table.columns.forEach((column) => {
+                //   diffDbColors[`${table.name}-${column.name}`] = 'green';
+                // });
+              } else {
+                // Table exists.
+                // Check columns.
+                table.columns.forEach((column) => {
+                  const foundColumn = _.find(foundTable.columns, { name: column.name });
 
-                if (foundColumn === undefined) {
-                  // Column does not exist.
-                  // Add color scheme.
-                  diffDbColors[`${table.name}-${column.name}`] = 'red';
-                } else {
-                  // Column exists.
-                  // Check properties.
-                  const keys = Object.keys(column);
+                  if (foundColumn === undefined) {
+                    // Column does not exist.
+                    // Add color scheme.
+                    diffDbColors[`${table.name}-${column.name}`] = 'red';
+                    backgroundColors[`${table.name}-${column.name}`] = false;
+                  } else {
+                    // Column exists.
+                    // Check properties.
+                    const keys = Object.keys(column);
 
-                  keys.forEach((key) => {
-                    if (foundColumn[key] === undefined) {
-                      // Property does not exist.
-                      // Add color scheme.
-                      diffDbColors[`${table.name}-${column.name}-${column[key]}`] = 'red';
-                    }
-                  });
-                }
-              });
-            }
-          });
-          // console.log(diffDbColors);
-          this.setState({ diffDb, diffDbColors });
+                    keys.forEach((key) => {
+                      if (foundColumn[key] === undefined) {
+                        // Property does not exist.
+                        // Add color scheme.
+                        diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'red';
+                        backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
+                      }
+                    });
+                  }
+                });
+              }
+            });
+            // console.log(diffDbColors);
+            this.setState({ diffDb, diffDbColors, backgroundColors });
           });
       });
   }
@@ -328,18 +338,34 @@ db.any(query)
 
   addScript(id, query) {
     const { script } = this.state;
-    script[id] = query;
-    this.setState({ script });
+    const scriptCopy = JSON.parse(JSON.stringify(script));
+
+    scriptCopy[id] = query;
+    this.setState({ script: scriptCopy });
   }
 
-  removeScript(id, query) {
+  removeScript(id) {
+    const { script } = this.state;
+    const scriptCopy = Object.assign({}, script);
+    delete scriptCopy[id];
+    this.setState({ script: scriptCopy });
+  }
+
+  setBackgroundColor(id) {
+    const { backgroundColors } = this.state;
+    const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
+
+    backgroundColorsCopy[id] = !backgroundColorsCopy[id];
+    this.setState({ backgroundColors: backgroundColorsCopy });
   }
 
   render() {
     const {
-      oldDb, newDb, diffDb, oldDbDisplay, newDbDisplay, diffDbDisplay, scriptDisplay, diffDbColors, clickable,
+      oldDb, newDb, diffDb, script, oldDbDisplay, newDbDisplay, diffDbDisplay, scriptDisplay, diffDbColors, backgroundColors,
     } = this.state;
-    const { changeDisplay, addScript, removeScript } = this;
+    const {
+      changeDisplay, addScript, removeScript, setBackgroundColor,
+    } = this;
 
     return (
       <div>
@@ -348,7 +374,7 @@ db.any(query)
         <button id="oldDbDisplay" onClick={(event) => { changeDisplay(event); }}>New DB</button>
         <button id="newDbDisplay" onClick={(event) => { changeDisplay(event); }}>Curr DB</button>
         <button id="diffDbDisplay" onClick={(event) => { changeDisplay(event); }}>DB Diff</button>
-        <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button>
+        {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
         {oldDbDisplay ? <DbDisplayContainer db={oldDb} /> : null}
         {newDbDisplay ? <DbDisplayContainer db={newDb} /> : null}
         {diffDbDisplay
@@ -358,11 +384,13 @@ db.any(query)
               diffDbColors={diffDbColors}
               addScript={addScript}
               removeScript={removeScript}
+              script={script}
+              backgroundColors={backgroundColors}
+              setBackgroundColor={setBackgroundColor}
             />
           )
           : null}
-        {scriptDisplay ? <ScriptContainer script={script} /> : null}
-        {/* {oldDbDisplay ? <DbDisplayContainer script={script} /> : null} */}
+        {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
       </div>
     );
   }
