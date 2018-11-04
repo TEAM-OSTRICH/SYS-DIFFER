@@ -34,15 +34,15 @@ class Check2Links extends Component {
     console.log(event.target.id, "BUTTON ID");
     let input1;
     let input2;
-    // if (event.target.id === "notLinks") {
-    //   input1 = `postgres://${this.props.inputObj1User}:${this.props.inputObj1Pass}@${this.props.inputObj1Host}:${this.props.inputObj1Port}/${this.props.inputObj1Dbname}`;
-    //   input2 = `postgres://${this.props.inputObj2User}:${this.props.inputObj2Pass}@${this.props.inputObj2Host}:${this.props.inputObj2Port}/${this.props.inputObj2Dbname}`
-    // }
+    if (event.target.id === "notLinks") {
+      input1 = `postgres://${this.props.inputObj1User}:${this.props.inputObj1Pass}@${this.props.inputObj1Host}:${this.props.inputObj1Port}/${this.props.inputObj1Dbname}`;
+      input2 = `postgres://${this.props.inputObj2User}:${this.props.inputObj2Pass}@${this.props.inputObj2Host}:${this.props.inputObj2Port}/${this.props.inputObj2Dbname}`
+    }
     
-    // else if (event.target.id === "links"){
+    else if (event.target.id === "links"){
       input1 = this.props.input1;
       input2 = this.props.input2;
-    // } 
+    } 
     console.log(input1, input2, 'NOTHING?')
     const db1 = pgp(input1);
     db1.connect()
