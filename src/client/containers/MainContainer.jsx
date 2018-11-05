@@ -223,7 +223,7 @@ class MainContainer extends Component {
       const diffDb = JSON.parse(JSON.stringify(prodDb));
       const diffDbColors = {};
       const backgroundColors = {};
-
+      console.log(devDb, prodDb);
       // Check for additions and modifications.
       devDb.forEach((table) => {
         const foundTable = _.find(diffDb, { name: table.name });

@@ -26,8 +26,7 @@ class App extends Component {
       inputObj2Host: '',
       inputObj2Port: '',
       inputObj2Dbname: '',
-      inputObj2Schema: '',   
-      
+      inputObj2Schema: '',
     };
 
     this.change1 = this.change1.bind(this);
@@ -48,6 +47,15 @@ class App extends Component {
 
     this.changeLinkSchema1 = this.changeLinkSchema1.bind(this);
     this.changeLinkSchema2 = this.changeLinkSchema2.bind(this);
+
+    this.setInput = this.setInput.bind(this);
+  }
+
+  // For testing only.
+  setInput(input1, input2, inputLinkSchema1, inputLinkSchema2) {
+    this.setState({
+      input1, input2, inputLinkSchema1, inputLinkSchema2,
+    });
   }
 
   change1(event) {
@@ -57,126 +65,143 @@ class App extends Component {
   change2(event) {
     this.setState({ input2: event.target.value });
   }
+
   changeLinkSchema1(event) {
     this.setState({ inputLinkSchema1: event.target.value });
   }
+
   changeLinkSchema2(event) {
     this.setState({ inputLinkSchema2: event.target.value });
   }
 
   changeInput1user(event) {
-    console.log(event,'no')
-    this.setState({ 
+    console.log(event, 'no');
+    this.setState({
       inputObj1User: event.target.value,
       input1: '',
-      input2: '' ,
+      input2: '',
       inputLinkSchema1: '',
       inputLinkSchema2: '',
     });
   }
+
   changeInput1pass(event) {
-    this.setState({ 
+    this.setState({
       inputObj1Pass: event.target.value,
       input1: '',
-      input2: '' ,
+      input2: '',
       inputLinkSchema1: '',
       inputLinkSchema2: '',
     });
   }
+
   changeInput1host(event) {
-    this.setState({ 
+    this.setState({
       inputObj1Host: event.target.value,
       input1: '',
-      input2: '' ,
+      input2: '',
       inputLinkSchema1: '',
       inputLinkSchema2: '',
     });
   }
+
   changeInput1port(event) {
-    this.setState({ 
+    this.setState({
       inputObj1Port: event.target.value,
       input1: '',
-      input2: '' ,
+      input2: '',
       inputLinkSchema1: '',
       inputLinkSchema2: '',
     });
   }
+
   changeInput1dbname(event) {
-    this.setState({ 
+    this.setState({
       inputObj1Dbname: event.target.value,
       input1: '',
-      input2: '' ,
+      input2: '',
       inputLinkSchema1: '',
       inputLinkSchema2: '',
     });
   }
-  
+
   changeInput1schema(event) {
-    this.setState({ inputObj1Schema: event.target.value,
+    this.setState({
+      inputObj1Schema: event.target.value,
       input1: '',
-      input2: '' ,
+      input2: '',
       inputLinkSchema1: '',
       inputLinkSchema2: '',
-     });
+    });
   }
 
   changeInput2user(event) {
-    this.setState({ 
+    this.setState({
       inputObj2User: event.target.value,
       input1: '',
-      input2: '' ,
+      input2: '',
       inputLinkSchema1: '',
       inputLinkSchema2: '',
     });
   }
+
   changeInput2pass(event) {
-    this.setState({ inputObj2Pass: event.target.value,
-    input1: '',
-    input2: '' ,
-    inputLinkSchema1: '',
-    inputLinkSchema2: '',
-  });
-  }
-  changeInput2host(event) {
-    this.setState({ inputObj2Host: event.target.value,
-    input1: '',
-    input2: '' ,
-    inputLinkSchema1: '',
-    inputLinkSchema2: '',
-  });
-  }
-  changeInput2port(event) {
-    this.setState({ inputObj2Port: event.target.value,
-    input1: '',
-    input2: '' ,
-    inputLinkSchema1: '',
-    inputLinkSchema2: '',
-  });
-  }
-  changeInput2dbname(event) {
-    this.setState({ inputObj2Dbname: event.target.value,
-    input1: '',
-    input2: '' ,
-    inputLinkSchema1: '',
-    inputLinkSchema2: '',
-  });
-  }
-  changeInput2schema(event) {
-    this.setState({ inputObj2Schema: event.target.value,
+    this.setState({
+      inputObj2Pass: event.target.value,
       input1: '',
-      input2: '' ,
+      input2: '',
       inputLinkSchema1: '',
       inputLinkSchema2: '',
-     });
+    });
+  }
+
+  changeInput2host(event) {
+    this.setState({
+      inputObj2Host: event.target.value,
+      input1: '',
+      input2: '',
+      inputLinkSchema1: '',
+      inputLinkSchema2: '',
+    });
+  }
+
+  changeInput2port(event) {
+    this.setState({
+      inputObj2Port: event.target.value,
+      input1: '',
+      input2: '',
+      inputLinkSchema1: '',
+      inputLinkSchema2: '',
+    });
+  }
+
+  changeInput2dbname(event) {
+    this.setState({
+      inputObj2Dbname: event.target.value,
+      input1: '',
+      input2: '',
+      inputLinkSchema1: '',
+      inputLinkSchema2: '',
+    });
+  }
+
+  changeInput2schema(event) {
+    this.setState({
+      inputObj2Schema: event.target.value,
+      input1: '',
+      input2: '',
+      inputLinkSchema1: '',
+      inputLinkSchema2: '',
+    });
   }
 
   render() {
     const {
       input1, input2, inputLinkSchema1, inputLinkSchema2, inputObj1User, inputObj1Pass,
-inputObj1Host, inputObj1Port, inputObj1Dbname, inputObj1Schema, inputObj2User, inputObj2Pass, inputObj2Host, inputObj2Port, inputObj2Dbname, inputObj2Schema,
-  } = this.state;
+      inputObj1Host, inputObj1Port, inputObj1Dbname, inputObj1Schema, inputObj2User, inputObj2Pass, inputObj2Host, inputObj2Port, inputObj2Dbname, inputObj2Schema,
+    } = this.state;
     const {
-      checkBoth, change1, change2, changeLinkSchema1, changeLinkSchema2, changeInput1user,changeInput1pass, changeInput1host, changeInput1port, changeInput1dbname, changeInput1schema, changeInput2user, changeInput2pass, changeInput2host, changeInput2port, changeInput2dbname, changeInput2schema,
+      checkBoth, change1, change2, changeLinkSchema1, changeLinkSchema2, changeInput1user, changeInput1pass, changeInput1host, changeInput1port, changeInput1dbname, changeInput1schema, changeInput2user, changeInput2pass, changeInput2host, changeInput2port, changeInput2dbname, changeInput2schema, setInput,
     } = this;
 
     return (
@@ -257,7 +282,8 @@ inputObj1Host, inputObj1Port, inputObj1Dbname, inputObj1Schema, inputObj2User, i
                     changeInput2port={changeInput2port}
                     changeInput2dbname={changeInput2dbname}
                     changeInput2schema={changeInput2schema}
-                    
+
+                    setInput={setInput}
                   />
                 )
               }
