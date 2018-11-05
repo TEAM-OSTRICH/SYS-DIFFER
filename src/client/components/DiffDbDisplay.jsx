@@ -20,6 +20,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
       // Background color is set meaning change is selected so deselect change and remove query from script.
       target.style.backgroundColor = null;
       removeScript(id);
+      console.log(id);
       setBackgroundColor(id);
     } else {
       // Select change.
