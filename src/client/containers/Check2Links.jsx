@@ -57,7 +57,7 @@ class Check2Links extends Component {
       // .then(data => data.json())
       // .then(data => updateU1(data))
       .then((response) => {
-        console.log(response,'ohh');
+        console.log(response, 'ohh');
         if (response === 200) {
         // part2
           // fetch('/check2', {
@@ -75,18 +75,18 @@ class Check2Links extends Component {
           // original button function
 
           const db2 = pgp(input2);
-    db2.connect()
-      .then((obj) => {
-        // u1 = req.body.test;
-        // console.log(u1, 'u1');
-        // res.json(u1);
-        obj.done(); // success, release the connection;
-        return 200;
-      })
-      .catch((error) => {
-        console.log('ERROR:', error.message || error);
-        throw error;
-      })
+          db2.connect()
+            .then((obj) => {
+              // u1 = req.body.test;
+              // console.log(u1, 'u1');
+              // res.json(u1);
+              obj.done(); // success, release the connection;
+              return 200;
+            })
+            .catch((error) => {
+              console.log('ERROR:', error.message || error);
+              throw error;
+            })
             .then((response) => {
               if (response === 200) {
               // console.log('u1', u1, 'u2', u2);

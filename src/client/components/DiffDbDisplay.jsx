@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 // added function to change clicked element's background color
-const handleClick = (event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo) => {
+const handleClick = (event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column) => {
   let id;
   let target;
   const { parentNode } = event.target;
@@ -36,8 +36,34 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           let columnString = '';
 
           columns.forEach((column, index) => {
-            const { name, dataType, constraintType } = column;
-            columnString += `${name} ${dataType} ${constraintType}, `;
+            const { name, dataType, constraintTypes } = column;
+
+            columnString += `${name} ${dataType}`;
+
+            if (constraintTypes !== undefined) {
+              // Add all constraint types.
+              constraintTypes.forEach((constraintType) => {
+                if (constraintType.includes('REFERENCES')) {
+                  const constraintTypeArray = constraintType.split(' ');
+                  const foreignKey = ` ${constraintTypeArray[0]} ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
+                  columnString += `${foreignKey}`;
+                } else {
+                  columnString += ` ${constraintType}`;
+                }
+              });
+            }
+
+            columnString += ', ';
+
+            // if (constraintType.includes('REFERENCES')) {
+            //   console.log(constraintType);
+            //   const constraintTypeArray = constraintType.split(' ');
+            //   console.log(constraintTypeArray);
+            //   const foreignKey = `${constraintTypeArray[0]} ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
+            //   columnString += `${name} ${dataType} ${foreignKey}, `;
+            // } else {
+            //   columnString += `${name} ${dataType} ${constraintType}, `;
+            // }
           });
 
           // Remove last comma.
@@ -55,7 +81,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
         console.log('tableInfo', tableInfo);
         const { name, dataType, constraintType } = column;
         const tableName = tableInfo.name;
-        //console.log('tableName', tableName);
+        // console.log('tableName', tableName);
         if (diffDbColors[event.target.id] === 'green') {
           // Add a column
           addScript(id, `ALTER TABLE ${tableName} ADD COLUMN ${name} ${dataType} ${constraintType};`);
@@ -64,7 +90,6 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           addScript(id, `ALTER TABLE ${tableName} REMOVE COLUMN ${name};`);
         }
       }
-
     }
   }
 };
@@ -77,7 +102,7 @@ const DiffDbDisplay = (props) => {
 
 /* eslint-disable */
   return (
-    <ul className="list-group-item">
+    <ul>
       <li
         id={name}
         className="list-group-item"
@@ -110,15 +135,7 @@ const DiffDbDisplay = (props) => {
                 : null,
             }
           }
-<<<<<<< HEAD
           onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
-=======
-          onClick={
-            diffDbColors[`${name}-${column.name}`]
-              ? (event) => {handleClick(event, diffDbColors, addScript, removeScript, tableInfo, column)}
-              : null
-          }
->>>>>>> 860c20daba963a7381f0812c0dac15d233420405
         >
           <span>{column.name}</span>
           {' '}
@@ -130,7 +147,7 @@ const DiffDbDisplay = (props) => {
                 borderColor:
                   diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
                     ? diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
-                    : 'rgba(0,0,0,.125)',
+                    : null,
                   backgroundColor: backgroundColors[`${name}-${column.name}-dataType-${column.dataType}`]
                     ? diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
                     : null,
@@ -142,26 +159,55 @@ const DiffDbDisplay = (props) => {
           </span>
           {' '}
           {
-            column.constraintType
+            !column.isNullable
               ? (
                 <span
-                  id={`${name}-${column.name}-constraintType-${column.constraintType}`}
+                  id={`${name}-${column.name}-nullable-${column.isNullable}`}
                   className="column-property"
                   style={
                     {
                       borderColor:
-                        diffDbColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
-                          ? diffDbColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
-                          : 'rgba(0,0,0,.125)',
-                      backgroundColor: backgroundColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
-                          ? diffDbColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
+                        diffDbColors[`${name}-${column.name}-nullable-${column.dataType}`]
+                          ? diffDbColors[`${name}-${column.name}-nullable-${column.dataType}`]
+                          : null,
+                        backgroundColor: backgroundColors[`${name}-${column.name}-nullable-${column.dataType}`]
+                          ? diffDbColors[`${name}-${column.name}-nullable-${column.dataType}`]
                           : null,
                     }
                   }
                   onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
                 >
-                  {column.constraintType}
-                </span>)
+                  NOT NULL
+                </span>
+              ) 
+            : null
+          }
+          {' '}
+          {
+            column.constraintTypes
+              ? (
+                column.constraintTypes.map(constraintType => (
+                  <span
+                    id={`${name}-${column.name}-constraintType-${constraintType}`}
+                    className="column-property"
+                    style={
+                      {
+                        borderColor:
+                          diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`]
+                            ? diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`]
+                            : null,
+                        backgroundColor: backgroundColors[`${name}-${column.name}-constraintType-${constraintType}`]
+                            ? diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`]
+                            : null,
+                      }
+                    }
+                    onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
+                  >
+                    {constraintType}
+                  </span>
+                  )
+                )
+              )
               : null
           }
         </li>))

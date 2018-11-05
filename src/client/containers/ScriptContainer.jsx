@@ -5,8 +5,8 @@ const ScriptContainer = (props) => {
   const { script } = props;
 
   return (
-    <div id="dbDisplayContainer">
-      <h1>Script</h1>
+    <div id="scriptContainer">
+      Script
       <ScriptDisplay script={script} />
     </div>
   );
