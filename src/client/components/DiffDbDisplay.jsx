@@ -14,13 +14,13 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
     id = parentNode.id;
     target = parentNode;
   }
-  console.log('e.t.s.b', event.target.style.backgroundColor);
+  console.log('e.t.s.b', event.target.style.backgroundColor, 'k', diffDbColors[id], 'scared');
   if (diffDbColors[id] !== undefined) {
-    if (event.target.style.backgroundColor === diffDbColors[id]) {
+    if (target.style.backgroundColor === diffDbColors[id]) {
       // Background color is set meaning change is selected so deselect change and remove query from script.
       target.style.backgroundColor = null;
       removeScript(id);
-      console.log(id);
+      console.log(id, 'id');
       setBackgroundColor(id);
     } else {
       // Select change.
@@ -231,7 +231,7 @@ const DiffDbDisplay = (props) => {
                             : null,
                       }
                     }
-                    onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
+                    onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)}}
                   >
                     {constraintType}
                   </span>

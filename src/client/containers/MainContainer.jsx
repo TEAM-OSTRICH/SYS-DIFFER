@@ -327,7 +327,9 @@ class MainContainer extends Component {
               // Add color scheme.
               diffDbColors[`${table.name}-${column.name}`] = 'red';
               backgroundColors[`${table.name}-${column.name}`] = false;
-            } else if (column.constraintTypes !== undefined) {
+            } 
+            else {
+            // else if (column.constraintTypes !== undefined) {
               // Column exists.
               // Check column properties.
               // Do not have to check if data type exists because all columns must have a data type.
@@ -475,7 +477,9 @@ class MainContainer extends Component {
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = Object.assign({}, script);
+    console.log(scriptCopy,'OLD')
     delete scriptCopy[id];
+    console.log(scriptCopy,'NEW')
     this.setState({ script: scriptCopy });
   }
 
