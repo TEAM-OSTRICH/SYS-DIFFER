@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 // added function to change clicked element's background color
 const handleClick = (event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column) => {
+  event.stopPropagation();
   let id;
   let target;
   const { parentNode } = event.target;
@@ -13,7 +14,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
     id = parentNode.id;
     target = parentNode;
   }
-
+  console.log('e.t.s.b', event.target.style.backgroundColor);
   if (diffDbColors[id] !== undefined) {
     if (event.target.style.backgroundColor === diffDbColors[id]) {
       // Background color is set meaning change is selected so deselect change and remove query from script.
@@ -78,16 +79,43 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
       }
       // Two query params means add or delete column from table
       if (queryParams.length === 2) {
-        console.log('tableInfo', tableInfo);
+        // console.log('tableInfo', tableInfo);
         const { name, dataType, constraintType } = column;
         const tableName = tableInfo.name;
-        // console.log('tableName', tableName);
-        if (diffDbColors[event.target.id] === 'green') {
+        let columnString = `ALTER TABLE ${tableName} `;
+        if (diffDbColors[id] === 'green') {
           // Add a column
-          addScript(id, `ALTER TABLE ${tableName} ADD COLUMN ${name} ${dataType} ${constraintType};`);
+          columnString += `ADD COLUMN ${name}`;
+          if (dataType) {
+            columnString += ` ${dataType}`;
+          }
+          if (constraintType) {
+            columnString += ` ${constraintType}`;
+          }
+          columnString += ';';
+          addScript(id, columnString);
         } else {
           // Must be 'red' so delete a column
-          addScript(id, `ALTER TABLE ${tableName} REMOVE COLUMN ${name};`);
+          addScript(id, `ALTER TABLE ${tableName} DROP COLUMN ${name};/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`);
+        }
+      }
+      // Four query params means add or delete data-type or constraint
+      if (queryParams.length === 4) {
+        // console.log('queryParams', queryParams);
+        const { name, dataType, constraintType } = column;
+        const tableName = tableInfo.name;
+        if (queryParams[2] === 'constraintType') {
+          if (diffDbColors[id] === 'green') {
+            // add a constraint
+            addScript(id, `ALTER TABLE ${tableName} ADD ${constraintType}(${name});`);
+          } else {
+            // remove a constraint
+            addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} DROP ${constraintType};`);
+          }
+        }
+        if (queryParams[2] === 'dataType') {
+          // add a dataType
+          addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} TYPE ${dataType}();`);
         }
       }
     }
@@ -102,6 +130,7 @@ const DiffDbDisplay = (props) => {
 
 /* eslint-disable */
   return (
+    // <ul className="list-group-item">
     <ul>
       <li
         id={name}
@@ -135,7 +164,7 @@ const DiffDbDisplay = (props) => {
                 : null,
             }
           }
-          onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
+          onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)}}
         >
           <span>{column.name}</span>
           {' '}
@@ -153,7 +182,7 @@ const DiffDbDisplay = (props) => {
                     : null,
               }
             }
-            onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
+            onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)}}
           >
             {column.dataType}
           </span>
@@ -175,7 +204,7 @@ const DiffDbDisplay = (props) => {
                           : null,
                     }
                   }
-                  onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
+                  onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)}}
                 >
                   NOT NULL
                 </span>

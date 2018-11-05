@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { NavLink, Redirect, withRouter } from 'react-router-dom';
 import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
 import ScriptContainer from './ScriptContainer.jsx';
@@ -46,10 +47,18 @@ class MainContainer extends Component {
   }
 
   componentWillMount() {
-    // const { input1, input2 } = this.props;
-    // console.log(this.props, input1, input2);
-    const input1 = 'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk';
-    const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
+    let {
+      input1, input2, inputLinkSchema1, inputLinkSchema2, inputObj1Schema, inputObj2Schema,
+    } = this.props;
+    if (input1 === '' || input2 === '') {
+      input1 = `postgres://${this.props.inputObj1User}:${this.props.inputObj1Pass}@${this.props.inputObj1Host}:${this.props.inputObj1Port}/${this.props.inputObj1Dbname}`;
+      input2 = `postgres://${this.props.inputObj2User}:${this.props.inputObj2Pass}@${this.props.inputObj2Host}:${this.props.inputObj2Port}/${this.props.inputObj2Dbname}`;
+      inputLinkSchema1 = inputObj1Schema;
+      inputLinkSchema2 = inputObj2Schema;
+    }
+    console.log('INPUT', inputLinkSchema1, inputLinkSchema2);
+    // const input1 = 'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk';
+    // const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
 
     const query = `
       SELECT
@@ -71,7 +80,7 @@ class MainContainer extends Component {
       LEFT JOIN information_schema.constraint_column_usage AS ccu 
         ON tc.constraint_name = ccu.constraint_name
       WHERE t.table_type = 'BASE TABLE'
-      AND t.table_schema = 'public'
+      AND t.table_schema = '${inputLinkSchema1}'
       AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
       GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length
       UNION ALL
@@ -94,7 +103,7 @@ class MainContainer extends Component {
       LEFT JOIN information_schema.constraint_column_usage AS ccu
         ON tc.constraint_name = ccu.constraint_name
       WHERE t.table_type = 'BASE TABLE'
-      AND t.table_schema = 'public'
+      AND t.table_schema = '${inputLinkSchema2}'
       AND tc.constraint_type = 'FOREIGN KEY'
       GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length, ccu.table_name, ccu.column_name
       ORDER BY table_name, column_name
@@ -429,9 +438,16 @@ class MainContainer extends Component {
       changeDisplay, addScript, removeScript, setBackgroundColor,
     } = this;
 
+    /* eslint-disable */
     return (
       <div>
-        <button onClick={(event) => { }}>go home</button>
+        <button onClick={(event) => {
+          console.log(this.props, 'workkk');
+          return this.props.history.push('/');
+        }}
+        >
+          Home
+        </button>
         <button id="devDbDisplay" onClick={(event) => { changeDisplay(event); }}>Dev DB</button>
         <button id="prodDbDisplay" onClick={(event) => { changeDisplay(event); }}>Prod DB</button>
         <button id="diffDbDisplay" onClick={(event) => { changeDisplay(event); }}>DB Diff</button>
@@ -454,7 +470,8 @@ class MainContainer extends Component {
         {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
       </div>
     );
+    /* eslint-enable */
   }
 }
 
-export default MainContainer;
+export default withRouter(MainContainer);
