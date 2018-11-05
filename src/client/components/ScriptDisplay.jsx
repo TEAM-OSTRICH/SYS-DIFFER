@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 
 const ScriptDisplay = (props) => {
   const { script } = props;
+  let scriptString = '';
+
+  Object.values(script).map((query) => {
+    scriptString += `${query} \n`;
+  });
 
   return (
     <div>
-      {script.map(query => (
-        <p>{query}</p>
-      ))}
+      <textarea id="scriptTextArea" value={scriptString} readOnly />
     </div>
   );
 };
