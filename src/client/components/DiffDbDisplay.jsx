@@ -104,7 +104,8 @@ const DiffDbDisplay = (props) => {
 
 /* eslint-disable */
   return (
-    <ul className="list-group-item">
+    // <ul className="list-group-item">
+    <ul>
       <li
         id={name}
         className="list-group-item"
