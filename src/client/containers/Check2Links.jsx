@@ -96,8 +96,8 @@ class Check2Links extends Component {
 
   render() {
     const {
-      input1, input2, change1, change2,inputObj1User, inputObj1Pass,
-      inputObj1Host,  inputObj1Port,  inputObj1Dbname,  inputObj2User,  inputObj2Pass,  inputObj2Host,  inputObj2Port,  inputObj2Dbname,changeInput1user,changeInput1pass, changeInput1host, changeInput1port, changeInput1dbname, changeInput2user, changeInput2pass, changeInput2host, changeInput2port, changeInput2dbname,
+      input1, input2, inputLinkSchema1, inputLinkSchema2, change1, change2, changeLinkSchema1, changeLinkSchema2, inputObj1User, inputObj1Pass,
+      inputObj1Host, inputObj1Schema, inputObj1Port,  inputObj1Dbname,  inputObj2User,  inputObj2Pass,  inputObj2Host,  inputObj2Port,  inputObj2Dbname, inputObj2Schema, changeInput1user,changeInput1pass, changeInput1host, changeInput1port, changeInput1dbname, changeInput1schema, changeInput2user, changeInput2pass, changeInput2host, changeInput2port, changeInput2dbname, changeInput2schema,
     } = this.props;
     const { checkBoth } = this;
     
@@ -105,37 +105,69 @@ class Check2Links extends Component {
     
     return (
       <div>
-        <h1>DBiffer</h1>
+        <h1 className="centerText">❤CHRISDIFFER❤</h1>
+        {/* <form> */}
+        <h2 className="centerText">provide links</h2>
+        <div className="inputGridContainer">
+          <div className="inputGrid">
+            <h5>db1</h5>
+            <br />
+            <span>link1: </span>
+            <input value={input1} onChange={change1} />
+            <br />
+            <span>schema: </span>
+            <input value={inputLinkSchema1} onChange={changeLinkSchema1} />
 
-        <form>
-          <span>link1: </span><input id="DbUrl1" value={input1} onChange={change1} />
-          {/* <br />
-          <br /> */}
-          <span>link2: </span><input id="DbUrl2" value={input2} onChange={change2} />
-          <br />
-          <br />
-          <button type="submit" id="links" onClick={checkBoth}>GO</button>
-        </form>
-        <h2>OR</h2>
-        <form>
-          db1<br></br>
-          user<input id="inp1-1" value={inputObj1User} onChange={changeInput1user}/>
-          pass<input id="inp1-2" value={inputObj1Pass} onChange={changeInput1pass}/>
-          host<input id="inp1-3" value={inputObj1Host} onChange={changeInput1host}/>
-          dbname<input id="inp1-4" value={inputObj1Dbname} onChange={changeInput1dbname}/>
-          port<input id="inp1-5" value={inputObj1Port} onChange={changeInput1port}/>
+          </div>
 
-          <br></br>
-          db2<br></br>
-          user<input id="inp2-1" value={inputObj2User} onChange={changeInput2user}/>
-          pass<input id="inp2-2" value={inputObj2Pass} onChange={changeInput2pass}/>
-          host<input id="inp2-3" value={inputObj2Host} onChange={changeInput2host}/>
-          dbname<input id="inp2-4" value={inputObj2Dbname} onChange={changeInput2dbname}/>
-          port<input id="inp2-5" value={inputObj2Port} onChange={changeInput2port}/>
+          <div className="inputGrid">
+            <h5>db2</h5>
+            <br />
+            <span>link2: </span>
+            <input value={input2} onChange={change2} />
+            <br />
+            <span>schema: </span>
+            <input value={inputLinkSchema2} onChange={changeLinkSchema2} />
 
-          <br></br>
-          <button type="submit" id="notLinks" onClick={checkBoth}>gooo</button>
-        </form>
+          </div>
+         
+          <button className="buttonGrid" type="submit" id="links" onClick={checkBoth}>GO</button>
+
+        {/* </form> */}
+        </div>
+        <h2 className="centerText">OR</h2>
+        {/* <form> */}
+        <div className="inputGridContainer">
+          <div className="inputGrid">
+            <h5>db1</h5><br />
+            user: <input value={inputObj1User} onChange={changeInput1user}/><br />
+            password: <input value={inputObj1Pass} onChange={changeInput1pass}/><br />
+            host: <input value={inputObj1Host} onChange={changeInput1host}/><br />
+            dbname: <input value={inputObj1Dbname} onChange={changeInput1dbname}/><br />
+            port: <input value={inputObj1Port} onChange={changeInput1port}/>
+            <br />
+            schema:  <input value={inputObj1Schema} onChange={changeInput1schema}/>
+            {/* <br /> */}
+          </div>
+
+          <div className="inputGrid">
+          <h5>db2</h5><br />
+            user: <input value={inputObj2User} onChange={changeInput2user}/>
+            <br />
+            password: <input value={inputObj2Pass} onChange={changeInput2pass}/>
+            <br />
+            host: <input value={inputObj2Host} onChange={changeInput2host}/>
+            <br />
+            dbname: <input value={inputObj2Dbname} onChange={changeInput2dbname}/><br />
+            port: <input value={inputObj2Port} onChange={changeInput2port}/>
+            <br />
+            schema:  <input value={inputObj2Schema} onChange={changeInput2schema}/>
+          </div>
+
+          <button className="buttonGrid" type="submit" id="notLinks" onClick={checkBoth}>gooo</button>
+        </div>
+
+        {/* </form> */}
 
         
       </div>
