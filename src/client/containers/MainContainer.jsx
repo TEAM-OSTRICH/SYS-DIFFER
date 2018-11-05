@@ -29,13 +29,14 @@ class MainContainer extends Component {
   }
 
   componentWillMount() {
-    let { input1, input2 } = this.props;
+    let { input1, input2, inputLinkSchema1, inputLinkSchema2, inputObj1Schema, inputObj2Schema } = this.props;
     if (input1 === '' || input2 === '') {
-      console.log(this.props);
       input1 = `postgres://${this.props.inputObj1User}:${this.props.inputObj1Pass}@${this.props.inputObj1Host}:${this.props.inputObj1Port}/${this.props.inputObj1Dbname}`;
       input2 = `postgres://${this.props.inputObj2User}:${this.props.inputObj2Pass}@${this.props.inputObj2Host}:${this.props.inputObj2Port}/${this.props.inputObj2Dbname}`;
+      inputLinkSchema1 = inputObj1Schema;
+      inputLinkSchema2 = inputObj2Schema;
     }
-    console.log("INPUT", input1, input2);
+    console.log("INPUT", inputLinkSchema1, inputLinkSchema2);
     // const input1 = 'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk';
     // const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
 
@@ -80,7 +81,7 @@ LEFT JOIN information_schema.table_constraints AS tc
 LEFT JOIN information_schema.constraint_column_usage AS ccu 
   ON tc.constraint_name = ccu.constraint_name
 WHERE table_type = 'BASE TABLE'
-AND t.table_schema = 'public'
+AND t.table_schema = '${inputLinkSchema1}'
 AND (constraint_type is null OR constraint_type <> 'FOREIGN KEY')
 UNION ALL
 SELECT
@@ -102,7 +103,7 @@ LEFT JOIN information_schema.table_constraints as tc
 LEFT JOIN information_schema.constraint_column_usage AS ccu
   ON tc.constraint_name = ccu.constraint_name
 WHERE table_type = 'BASE TABLE'
-AND t.table_schema = 'public'
+AND t.table_schema = '${inputLinkSchema1}'
 AND constraint_type = 'FOREIGN KEY'
 ORDER BY table_name`
 db.any(query)
@@ -112,7 +113,7 @@ db.any(query)
 
         let currentTableName;
         let table = {};
-        console.log(schemaInfo,'schema');
+        // console.log(schemaInfo,'schema');
         schemaInfo.forEach((row) => {
           const {
             table_name, column_name, is_nullable, data_type, character_maximum_length, constraint_type, foreign_table_name, foreign_column_name,
@@ -174,11 +175,59 @@ db.any(query)
     // const { url } = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
     
     const db2 = pgp(input2);
+
+    // have to use this query because schema name is no longer PUBLIC
+    // before the query was stored in a variable, so we could reuse it
+
+        `SELECT
+    t.table_name,
+    c.column_name,
+    c.is_nullable,
+    c.data_type,
+    c.character_maximum_length,
+    tc.constraint_type,
+    null AS foreign_table_name,
+    null AS foreign_column_name
+    FROM
+    information_schema.tables AS t JOIN information_schema.columns AS c
+      ON t.table_name = c.table_name
+    LEFT JOIN information_schema.key_column_usage AS kcu
+      ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+    LEFT JOIN information_schema.table_constraints AS tc
+      ON kcu.constraint_name = tc.constraint_name
+    LEFT JOIN information_schema.constraint_column_usage AS ccu 
+      ON tc.constraint_name = ccu.constraint_name
+    WHERE table_type = 'BASE TABLE'
+    AND t.table_schema = '${inputLinkSchema2}'
+    AND (constraint_type is null OR constraint_type <> 'FOREIGN KEY')
+    UNION ALL
+    SELECT
+    t.table_name,
+    c.column_name,
+    c.is_nullable,
+    c.data_type,
+    c.character_maximum_length,
+    tc.constraint_type,
+    ccu.table_name AS foreign_table_name,
+    ccu.column_name AS foreign_column_name
+    FROM
+    information_schema.tables AS t JOIN information_schema.columns as c
+      ON t.table_name = c.table_name
+    LEFT JOIN information_schema.key_column_usage as kcu
+      ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+    LEFT JOIN information_schema.table_constraints as tc
+      ON kcu.constraint_name = tc.constraint_name
+    LEFT JOIN information_schema.constraint_column_usage AS ccu
+      ON tc.constraint_name = ccu.constraint_name
+    WHERE table_type = 'BASE TABLE'
+    AND t.table_schema = '${inputLinkSchema2}'
+    AND constraint_type = 'FOREIGN KEY'
+    ORDER BY table_name`
     db2.any(query)
     // .then(data=>console.log(data))
           // .then(data => data.json())
           .then((schemaInfo2) => {
-            console.log(schemaInfo2)
+            // console.log(schemaInfo2)
             const { newDb } = this.state;
             const newDbCopy = newDb.slice();
 

@@ -6,6 +6,9 @@
   background-color: #fff;
   border: 2px solid rgba(0,0,0,.125);
 }
+.list-group-item:first-child { 
+  background-color: pink;
+}
 
 #dbDisplayContainer {
   display: grid;
@@ -46,7 +49,7 @@ span {
 }
 .inputGrid > input{
   margin: 2px 0;
-  background-color: seashell;
+  background-color: whitesmoke;
   border: none;
   margin-right: 22%;
   /* width: 50%; */
@@ -111,5 +114,11 @@ h1{
   color: seashell;
 }
 h2{
+  font-size: 20px;
+  margin-top: 2px;
   color: rgba(0,0,0,.5);
+}
+ul{
+  /* border: 1px solid seashell; */
+  padding: 10px;
 }
