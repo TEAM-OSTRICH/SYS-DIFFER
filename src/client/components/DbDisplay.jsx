@@ -15,7 +15,16 @@ const DbDisplay = (props) => {
           {' '}
           {column.dataType}
           {' '}
-          {column.constraintType ? column.constraintType : null}
+          {column.isNullable ? null : 'NOT NULL'}
+          {' '}
+          {column.constraintTypes
+            ? column.constraintTypes.map((constraintType, index) => {
+              if (index === column.constraintTypes.length - 1) {
+                return constraintType;
+              }
+              return `${constraintType} `;
+            })
+            : null}
         </li>))
       }
     </ul>

@@ -14,7 +14,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
     id = parentNode.id;
     target = parentNode;
   }
-  console.log('e.t.s.b', event.target.style.backgroundColor)
+  console.log('e.t.s.b', event.target.style.backgroundColor);
   if (diffDbColors[id] !== undefined) {
     if (event.target.style.backgroundColor === diffDbColors[id]) {
       // Background color is set meaning change is selected so deselect change and remove query from script.
@@ -37,8 +37,34 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           let columnString = '';
 
           columns.forEach((column, index) => {
-            const { name, dataType, constraintType } = column;
-            columnString += `${name} ${dataType} ${constraintType}, `;
+            const { name, dataType, constraintTypes } = column;
+
+            columnString += `${name} ${dataType}`;
+
+            if (constraintTypes !== undefined) {
+              // Add all constraint types.
+              constraintTypes.forEach((constraintType) => {
+                if (constraintType.includes('REFERENCES')) {
+                  const constraintTypeArray = constraintType.split(' ');
+                  const foreignKey = ` ${constraintTypeArray[0]} ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
+                  columnString += `${foreignKey}`;
+                } else {
+                  columnString += ` ${constraintType}`;
+                }
+              });
+            }
+
+            columnString += ', ';
+
+            // if (constraintType.includes('REFERENCES')) {
+            //   console.log(constraintType);
+            //   const constraintTypeArray = constraintType.split(' ');
+            //   console.log(constraintTypeArray);
+            //   const foreignKey = `${constraintTypeArray[0]} ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
+            //   columnString += `${name} ${dataType} ${foreignKey}, `;
+            // } else {
+            //   columnString += `${name} ${dataType} ${constraintType}, `;
+            // }
           });
 
           // Remove last comma.
@@ -61,12 +87,12 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           // Add a column
           columnString += `ADD COLUMN ${name}`;
           if (dataType) {
-            columnString += ` ${dataType}`
+            columnString += ` ${dataType}`;
           }
           if (constraintType) {
-            columnString += ` ${constraintType}`
+            columnString += ` ${constraintType}`;
           }
-          columnString += `;`
+          columnString += ';';
           addScript(id, columnString);
         } else {
           // Must be 'red' so delete a column
@@ -150,7 +176,7 @@ const DiffDbDisplay = (props) => {
                 borderColor:
                   diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
                     ? diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
-                    : 'rgba(0,0,0,.125)',
+                    : null,
                   backgroundColor: backgroundColors[`${name}-${column.name}-dataType-${column.dataType}`]
                     ? diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
                     : null,
@@ -162,26 +188,55 @@ const DiffDbDisplay = (props) => {
           </span>
           {' '}
           {
-            column.constraintType
+            !column.isNullable
               ? (
                 <span
-                  id={`${name}-${column.name}-constraintType-${column.constraintType}`}
+                  id={`${name}-${column.name}-nullable-${column.isNullable}`}
                   className="column-property"
                   style={
                     {
                       borderColor:
-                        diffDbColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
-                          ? diffDbColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
-                          : 'rgba(0,0,0,.125)',
-                      backgroundColor: backgroundColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
-                          ? diffDbColors[`${name}-${column.name}-constraintType-${column.constraintType}`]
+                        diffDbColors[`${name}-${column.name}-nullable-${column.dataType}`]
+                          ? diffDbColors[`${name}-${column.name}-nullable-${column.dataType}`]
+                          : null,
+                        backgroundColor: backgroundColors[`${name}-${column.name}-nullable-${column.dataType}`]
+                          ? diffDbColors[`${name}-${column.name}-nullable-${column.dataType}`]
                           : null,
                     }
                   }
                   onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)}}
                 >
-                  {column.constraintType}
-                </span>)
+                  NOT NULL
+                </span>
+              ) 
+            : null
+          }
+          {' '}
+          {
+            column.constraintTypes
+              ? (
+                column.constraintTypes.map(constraintType => (
+                  <span
+                    id={`${name}-${column.name}-constraintType-${constraintType}`}
+                    className="column-property"
+                    style={
+                      {
+                        borderColor:
+                          diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`]
+                            ? diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`]
+                            : null,
+                        backgroundColor: backgroundColors[`${name}-${column.name}-constraintType-${constraintType}`]
+                            ? diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`]
+                            : null,
+                      }
+                    }
+                    onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor)}}
+                  >
+                    {constraintType}
+                  </span>
+                  )
+                )
+              )
               : null
           }
         </li>))

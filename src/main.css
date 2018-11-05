@@ -17,20 +17,47 @@
 }
 
 .column-property {
-  border: 2px solid rgba(0,0,0,.125);
+  border: 2px solid rgba(0,0,0,0);
   border-radius: 25px;
   cursor: default;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+     -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+          user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome and Opera */
 }
 
 #DiffDbDisplayContainer {
   display: grid;
   /* background-color: red; */
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 1fr 1fr;
 }
 
 span {
   cursor: default;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+     -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+          user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome and Opera */
 }
+
+#scriptContainer {
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#scriptTextArea {
+  height: 75vh;
+  width: 50vw;
+  background-color: lightgray;
+}
+
 .inputGridContainer{
   display: grid;
   /* background: yellowgreen; */
