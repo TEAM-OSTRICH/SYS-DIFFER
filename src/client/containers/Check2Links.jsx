@@ -42,51 +42,74 @@ class Check2Links extends Component {
       input2 = this.props.input2;
     }
 
+    // ge tried to break things with kevin's help
     const db1 = pgp(input1);
-    db1.connect()
+    const promise1 = db1.connect()
       .then((obj) => {
         obj.done(); // success, release the connection;
-        return 200;
+        // return 200;
       })
-      .catch((error) => {
-        console.log('ERROR:', error.message || error);
-        throw error;
+      // .catch(err=>console.log(err, 'nooooo1'));
+    const db2 = pgp(input2);
+    const promise2 = db2.connect()
+      .then((obj) => {
+        obj.done(); // success, release the connection;
+        // return 200;
       })
+      // .catch(err=>console.log(err, 'nooooo2'));
+    Promise.all([promise1, promise2])
+      .then(()=>{
+        console.log('kevinnnn');
+        this.props.history.push('/kevin')
+      })
+      .catch(err => console.log(err, 'noooooAll'));
 
-      .then((response) => {
-        console.log(response, 'ohh');
-        if (response === 200) {
-          const db2 = pgp(input2);
-          db2.connect()
-            .then((obj) => {
-              obj.done(); // success, release the connection;
-              return 200;
-            })
-            .catch((error) => {
-              console.log('ERROR:', error.message || error);
-              throw error;
-            })
-            .then((response) => {
-              if (response === 200) {
-              // console.log('u1', u1, 'u2', u2);
-              // if (u1.length > 0 && u2.length > 0) {
-                console.log('work!');
-                this.props.history.push('/kevin');
-              } else {
-                alert('Ge so smart');
-              }
-            // }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else {
-          alert('Ges mistake');
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+    // const db1 = pgp(input1);
+    // db1.connect()
+    //   .then((obj) => {
+    //     obj.done(); // success, release the connection;
+    //     return 200;
+    //   })
+    //   .catch((error) => {
+    //     console.log('ERROR:', error.message || error);
+    //     throw error;
+    //   })
+
+    //   .then((response) => {
+    //     console.log(response, '1st one works');
+    //     if (response === 200) {
+    //       const db2 = pgp(input2);
+    //       db2.connect()
+    //         .then((obj) => {
+    //           obj.done(); // success, release the connection;
+    //           return 200;
+    //         })
+    //         .catch((error) => {
+    //           console.log('ERROR:', error.message || error);
+    //           throw error;
+    //         })
+    //         .then((response) => {
+    //           if (response === 200) {
+    //           // console.log('u1', u1, 'u2', u2);
+    //           // if (u1.length > 0 && u2.length > 0) {
+    //             console.log('2nd one also works!');
+    //             this.props.history.push('/kevin');
+    //           } else {
+    //             alert('Ge so smart');
+    //           }
+    //         // }
+    //         })
+    //         .catch((err) => {
+    //           console.log(err);
+    //         });
+    //     } else {
+    //       alert('Ges mistake');
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }
 
   skipThisIsh() {
