@@ -44,6 +44,8 @@ class MainContainer extends Component {
     this.addScript = this.addScript.bind(this);
     this.removeScript = this.removeScript.bind(this);
     this.setBackgroundColor = this.setBackgroundColor.bind(this);
+    this.removeAllChanges = this.removeAllChanges.bind(this);
+    this.addAllChanges = this.addAllChanges.bind(this);
   }
 
   componentWillMount() {
@@ -527,14 +529,6 @@ class MainContainer extends Component {
     this.setState({ backgroundColors: backgroundColorsCopy });
   }
 
-  addScript(id, query) {
-    const { script } = this.state;
-    const scriptCopy = JSON.parse(JSON.stringify(script));
-
-    scriptCopy[id] = query;
-    this.setState({ script: scriptCopy });
-  }
-
   changeDisplay(event) {
     const display = event.target.id;
     // Reset all displays to false.
@@ -547,6 +541,14 @@ class MainContainer extends Component {
     this.setState({ [display]: true });
   }
 
+  addScript(id, query) {
+    const { script } = this.state;
+    const scriptCopy = JSON.parse(JSON.stringify(script));
+
+    scriptCopy[id] = query;
+    this.setState({ script: scriptCopy });
+  }
+
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = Object.assign({}, script);
@@ -554,6 +556,31 @@ class MainContainer extends Component {
     delete scriptCopy[id];
     console.log(scriptCopy, 'NEW');
     this.setState({ script: scriptCopy });
+  }
+
+  removeAllChanges() {
+    const backgroundColors = this.state;
+    const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
+
+    const ids = Object.keys(backgroundColorsCopy);
+
+    ids.forEach((id) => {
+      backgroundColorsCopy.id = false;
+    });
+
+    this.setState({ script: {}, backgroundColors: backgroundColorsCopy });
+  }
+
+  addAllChanges(script) {
+    const { backgroundColors } = this.state;
+    const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
+    const ids = Object.keys(backgroundColorsCopy);
+
+    ids.forEach((id) => {
+      backgroundColorsCopy[id] = true;
+    });
+
+    this.setState({ backgroundColors: backgroundColorsCopy });
   }
 
   render() {
@@ -570,7 +597,7 @@ class MainContainer extends Component {
       backgroundColors,
     } = this.state;
     const {
-      changeDisplay, addScript, removeScript, setBackgroundColor,
+      changeDisplay, addScript, removeScript, setBackgroundColor, removeAllChanges, addAllChanges,
     } = this;
 
     /* eslint-disable */
@@ -611,6 +638,23 @@ class MainContainer extends Component {
         {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
         {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
         {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
+<<<<<<< HEAD
+        {diffDbDisplay
+          ? (
+            <DiffDbDisplayContainer
+              db={diffDb}
+              diffDbColors={diffDbColors}
+              addScript={addScript}
+              removeScript={removeScript}
+              script={script}
+              backgroundColors={backgroundColors}
+              setBackgroundColor={setBackgroundColor}
+              removeAllChanges={removeAllChanges}
+              addAllChanges={addAllChanges}
+            />
+          )
+          : null}
+=======
         {diffDbDisplay ? (
           <DiffDbDisplayContainer
             db={diffDb}
@@ -622,6 +666,7 @@ class MainContainer extends Component {
             setBackgroundColor={setBackgroundColor}
           />
         ) : null}
+>>>>>>> master
         {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
       </div>
     );

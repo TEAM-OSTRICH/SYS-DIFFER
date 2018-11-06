@@ -6,6 +6,7 @@
   background-color: #fff;
   border: 2px solid rgba(0,0,0,.125);
 }
+
 .list-group-item:first-child { 
   background-color: pink;
 }
@@ -58,23 +59,23 @@ span {
   background-color: lightgray;
 }
 
-.inputGridContainer{
+.inputGridContainer {
   display: grid;
   /* background: yellowgreen; */
   grid-template-columns: auto auto;
   margin:0 10%;
-
 }
-.inputGrid{
+
+.inputGrid {
   background: pink;
   text-align: center;
   padding: 20px 10px;
   margin: 0 1%;
   border-radius: 10px;
   text-align: right;
-
 }
-.inputGrid > input{
+
+.inputGrid > input {
   margin: 2px 0;
   background-color: whitesmoke;
   border: none;
@@ -82,7 +83,7 @@ span {
   /* width: 50%; */
 }
 
-.buttonGrid{
+.buttonGrid {
   border:3px solid seashell;
   /* height: 100%; */
   background: seashell;
@@ -95,7 +96,7 @@ span {
   z-index: 2;
 }
 
-.buttonGrid:hover{
+.buttonGrid:hover {
   color: seashell;
   -webkit-transition: all 0.3s ease 0s; 
 }
@@ -114,38 +115,70 @@ span {
   z-index: -1;
 }
 
-.buttonGrid:hover:after{ width: 100%; }
+.buttonGrid:hover:after {
+  width: 100%;
+}
 
-body{
+body {
   font-family: 'Ubuntu', sans-serif;
   background: #b5beda;
   font-weight: 500;
 }
+
 .buttonGrid:focus {
   outline:none !important;
 }
-input:focus{
+
+input:focus {
   outline: none;
 }
-h5{
+
+h5 {
   text-align: center;
   background: whitesmoke;
   margin: 0;
   font-size: 16px;
 }
-.centerText{
+
+.centerText {
   text-align: center;
 }
-h1{
+
+h1 {
   font-size: 44px;
   color: seashell;
 }
-h2{
+
+h2 {
   font-size: 20px;
   margin-top: 2px;
   color: rgba(0,0,0,.5);
 }
-ul{
+
+ul {
   /* border: 1px solid seashell; */
   padding: 10px;
+}
+
+#alert {
+  position: absolute;
+  top: 10%;
+  left: 40%;
+  background-color: yellow;
+  height: 20%;
+  width: 20%;
+  z-index: 3;
+  border-radius: 10px;
+  box-shadow: 5px 5px;
+  text-align: center;
+}
+
+.alert-shown {
+  opacity: 1;
+  transition: all 250ms linear;
+}
+
+.alert-hidden {
+  opacity: 0;
+  transition: all 250ms linear;
 }
