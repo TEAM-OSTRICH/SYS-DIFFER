@@ -638,7 +638,6 @@ class MainContainer extends Component {
         {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
         {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
         {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
-<<<<<<< HEAD
         {diffDbDisplay
           ? (
             <DiffDbDisplayContainer
@@ -654,19 +653,6 @@ class MainContainer extends Component {
             />
           )
           : null}
-=======
-        {diffDbDisplay ? (
-          <DiffDbDisplayContainer
-            db={diffDb}
-            diffDbColors={diffDbColors}
-            addScript={addScript}
-            removeScript={removeScript}
-            script={script}
-            backgroundColors={backgroundColors}
-            setBackgroundColor={setBackgroundColor}
-          />
-        ) : null}
->>>>>>> master
         {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
       </div>
     );
