@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 const DbDisplay = (props) => {
   const { tableInfo } = props;
   const { name, columns } = tableInfo;
+  // console.log(columns,'clm nullable')
 
   return (
     <ul>

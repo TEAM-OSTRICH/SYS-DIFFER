@@ -158,8 +158,8 @@ class Check2Links extends Component {
   skipThisIsh() {
     const { setInput } = this.props;
     setInput(
-      'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk',
       'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw',
+      'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk',
       'public',
       'public',
     );
@@ -177,7 +177,7 @@ class Check2Links extends Component {
     return (
       <div>
         <h1 className="centerText">❤CHRISDIFFER❤</h1>
-        <button className="centerText" onClick={this.skipThisIsh}>Skip This Ish</button>
+        <button className="centerText" onClick={this.skipThisIsh}>Skip This Shit</button>
         <h2 className="centerText">PROVIDE LINKS</h2>
         <div className="inputGridContainer">
           <div className="inputGrid">

@@ -14,12 +14,17 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
     id = parentNode.id;
     target = parentNode;
   }
+<<<<<<< HEAD
   console.log(id, diffDbColors[id]);
+=======
+  console.log('e.t.s.b', event.target.style.backgroundColor, 'id', event.target.id, 'k', diffDbColors[id], 'scared');
+>>>>>>> master
   if (diffDbColors[id] !== undefined) {
     if (target.style.backgroundColor === diffDbColors[id]) {
       // Background color is set meaning change is selected so deselect change and remove query from script.
       // target.style.backgroundColor = null;
       removeScript(id);
+      console.log(id, 'id');
       setBackgroundColor(id);
     } else {
       // Select change.
@@ -28,7 +33,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
 
       // Create query.
       const queryParams = id.split('-');
-
+      console.log(queryParams, 'params');
       // One query parameter means add or delete a table.
       if (queryParams.length === 1) {
         const { name, columns } = tableInfo;
@@ -117,6 +122,18 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           // add a dataType
           addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} TYPE ${dataType}();`);
         }
+        if (queryParams[2] === 'nullable') {
+          console.log(diffDbColors[id]);
+          if (diffDbColors[id] === 'green') {
+            // add a "NOT NULL"
+            console.log('kill myself');
+            addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} SET NOT NULL;`);
+          } else {
+            console.log('die');
+            // remove a "NOT NULL"
+            addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} DROP NOT NULL;`);
+          }
+        }
       }
     }
   }
@@ -196,11 +213,11 @@ const DiffDbDisplay = (props) => {
                   style={
                     {
                       borderColor:
-                        diffDbColors[`${name}-${column.name}-nullable-${column.dataType}`]
-                          ? diffDbColors[`${name}-${column.name}-nullable-${column.dataType}`]
+                        diffDbColors[`${name}-${column.name}-nullable-${column.isNullable}`]
+                          ? diffDbColors[`${name}-${column.name}-nullable-${column.isNullable}`]
                           : null,
-                        backgroundColor: backgroundColors[`${name}-${column.name}-nullable-${column.dataType}`]
-                          ? diffDbColors[`${name}-${column.name}-nullable-${column.dataType}`]
+                        backgroundColor: backgroundColors[`${name}-${column.name}-nullable-${column.isNullable}`]
+                          ? diffDbColors[`${name}-${column.name}-nullable-${column.isNullable}`]
                           : null,
                     }
                   }
