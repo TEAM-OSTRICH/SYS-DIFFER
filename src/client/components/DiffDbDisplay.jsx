@@ -14,12 +14,13 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
     id = parentNode.id;
     target = parentNode;
   }
-  console.log('e.t.s.b', event.target.style.backgroundColor);
+  console.log('e.t.s.b', event.target.style.backgroundColor, 'k', diffDbColors[id], 'scared');
   if (diffDbColors[id] !== undefined) {
-    if (event.target.style.backgroundColor === diffDbColors[id]) {
+    if (target.style.backgroundColor === diffDbColors[id]) {
       // Background color is set meaning change is selected so deselect change and remove query from script.
       target.style.backgroundColor = null;
       removeScript(id);
+      console.log(id, 'id');
       setBackgroundColor(id);
     } else {
       // Select change.
@@ -105,7 +106,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           addScript(id, columnString);
         } else {
           // Must be 'red' so delete a column
-          addScript(id, `ALTER TABLE ${tableName} DROP COLUMN ${name};/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`);
+          addScript(id, `ALTER TABLE ${tableName} DROP COLUMN ${name};/*  ALERT: CASCADE DELETE WILL ALSO DELETE ALL ASSOCIATED DATA  */`);
         }
       }
       // Four query params means add or delete data-type or constraint
@@ -139,7 +140,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
         }
         if (queryParams[2] === 'dataType') {
           // add a dataType
-          addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} TYPE ${dataType}();`);
+          addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} TYPE ${dataType};`);
         }
       }
     }
@@ -175,7 +176,9 @@ const DiffDbDisplay = (props) => {
           }
         }
         onClick={
-          (event) => { handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo) }
+          (event) => {
+            handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo)
+          }
         }
       >
         <span>{name}</span>
@@ -196,7 +199,9 @@ const DiffDbDisplay = (props) => {
             }
           }
           onClick={
-            (event) => { handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column) }
+            (event) => {
+              handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)
+            }
           }
         >
           <span>{column.name}</span>
@@ -216,7 +221,9 @@ const DiffDbDisplay = (props) => {
               }
             }
             onClick={
-              (event) => { handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column) }
+              (event) => {
+                handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)
+              }
             }
           >
             {column.dataType}
@@ -240,7 +247,9 @@ const DiffDbDisplay = (props) => {
                     }
                   }
                   onClick={
-                    (event) => { handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column) }
+                    (event) => {
+                      handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)
+                    }
                   }
                 >
                   NOT NULL
@@ -268,7 +277,9 @@ const DiffDbDisplay = (props) => {
                       }
                     }
                     onClick={
-                      (event) => { handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor) }
+                      (event) => {
+                        handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)
+                      }
                     }
                   >
                     {constraintType}

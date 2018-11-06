@@ -60,7 +60,7 @@ class MainContainer extends Component {
     // const input1 = 'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk';
     // const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
 
-    const query = `
+    let query = `
       SELECT
       t.table_name,
       c.column_name,
@@ -81,6 +81,54 @@ class MainContainer extends Component {
         ON tc.constraint_name = ccu.constraint_name
       WHERE t.table_type = 'BASE TABLE'
       AND t.table_schema = '${inputLinkSchema1}'
+      AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
+      GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length
+      UNION ALL
+      SELECT
+      t.table_name,
+      c.column_name,
+      c.is_nullable,
+      c.data_type,
+      c.character_maximum_length,
+      string_agg(tc.constraint_type, ', ') AS constraint_types,
+      ccu.table_name AS foreign_table_name,
+      ccu.column_name AS foreign_column_name
+      FROM
+      information_schema.tables AS t JOIN information_schema.columns as c
+        ON t.table_name = c.table_name
+      LEFT JOIN information_schema.key_column_usage as kcu
+        ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+      LEFT JOIN information_schema.table_constraints as tc
+        ON kcu.constraint_name = tc.constraint_name
+      LEFT JOIN information_schema.constraint_column_usage AS ccu
+        ON tc.constraint_name = ccu.constraint_name
+      WHERE t.table_type = 'BASE TABLE'
+      AND t.table_schema = '${inputLinkSchema1}'
+      AND tc.constraint_type = 'FOREIGN KEY'
+      GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length, ccu.table_name, ccu.column_name
+      ORDER BY table_name, column_name
+      `;
+      let query2 = `
+      SELECT
+      t.table_name,
+      c.column_name,
+      c.is_nullable,
+      c.data_type,
+      c.character_maximum_length,
+      string_agg(tc.constraint_type, ', ') AS constraint_types,
+      null AS foreign_table_name,
+      null AS foreign_column_name
+      FROM
+      information_schema.tables AS t JOIN information_schema.columns AS c
+        ON t.table_name = c.table_name
+      LEFT JOIN information_schema.key_column_usage AS kcu
+        ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+      LEFT JOIN information_schema.table_constraints AS tc
+        ON kcu.constraint_name = tc.constraint_name
+      LEFT JOIN information_schema.constraint_column_usage AS ccu 
+        ON tc.constraint_name = ccu.constraint_name
+      WHERE t.table_type = 'BASE TABLE'
+      AND t.table_schema = '${inputLinkSchema2}'
       AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
       GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length
       UNION ALL
@@ -286,7 +334,9 @@ class MainContainer extends Component {
               // Add color scheme.
               diffDbColors[`${table.name}-${column.name}`] = 'red';
               backgroundColors[`${table.name}-${column.name}`] = false;
-            } else if (column.constraintTypes !== undefined) {
+            } 
+            else {
+            // else if (column.constraintTypes !== undefined) {
               // Column exists.
               // Check column properties.
               // Do not have to check if data type exists because all columns must have a data type.
@@ -337,10 +387,11 @@ class MainContainer extends Component {
 
     // Query new and current database for schema information.
     // Run diffing algorithm.
-    devDbConn.any(query)
-      .then((schemaInfo) => {
-        devDb = setDbInfo('devDb', schemaInfo);
-
+    devDbConn.any(query2)
+    .then((schemaInfo) => {
+      devDb = setDbInfo('devDb', schemaInfo);
+      
+      // inputLinkSchema1 = inputLinkSchema2;
         prodDbConn.any(query)
           .then((schemaInfo2) => {
             prodDb = setDbInfo('prodDb', schemaInfo2);
@@ -433,7 +484,9 @@ class MainContainer extends Component {
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = Object.assign({}, script);
+    console.log(scriptCopy,'OLD')
     delete scriptCopy[id];
+    console.log(scriptCopy,'NEW')
     this.setState({ script: scriptCopy });
   }
 
