@@ -4,6 +4,7 @@ import { NavLink, Redirect, withRouter } from 'react-router-dom';
 import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
 import ScriptContainer from './ScriptContainer.jsx';
+import { Nav, NavItem } from 'react-bootstrap';
 
 const initOptions = {
   connect(client, dc, useCount) {
@@ -514,33 +515,35 @@ class MainContainer extends Component {
     /* eslint-disable */
     return (
       <div>
-        <button onClick={(event) => {
-          console.log(this.props, 'workkk');
-          return this.props.history.push('/');
-        }}
-        >
-          Home
-        </button>
-        <button id="devDbDisplay" onClick={(event) => { changeDisplay(event); }}>Dev DB</button>
-        <button id="prodDbDisplay" onClick={(event) => { changeDisplay(event); }}>Prod DB</button>
-        <button id="diffDbDisplay" onClick={(event) => { changeDisplay(event); }}>DB Diff</button>
-        {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
-        {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
-        {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
-        {diffDbDisplay
-          ? (
-            <DiffDbDisplayContainer
-              db={diffDb}
-              diffDbColors={diffDbColors}
-              addScript={addScript}
-              removeScript={removeScript}
-              script={script}
-              backgroundColors={backgroundColors}
-              setBackgroundColor={setBackgroundColor}
-            />
-          )
-          : null}
-        {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
+        <Nav bsStyle="tabs" onSelect={(k) => this.handleSelect(k)}>
+          <NavItem eventKey="1" onClick={(event) => {
+            console.log(this.props, 'workkk');
+            return this.props.history.push('/');
+          }}
+          >
+            Home
+          </NavItem>
+          <NavItem eventKey="2" id="devDbDisplay" onClick={(event) => { changeDisplay(event); }}>Dev DB</NavItem>
+          <NavItem eventKey="3" id="prodDbDisplay" onClick={(event) => { changeDisplay(event); }}>Prod DB</NavItem>
+          <NavItem eventKey="4" id="diffDbDisplay" onClick={(event) => { changeDisplay(event); }}>DB Diff</NavItem>
+          {/* <NavItem id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</NavItem> */}
+          </Nav>
+          {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
+          {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
+          {diffDbDisplay
+            ? (
+              <DiffDbDisplayContainer
+                db={diffDb}
+                diffDbColors={diffDbColors}
+                addScript={addScript}
+                removeScript={removeScript}
+                script={script}
+                backgroundColors={backgroundColors}
+                setBackgroundColor={setBackgroundColor}
+              />
+            )
+            : null}
+          {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
       </div>
     );
     /* eslint-enable */
