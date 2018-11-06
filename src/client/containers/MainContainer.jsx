@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import _ from "lodash";
-import { NavLink, Redirect, withRouter } from "react-router-dom";
-import DbDisplayContainer from "./DbDisplayContainer.jsx";
-import DiffDbDisplayContainer from "./DiffDbDisplayContainer.jsx";
-import ScriptContainer from "./ScriptContainer.jsx";
+import React, { Component } from 'react';
+import _ from 'lodash';
+import { NavLink, Redirect, withRouter } from 'react-router-dom';
+import DbDisplayContainer from './DbDisplayContainer.jsx';
+import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
+import ScriptContainer from './ScriptContainer.jsx';
 
 const initOptions = {
   connect(client, dc, useCount) {
@@ -19,10 +19,10 @@ const initOptions = {
   },
   receive(data, result, e) {
     // console.log('DATA: ', data);
-  }
+  },
 };
 
-const pgp = require("pg-promise")(initOptions);
+const pgp = require('pg-promise')(initOptions);
 
 class MainContainer extends Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class MainContainer extends Component {
       prodDbDisplay: false,
       diffDbDisplay: false,
       scriptDisplay: false,
-      backgroundColors: {}
+      backgroundColors: {},
     };
 
     this.changeDisplay = this.changeDisplay.bind(this);
@@ -53,9 +53,9 @@ class MainContainer extends Component {
       inputLinkSchema1,
       inputLinkSchema2,
       inputObj1Schema,
-      inputObj2Schema
+      inputObj2Schema,
     } = this.props;
-    if (input1 === "" || input2 === "") {
+    if (input1 === '' || input2 === '') {
       input1 = `postgres://${this.props.inputObj1User}:${
         this.props.inputObj1Pass
       }@${this.props.inputObj1Host}:${this.props.inputObj1Port}/${
@@ -69,11 +69,11 @@ class MainContainer extends Component {
       inputLinkSchema1 = inputObj1Schema;
       inputLinkSchema2 = inputObj2Schema;
     }
-    console.log("INPUT", inputLinkSchema1, inputLinkSchema2);
+    console.log('INPUT', inputLinkSchema1, inputLinkSchema2);
     // const input1 = 'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk';
     // const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
 
-    let query = `
+    const query = `
       SELECT
       t.table_name,
       c.column_name,
@@ -121,7 +121,7 @@ class MainContainer extends Component {
       GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length, ccu.table_name, ccu.column_name
       ORDER BY table_name, column_name
       `;
-    let query2 = `
+    const query2 = `
       SELECT
       t.table_name,
       c.column_name,
@@ -180,7 +180,7 @@ class MainContainer extends Component {
       let currentTableName;
       let table = {};
 
-      schemaInfo.forEach(row => {
+      schemaInfo.forEach((row) => {
         const {
           table_name,
           column_name,
@@ -189,7 +189,7 @@ class MainContainer extends Component {
           character_maximum_length,
           constraint_types,
           foreign_table_name,
-          foreign_column_name
+          foreign_column_name,
         } = row;
 
         if (currentTableName === undefined) {
@@ -209,21 +209,19 @@ class MainContainer extends Component {
         // Create new column object.
         const column = {};
         column.name = column_name;
-        column.isNullable = (is_nullable == "YES" ? true : false);
-        
+        column.isNullable = (is_nullable == 'YES');
+
         column.dataType = data_type;
-        if (data_type === "character varying")
-          column.dataType = `varchar (${character_maximum_length})`;
-        if (data_type === "double precision") column.dataType = "float";
+        if (data_type === 'character varying') { column.dataType = `varchar (${character_maximum_length})`; }
+        if (data_type === 'double precision') column.dataType = 'float';
         if (constraint_types !== null) {
-          const constraintTypesArray = constraint_types.split(", ");
+          const constraintTypesArray = constraint_types.split(', ');
           column.constraintTypes = [];
 
-          constraintTypesArray.forEach(constraintType => {
+          constraintTypesArray.forEach((constraintType) => {
             let constraintTypeTemp = constraintType;
 
-            if (constraintType === "FOREIGN KEY")
-              constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`;
+            if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
 
             column.constraintTypes.push(constraintTypeTemp);
           });
@@ -255,21 +253,21 @@ class MainContainer extends Component {
           // Table does not exist.
           diffDb.push(table);
           // Add color scheme.
-          diffDbColors[`${table.name}`] = "green";
+          diffDbColors[`${table.name}`] = 'green';
           backgroundColors[`${table.name}`] = false;
         } else {
           // Table exists.
           // Check columns.
           table.columns.forEach((column) => {
             const foundColumn = _.find(foundTable.columns, {
-              name: column.name
+              name: column.name,
             });
 
             if (foundColumn === undefined) {
               // Column does not exist.
               foundTable.columns.push(column);
               // Add color scheme.
-              diffDbColors[`${table.name}-${column.name}`] = "green";
+              diffDbColors[`${table.name}-${column.name}`] = 'green';
               backgroundColors[`${table.name}-${column.name}`] = false;
             } else {
               // Column exists.
@@ -282,25 +280,25 @@ class MainContainer extends Component {
                 // Add color scheme.
                 diffDbColors[
                   `${table.name}-${column.name}-dataType-${column.dataType}`
-                ] = "yellow";
+                ] = 'yellow';
                 backgroundColors[
                   `${table.name}-${column.name}-dataType-${column.dataType}`
                 ] = false;
               }
 
               // Check not null constraint.
-              console.log(column, column.isNullable, 'VS', foundColumn, foundColumn.isNullable)
+              console.log(column, column.isNullable, 'VS', foundColumn, foundColumn.isNullable);
               if (
-                column.isNullable === false &&
-                column.isNullable !== foundColumn.isNullable
+                column.isNullable === false
+                && column.isNullable !== foundColumn.isNullable
               ) {
                 // Property has been modified.
                 foundColumn.isNullable = column.isNullable;
                 // Add color scheme.
-                console.log(column.isNullable, "ahhhhh nullable");
+                console.log(column.isNullable, 'ahhhhh nullable');
                 diffDbColors[
                   `${table.name}-${column.name}-nullable-${column.isNullable}`
-                ] = "green";
+                ] = 'green';
                 backgroundColors[
                   `${table.name}-${column.name}-nullable-${column.isNullable}`
                 ] = false;
@@ -310,8 +308,8 @@ class MainContainer extends Component {
               if (column.constraintTypes !== undefined) {
                 column.constraintTypes.forEach((constraintType) => {
                   if (
-                    foundColumn.constraintTypes === undefined ||
-                    !foundColumn.constraintTypes.includes(constraintType)
+                    foundColumn.constraintTypes === undefined
+                    || !foundColumn.constraintTypes.includes(constraintType)
                   ) {
                     // Property does not exist.
                     if (foundColumn.contstraintTypes === undefined) {
@@ -357,26 +355,26 @@ class MainContainer extends Component {
       });
 
       // Check for deletions.
-      diffDb.forEach(table => {
+      diffDb.forEach((table) => {
         const foundTable = _.find(devDb, { name: table.name });
 
         if (foundTable === undefined) {
           // Table does not exist.
           // Add color scheme.
-          diffDbColors[`${table.name}`] = "red";
+          diffDbColors[`${table.name}`] = 'red';
           backgroundColors[`${table.name}`] = false;
         } else {
           // Table exists.
           // Check columns.
-          table.columns.forEach(column => {
+          table.columns.forEach((column) => {
             const foundColumn = _.find(foundTable.columns, {
-              name: column.name
+              name: column.name,
             });
 
             if (foundColumn === undefined) {
               // Column does not exist.
               // Add color scheme.
-              diffDbColors[`${table.name}-${column.name}`] = "red";
+              diffDbColors[`${table.name}-${column.name}`] = 'red';
               backgroundColors[`${table.name}-${column.name}`] = false;
             } else {
               // else if (column.constraintTypes !== undefined) {
@@ -386,10 +384,10 @@ class MainContainer extends Component {
 
               // Check not null constraint.
               if (
-                column.isNullable === false &&
-                column.isNullable !== foundColumn.isNullable
+                column.isNullable === false
+                && column.isNullable !== foundColumn.isNullable
               ) {
-                console.log('do sth')
+                console.log('do sth');
                 // Property has been modified.
 
                 // Ge commented out below 1 line to test
@@ -398,7 +396,7 @@ class MainContainer extends Component {
                 // Add color scheme.
                 diffDbColors[
                   `${table.name}-${column.name}-nullable-${column.isNullable}`
-                ] = "red";
+                ] = 'red';
                 backgroundColors[
                   `${table.name}-${column.name}-nullable-${column.isNullable}`
                 ] = false;
@@ -406,10 +404,10 @@ class MainContainer extends Component {
 
               // Check constraint types.
               if (column.constraintTypes !== undefined) {
-                column.constraintTypes.forEach(constraintType => {
+                column.constraintTypes.forEach((constraintType) => {
                   if (
-                    foundColumn.constraintTypes === undefined ||
-                    !foundColumn.constraintTypes.includes(constraintType)
+                    foundColumn.constraintTypes === undefined
+                    || !foundColumn.constraintTypes.includes(constraintType)
                   ) {
                     // Property does not exist.
                     // Add color scheme.
@@ -417,7 +415,7 @@ class MainContainer extends Component {
                       `${table.name}-${
                         column.name
                       }-constraintType-${constraintType}`
-                    ] = "red";
+                    ] = 'red';
                     backgroundColors[
                       `${table.name}-${
                         column.name
@@ -451,14 +449,14 @@ class MainContainer extends Component {
 
     // Query new and current database for schema information.
     // Run diffing algorithm.
-    devDbConn.any(query2).then(schemaInfo => {
-      devDb = setDbInfo("devDb", schemaInfo);
+    devDbConn.any(query2).then((schemaInfo) => {
+      devDb = setDbInfo('devDb', schemaInfo);
 
       // inputLinkSchema1 = inputLinkSchema2;
       prodDbConn
         .any(query)
-        .then(schemaInfo2 => {
-          prodDb = setDbInfo("prodDb", schemaInfo2);
+        .then((schemaInfo2) => {
+          prodDb = setDbInfo('prodDb', schemaInfo2);
         })
         // Determine differences between databases.
         .then(() => {
@@ -469,7 +467,7 @@ class MainContainer extends Component {
           let differentTablesArray = [];
 
           // Sort devDb.
-          devDb.forEach(table => {
+          devDb.forEach((table) => {
             const foundTable = _.find(prodDb, { name: table.name });
 
             if (foundTable !== undefined) {
@@ -484,7 +482,7 @@ class MainContainer extends Component {
           differentTablesArray = [];
 
           // Sort prodDb.
-          prodDb.forEach(table => {
+          prodDb.forEach((table) => {
             const foundTable = _.find(devDb, { name: table.name });
 
             if (foundTable !== undefined) {
@@ -499,7 +497,7 @@ class MainContainer extends Component {
           differentTablesArray = [];
 
           // Sort diffDb.
-          diffDb.forEach(table => {
+          diffDb.forEach((table) => {
             const foundTable1 = _.find(devDb, { name: table.name });
             const foundTable2 = _.find(prodDb, { name: table.name });
 
@@ -515,7 +513,7 @@ class MainContainer extends Component {
           this.setState({
             devDb: sortedDevDb,
             prodDb: sortedProdDb,
-            diffDb: sortedDiffDb
+            diffDb: sortedDiffDb,
           });
         });
     });
@@ -544,7 +542,7 @@ class MainContainer extends Component {
       devDbDisplay: false,
       prodDbDisplay: false,
       diffDbDisplay: false,
-      scriptDisplay: false
+      scriptDisplay: false,
     });
     this.setState({ [display]: true });
   }
@@ -552,9 +550,9 @@ class MainContainer extends Component {
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = Object.assign({}, script);
-    console.log(scriptCopy, "OLD");
+    console.log(scriptCopy, 'OLD');
     delete scriptCopy[id];
-    console.log(scriptCopy, "NEW");
+    console.log(scriptCopy, 'NEW');
     this.setState({ script: scriptCopy });
   }
 
@@ -569,9 +567,11 @@ class MainContainer extends Component {
       diffDbDisplay,
       scriptDisplay,
       diffDbColors,
-      backgroundColors
+      backgroundColors,
     } = this.state;
-    const { changeDisplay, addScript, removeScript, setBackgroundColor } = this;
+    const {
+      changeDisplay, addScript, removeScript, setBackgroundColor,
+    } = this;
 
     /* eslint-disable */
     return (

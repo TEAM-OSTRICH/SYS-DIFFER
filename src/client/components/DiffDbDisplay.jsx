@@ -29,7 +29,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
 
       // Create query.
       const queryParams = id.split('-');
-      console.log(queryParams,'params')
+      console.log(queryParams, 'params');
       // One query parameter means add or delete a table.
       if (queryParams.length === 1) {
         const { name, columns } = tableInfo;
@@ -119,13 +119,13 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} TYPE ${dataType}();`);
         }
         if (queryParams[2] === 'nullable') {
-          console.log(diffDbColors[id])
+          console.log(diffDbColors[id]);
           if (diffDbColors[id] === 'green') {
             // add a "NOT NULL"
-            console.log('kill myself')
+            console.log('kill myself');
             addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} SET NOT NULL;`);
           } else {
-            console.log('die')
+            console.log('die');
             // remove a "NOT NULL"
             addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} DROP NOT NULL;`);
           }
