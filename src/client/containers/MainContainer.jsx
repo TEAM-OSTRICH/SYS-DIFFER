@@ -71,7 +71,6 @@ class MainContainer extends Component {
       inputLinkSchema1 = inputObj1Schema;
       inputLinkSchema2 = inputObj2Schema;
     }
-    console.log('INPUT', inputLinkSchema1, inputLinkSchema2);
     // const input1 = 'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk';
     // const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
 
@@ -246,7 +245,6 @@ class MainContainer extends Component {
       const diffDb = JSON.parse(JSON.stringify(prodDb));
       const diffDbColors = {};
       const backgroundColors = {};
-      console.log(devDb, prodDb);
       // Check for additions and modifications.
       devDb.forEach((table) => {
         const foundTable = _.find(diffDb, { name: table.name });
@@ -289,7 +287,6 @@ class MainContainer extends Component {
               }
 
               // Check not null constraint.
-              console.log(column, column.isNullable, 'VS', foundColumn, foundColumn.isNullable);
               if (
                 column.isNullable === false
                 && column.isNullable !== foundColumn.isNullable
@@ -297,7 +294,6 @@ class MainContainer extends Component {
                 // Property has been modified.
                 foundColumn.isNullable = column.isNullable;
                 // Add color scheme.
-                console.log(column.isNullable, 'ahhhhh nullable');
                 diffDbColors[
                   `${table.name}-${column.name}-nullable-${column.isNullable}`
                 ] = 'green';
@@ -389,7 +385,6 @@ class MainContainer extends Component {
                 column.isNullable === false
                 && column.isNullable !== foundColumn.isNullable
               ) {
-                console.log('do sth');
                 // Property has been modified.
 
                 // Ge commented out below 1 line to test
@@ -552,9 +547,7 @@ class MainContainer extends Component {
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = Object.assign({}, script);
-    console.log(scriptCopy, 'OLD');
     delete scriptCopy[id];
-    console.log(scriptCopy, 'NEW');
     this.setState({ script: scriptCopy });
   }
 
@@ -569,19 +562,22 @@ class MainContainer extends Component {
     });
 
     this.setState({ script: {}, backgroundColors: backgroundColorsCopy });
+    console.log('when remove, bg colors', this.state.backgroundColors)
   }
 
-  addAllChanges(script) {
-    const { backgroundColors } = this.state;
-    const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
-    const ids = Object.keys(backgroundColorsCopy);
 
+  addAllChanges(script) {
+    console.log(this.state.diffDbColors,'diffDB')
+    const { diffDbColors } = this.state;
+    const backgroundColorsCopy = JSON.parse(JSON.stringify(diffDbColors));
+    const ids = Object.keys(backgroundColorsCopy);
     ids.forEach((id) => {
       backgroundColorsCopy[id] = true;
     });
-
-    this.setState({ backgroundColors: backgroundColorsCopy });
+    this.setState({ script: script, backgroundColors: backgroundColorsCopy });
+    console.log('when add, bg: colors', this.state.backgroundColors);
   }
+
 
   render() {
     const {
@@ -605,7 +601,6 @@ class MainContainer extends Component {
       <div>
         <button
           onClick={event => {
-            console.log(this.props, "workkk");
             return this.props.history.push("/");
           }}
         >
@@ -638,7 +633,6 @@ class MainContainer extends Component {
         {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
         {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
         {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
-<<<<<<< HEAD
         {diffDbDisplay
           ? (
             <DiffDbDisplayContainer
@@ -654,19 +648,6 @@ class MainContainer extends Component {
             />
           )
           : null}
-=======
-        {diffDbDisplay ? (
-          <DiffDbDisplayContainer
-            db={diffDb}
-            diffDbColors={diffDbColors}
-            addScript={addScript}
-            removeScript={removeScript}
-            script={script}
-            backgroundColors={backgroundColors}
-            setBackgroundColor={setBackgroundColor}
-          />
-        ) : null}
->>>>>>> master
         {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
       </div>
     );

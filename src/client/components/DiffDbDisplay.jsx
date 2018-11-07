@@ -14,11 +14,8 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
     id = parentNode.id;
     target = parentNode;
   }
-<<<<<<< HEAD
   console.log(id, diffDbColors[id]);
-=======
   console.log('e.t.s.b', event.target.style.backgroundColor, 'id', event.target.id, 'k', diffDbColors[id], 'scared');
->>>>>>> master
   if (diffDbColors[id] !== undefined) {
     if (target.style.backgroundColor === diffDbColors[id]) {
       // Background color is set meaning change is selected so deselect change and remove query from script.
