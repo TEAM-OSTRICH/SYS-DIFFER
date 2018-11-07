@@ -4,7 +4,9 @@ import ScriptDisplay from '../components/ScriptDisplay.jsx';
 
 const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo, column) => {
   // Select change.
-  setBackgroundColor(id);
+
+  // GE commented below 1 line out just to test
+  // setBackgroundColor(id);
 
   // Create query.
   const queryParams = id.split('-');
@@ -97,46 +99,54 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
       // add a dataType
       return `ALTER TABLE ${tableName} ALTER COLUMN ${name} TYPE ${dataType}();`;
     }
+    if (queryParams[2] === 'nullable') {
+      console.log(diffDbColors[id]);
+      if (diffDbColors[id] === 'green') {
+        // add a "NOT NULL"
+        return `ALTER TABLE ${tableName} ALTER COLUMN ${name} SET NOT NULL;`;
+      }
+      // remove a "NOT NULL"
+      return `ALTER TABLE ${tableName} ALTER COLUMN ${name} DROP NOT NULL;`;
+    }
   }
 };
 
-const selectAll = (db, diffDbColors, addScript, backgroundColors, setBackgroundColor) => {
-  const ids = Object.keys(backgroundColors);
+const selectAll = (db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges) => {
+  const ids = Object.keys(diffDbColors);
   const script = {};
   // console.log(backgroundColors);
   // Loop through all ids of backgroundColors and select changes.
+
   ids.forEach((id) => {
-    if (backgroundColors[id] === false) {
-      console.log(id);
-      const idArray = id.split('-');
-      const tableName = idArray[0];
-      const foundTable = _.find(db, { name: tableName });
+    // if (backgroundColors[id] === false) {
+    const idArray = id.split('-');
+    const tableName = idArray[0];
+    const foundTable = _.find(db, { name: tableName });
 
-      if (idArray.length === 1) {
-        script.id = handleClick(id, diffDbColors, addScript, setBackgroundColor, foundTable);
-      } else {
-        const columnName = idArray[1];
-        const foundColumn = _.find(foundTable.columns, { name: columnName });
-        script.id = handleClick(id, diffDbColors, addScript, setBackgroundColor, foundTable, foundColumn);
-      }
+    if (idArray.length === 1) {
+      script[id] = handleClick(id, diffDbColors, addScript, setBackgroundColor, foundTable);
+    } else {
+      const columnName = idArray[1];
+      const foundColumn = _.find(foundTable.columns, { name: columnName });
+      script[id] = handleClick(id, diffDbColors, addScript, setBackgroundColor, foundTable, foundColumn);
     }
+    // }
+    console.log(id, script[id]);
   });
-
-  console.log(script);
+  console.log(script, 'script');
+  addAllChanges(script);
 };
 
 const ScriptContainer = (props) => {
   const {
     script, removeAllChanges, db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges,
   } = props;
-
   return (
     <div id="scriptContainer">
       Script
       <ScriptDisplay script={script} />
-      <button onClick={() => {
-        selectAll(db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges);
-      }}
+      <button onClick={() => { selectAll(db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges); }
+      }
       >
       Add All
       </button>
