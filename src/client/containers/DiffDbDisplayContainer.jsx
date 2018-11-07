@@ -4,15 +4,7 @@ import ScriptContainer from './ScriptContainer.jsx';
 
 const DiffDbDisplayContainer = (props) => {
   const {
-    db,
-    diffDbColors,
-    addScript,
-    removeScript,
-    script,
-    backgroundColors,
-    setBackgroundColor,
-    removeAllChanges,
-    addAllChanges,
+    db, diffDbColors, addScript, removeScript, script, backgroundColors, setBackgroundColor, removeAllChanges, addAllChanges,
   } = props;
 
   const tables = db.map(tableInfo => (
