@@ -45,117 +45,157 @@ class MainContainer extends Component {
     this.addScript = this.addScript.bind(this);
     this.removeScript = this.removeScript.bind(this);
     this.setBackgroundColor = this.setBackgroundColor.bind(this);
+    this.removeAllChanges = this.removeAllChanges.bind(this);
+    this.addAllChanges = this.addAllChanges.bind(this);
   }
 
   componentWillMount() {
     let {
-      input1, input2, inputLinkSchema1, inputLinkSchema2, inputObj1Schema, inputObj2Schema,
+      input1,
+      input2,
+      inputLinkSchema1,
+      inputLinkSchema2,
+      inputObj1Schema,
+      inputObj2Schema,
     } = this.props;
     if (input1 === '' || input2 === '') {
-      input1 = `postgres://${this.props.inputObj1User}:${this.props.inputObj1Pass}@${this.props.inputObj1Host}:${this.props.inputObj1Port}/${this.props.inputObj1Dbname}`;
-      input2 = `postgres://${this.props.inputObj2User}:${this.props.inputObj2Pass}@${this.props.inputObj2Host}:${this.props.inputObj2Port}/${this.props.inputObj2Dbname}`;
+      input1 = `postgres://${this.props.inputObj1User}:${
+        this.props.inputObj1Pass
+      }@${this.props.inputObj1Host}:${this.props.inputObj1Port}/${
+        this.props.inputObj1Dbname
+      }`;
+      input2 = `postgres://${this.props.inputObj2User}:${
+        this.props.inputObj2Pass
+      }@${this.props.inputObj2Host}:${this.props.inputObj2Port}/${
+        this.props.inputObj2Dbname
+      }`;
       inputLinkSchema1 = inputObj1Schema;
       inputLinkSchema2 = inputObj2Schema;
     }
-    console.log('INPUT', inputLinkSchema1, inputLinkSchema2);
     // const input1 = 'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk';
     // const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
 
-    let query = `
-      SELECT
-      t.table_name,
-      c.column_name,
-      c.is_nullable,
-      c.data_type,
-      c.character_maximum_length,
-      string_agg(tc.constraint_type, ', ') AS constraint_types,
-      null AS foreign_table_name,
-      null AS foreign_column_name
-      FROM
-      information_schema.tables AS t JOIN information_schema.columns AS c
-        ON t.table_name = c.table_name
-      LEFT JOIN information_schema.key_column_usage AS kcu
-        ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-      LEFT JOIN information_schema.table_constraints AS tc
-        ON kcu.constraint_name = tc.constraint_name
-      LEFT JOIN information_schema.constraint_column_usage AS ccu 
-        ON tc.constraint_name = ccu.constraint_name
-      WHERE t.table_type = 'BASE TABLE'
-      AND t.table_schema = '${inputLinkSchema1}'
-      AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
-      GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length
-      UNION ALL
-      SELECT
-      t.table_name,
-      c.column_name,
-      c.is_nullable,
-      c.data_type,
-      c.character_maximum_length,
-      string_agg(tc.constraint_type, ', ') AS constraint_types,
-      ccu.table_name AS foreign_table_name,
-      ccu.column_name AS foreign_column_name
-      FROM
-      information_schema.tables AS t JOIN information_schema.columns as c
-        ON t.table_name = c.table_name
-      LEFT JOIN information_schema.key_column_usage as kcu
-        ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-      LEFT JOIN information_schema.table_constraints as tc
-        ON kcu.constraint_name = tc.constraint_name
-      LEFT JOIN information_schema.constraint_column_usage AS ccu
-        ON tc.constraint_name = ccu.constraint_name
-      WHERE t.table_type = 'BASE TABLE'
-      AND t.table_schema = '${inputLinkSchema1}'
-      AND tc.constraint_type = 'FOREIGN KEY'
-      GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length, ccu.table_name, ccu.column_name
-      ORDER BY table_name, column_name
+    const query = `
+        SELECT 
+        table_name,
+        column_name,
+        is_nullable,
+        data_type,
+        character_maximum_length,
+        string_agg(constraint_types, ', ') AS constraint_types,
+        string_agg(foreign_table_name, ', ') AS foreign_table_name,
+        string_agg(foreign_column_name, ', ') AS foreign_column_name
+        FROM
+          (
+            SELECT
+            t.table_name,
+            c.column_name,
+            c.is_nullable,
+            c.data_type,
+            c.character_maximum_length,
+            string_agg(tc.constraint_type, ', ') AS constraint_types,
+            null AS foreign_table_name,
+            null AS foreign_column_name
+            FROM
+            information_schema.tables AS t JOIN information_schema.columns AS c
+              ON t.table_name = c.table_name
+            LEFT JOIN information_schema.key_column_usage AS kcu
+              ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+            LEFT JOIN information_schema.table_constraints AS tc
+              ON kcu.constraint_name = tc.constraint_name
+            LEFT JOIN information_schema.constraint_column_usage AS ccu 
+              ON tc.constraint_name = ccu.constraint_name
+            WHERE t.table_type = 'BASE TABLE'
+            AND t.table_schema = '${inputLinkSchema1}'
+            AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
+            GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length
+            UNION ALL
+            SELECT
+            t.table_name,
+            c.column_name,
+            c.is_nullable,
+            c.data_type,
+            c.character_maximum_length,
+            string_agg(tc.constraint_type, ', ') AS constraint_types,
+            ccu.table_name AS foreign_table_name,
+            ccu.column_name AS foreign_column_name
+            FROM
+            information_schema.tables AS t JOIN information_schema.columns as c
+              ON t.table_name = c.table_name
+            LEFT JOIN information_schema.key_column_usage as kcu
+              ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+            LEFT JOIN information_schema.table_constraints as tc
+              ON kcu.constraint_name = tc.constraint_name
+            LEFT JOIN information_schema.constraint_column_usage AS ccu
+              ON tc.constraint_name = ccu.constraint_name
+            WHERE t.table_type = 'BASE TABLE'
+            AND t.table_schema = '${inputLinkSchema1}'
+            AND tc.constraint_type = 'FOREIGN KEY'
+            GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length, ccu.table_name, ccu.column_name
+            ORDER BY table_name, column_name
+          ) AS subquery
+        GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
       `;
-      let query2 = `
-      SELECT
-      t.table_name,
-      c.column_name,
-      c.is_nullable,
-      c.data_type,
-      c.character_maximum_length,
-      string_agg(tc.constraint_type, ', ') AS constraint_types,
-      null AS foreign_table_name,
-      null AS foreign_column_name
-      FROM
-      information_schema.tables AS t JOIN information_schema.columns AS c
-        ON t.table_name = c.table_name
-      LEFT JOIN information_schema.key_column_usage AS kcu
-        ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-      LEFT JOIN information_schema.table_constraints AS tc
-        ON kcu.constraint_name = tc.constraint_name
-      LEFT JOIN information_schema.constraint_column_usage AS ccu 
-        ON tc.constraint_name = ccu.constraint_name
-      WHERE t.table_type = 'BASE TABLE'
-      AND t.table_schema = '${inputLinkSchema2}'
-      AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
-      GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length
-      UNION ALL
-      SELECT
-      t.table_name,
-      c.column_name,
-      c.is_nullable,
-      c.data_type,
-      c.character_maximum_length,
-      string_agg(tc.constraint_type, ', ') AS constraint_types,
-      ccu.table_name AS foreign_table_name,
-      ccu.column_name AS foreign_column_name
-      FROM
-      information_schema.tables AS t JOIN information_schema.columns as c
-        ON t.table_name = c.table_name
-      LEFT JOIN information_schema.key_column_usage as kcu
-        ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-      LEFT JOIN information_schema.table_constraints as tc
-        ON kcu.constraint_name = tc.constraint_name
-      LEFT JOIN information_schema.constraint_column_usage AS ccu
-        ON tc.constraint_name = ccu.constraint_name
-      WHERE t.table_type = 'BASE TABLE'
-      AND t.table_schema = '${inputLinkSchema2}'
-      AND tc.constraint_type = 'FOREIGN KEY'
-      GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length, ccu.table_name, ccu.column_name
-      ORDER BY table_name, column_name
+    const query2 = `
+    SELECT 
+    table_name,
+    column_name,
+    is_nullable,
+    data_type,
+    character_maximum_length,
+    string_agg(constraint_types, ', ') AS constraint_types,
+    string_agg(foreign_table_name, ', ') AS foreign_table_name,
+    string_agg(foreign_column_name, ', ') AS foreign_column_name
+    FROM
+      (
+        SELECT
+        t.table_name,
+        c.column_name,
+        c.is_nullable,
+        c.data_type,
+        c.character_maximum_length,
+        string_agg(tc.constraint_type, ', ') AS constraint_types,
+        null AS foreign_table_name,
+        null AS foreign_column_name
+        FROM
+        information_schema.tables AS t JOIN information_schema.columns AS c
+          ON t.table_name = c.table_name
+        LEFT JOIN information_schema.key_column_usage AS kcu
+          ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+        LEFT JOIN information_schema.table_constraints AS tc
+          ON kcu.constraint_name = tc.constraint_name
+        LEFT JOIN information_schema.constraint_column_usage AS ccu 
+          ON tc.constraint_name = ccu.constraint_name
+        WHERE t.table_type = 'BASE TABLE'
+        AND t.table_schema = '${inputLinkSchema2}'
+        AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
+        GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length
+        UNION ALL
+        SELECT
+        t.table_name,
+        c.column_name,
+        c.is_nullable,
+        c.data_type,
+        c.character_maximum_length,
+        string_agg(tc.constraint_type, ', ') AS constraint_types,
+        ccu.table_name AS foreign_table_name,
+        ccu.column_name AS foreign_column_name
+        FROM
+        information_schema.tables AS t JOIN information_schema.columns as c
+          ON t.table_name = c.table_name
+        LEFT JOIN information_schema.key_column_usage as kcu
+          ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+        LEFT JOIN information_schema.table_constraints as tc
+          ON kcu.constraint_name = tc.constraint_name
+        LEFT JOIN information_schema.constraint_column_usage AS ccu
+          ON tc.constraint_name = ccu.constraint_name
+        WHERE t.table_type = 'BASE TABLE'
+        AND t.table_schema = '${inputLinkSchema2}'
+        AND tc.constraint_type = 'FOREIGN KEY'
+        GROUP BY t.table_name, c.column_name,  c.is_nullable, c.data_type, c.character_maximum_length, ccu.table_name, ccu.column_name
+        ORDER BY table_name, column_name
+      ) AS subquery
+    GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
       `;
 
     const devDbConn = pgp(input1);
@@ -197,9 +237,10 @@ class MainContainer extends Component {
         // Create new column object.
         const column = {};
         column.name = column_name;
-        column.isNullable = is_nullable !== 'NO';
+        column.isNullable = (is_nullable == 'YES');
+
         column.dataType = data_type;
-        if (data_type === 'character varying') column.dataType = `varchar (${character_maximum_length})`;
+        if (data_type === 'character varying') { column.dataType = `varchar (${character_maximum_length})`; }
         if (data_type === 'double precision') column.dataType = 'float';
         if (constraint_types !== null) {
           const constraintTypesArray = constraint_types.split(', ');
@@ -208,7 +249,7 @@ class MainContainer extends Component {
           constraintTypesArray.forEach((constraintType) => {
             let constraintTypeTemp = constraintType;
 
-            if (constraintType === 'FOREIGN KEY') constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`;
+            if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
 
             column.constraintTypes.push(constraintTypeTemp);
           });
@@ -231,7 +272,6 @@ class MainContainer extends Component {
       const diffDb = JSON.parse(JSON.stringify(prodDb));
       const diffDbColors = {};
       const backgroundColors = {};
-      console.log(devDb, prodDb);
       // Check for additions and modifications.
       devDb.forEach((table) => {
         const foundTable = _.find(diffDb, { name: table.name });
@@ -246,7 +286,9 @@ class MainContainer extends Component {
           // Table exists.
           // Check columns.
           table.columns.forEach((column) => {
-            const foundColumn = _.find(foundTable.columns, { name: column.name });
+            const foundColumn = _.find(foundTable.columns, {
+              name: column.name,
+            });
 
             if (foundColumn === undefined) {
               // Column does not exist.
@@ -263,31 +305,53 @@ class MainContainer extends Component {
                 // Property has been modified.
                 foundColumn.dataType = column.dataType;
                 // Add color scheme.
-                diffDbColors[`${table.name}-${column.name}-dataType-${column.dataType}`] = 'yellow';
-                backgroundColors[`${table.name}-${column.name}-dataType-${column.dataType}`] = false;
+                diffDbColors[
+                  `${table.name}-${column.name}-dataType-${column.dataType}`
+                ] = 'yellow';
+                backgroundColors[
+                  `${table.name}-${column.name}-dataType-${column.dataType}`
+                ] = false;
               }
 
               // Check not null constraint.
-              if (column.isNullable === false && column.isNullable !== foundColumn.isNullable) {
+              if (
+                column.isNullable === false
+                && column.isNullable !== foundColumn.isNullable
+              ) {
                 // Property has been modified.
                 foundColumn.isNullable = column.isNullable;
                 // Add color scheme.
-                diffDbColors[`${table.name}-${column.name}-nullable-${column.dataType}`] = 'green';
-                backgroundColors[`${table.name}-${column.name}-nullable-${column.dataType}`] = false;
+                diffDbColors[
+                  `${table.name}-${column.name}-nullable-${column.isNullable}`
+                ] = 'green';
+                backgroundColors[
+                  `${table.name}-${column.name}-nullable-${column.isNullable}`
+                ] = false;
               }
 
               // Check constraint types.
               if (column.constraintTypes !== undefined) {
                 column.constraintTypes.forEach((constraintType) => {
-                  if (foundColumn.constraintTypes === undefined || !foundColumn.constraintTypes.includes(constraintType)) {
+                  if (
+                    foundColumn.constraintTypes === undefined
+                    || !foundColumn.constraintTypes.includes(constraintType)
+                  ) {
                     // Property does not exist.
                     if (foundColumn.contstraintTypes === undefined) {
                       foundColumn.constraintTypes = [];
                     }
                     foundColumn.constraintTypes.push(constraintType);
                     // Add color scheme.
-                    diffDbColors[`${table.name}-${column.name}-constraintType-${constraintType}`] = 'green';
-                    backgroundColors[`${table.name}-${column.name}-constraintType-${constraintType}`] = false;
+                    diffDbColors[
+                      `${table.name}-${
+                        column.name
+                      }-constraintType-${constraintType}`
+                    ] = 'green';
+                    backgroundColors[
+                      `${table.name}-${
+                        column.name
+                      }-constraintType-${constraintType}`
+                    ] = false;
                   }
                 });
               }
@@ -328,38 +392,59 @@ class MainContainer extends Component {
           // Table exists.
           // Check columns.
           table.columns.forEach((column) => {
-            const foundColumn = _.find(foundTable.columns, { name: column.name });
+            const foundColumn = _.find(foundTable.columns, {
+              name: column.name,
+            });
 
             if (foundColumn === undefined) {
               // Column does not exist.
               // Add color scheme.
               diffDbColors[`${table.name}-${column.name}`] = 'red';
               backgroundColors[`${table.name}-${column.name}`] = false;
-            } 
-            else {
-            // else if (column.constraintTypes !== undefined) {
+            } else {
+              // else if (column.constraintTypes !== undefined) {
               // Column exists.
               // Check column properties.
               // Do not have to check if data type exists because all columns must have a data type.
 
-
               // Check not null constraint.
-              if (column.isNullable === false && column.isNullable !== foundColumn.isNullable) {
+              if (
+                column.isNullable === false
+                && column.isNullable !== foundColumn.isNullable
+              ) {
                 // Property has been modified.
-                foundColumn.isNullable = column.isNullable;
+
+                // Ge commented out below 1 line to test
+                // foundColumn.isNullable = column.isNullable;
+
                 // Add color scheme.
-                diffDbColors[`${table.name}-${column.name}-nullable-${column.dataType}`] = 'red';
-                backgroundColors[`${table.name}-${column.name}-nullable-${column.dataType}`] = false;
+                diffDbColors[
+                  `${table.name}-${column.name}-nullable-${column.isNullable}`
+                ] = 'red';
+                backgroundColors[
+                  `${table.name}-${column.name}-nullable-${column.isNullable}`
+                ] = false;
               }
 
               // Check constraint types.
               if (column.constraintTypes !== undefined) {
                 column.constraintTypes.forEach((constraintType) => {
-                  if (foundColumn.constraintTypes === undefined || !foundColumn.constraintTypes.includes(constraintType)) {
-                  // Property does not exist.
-                  // Add color scheme.
-                    diffDbColors[`${table.name}-${column.name}-constraintType-${constraintType}`] = 'red';
-                    backgroundColors[`${table.name}-${column.name}-constraintType-${constraintType}`] = false;
+                  if (
+                    foundColumn.constraintTypes === undefined
+                    || !foundColumn.constraintTypes.includes(constraintType)
+                  ) {
+                    // Property does not exist.
+                    // Add color scheme.
+                    diffDbColors[
+                      `${table.name}-${
+                        column.name
+                      }-constraintType-${constraintType}`
+                    ] = 'red';
+                    backgroundColors[
+                      `${table.name}-${
+                        column.name
+                      }-constraintType-${constraintType}`
+                    ] = false;
                   }
                 });
               }
@@ -388,70 +473,74 @@ class MainContainer extends Component {
 
     // Query new and current database for schema information.
     // Run diffing algorithm.
-    devDbConn.any(query2)
-    .then((schemaInfo) => {
+    devDbConn.any(query2).then((schemaInfo) => {
       devDb = setDbInfo('devDb', schemaInfo);
-      
+
       // inputLinkSchema1 = inputLinkSchema2;
-        prodDbConn.any(query)
-          .then((schemaInfo2) => {
-            prodDb = setDbInfo('prodDb', schemaInfo2);
-          })
+      prodDbConn
+        .any(query)
+        .then((schemaInfo2) => {
+          prodDb = setDbInfo('prodDb', schemaInfo2);
+        })
         // Determine differences between databases.
-          .then(() => {
-            diffDb = diffDatabases(devDb, prodDb);
+        .then(() => {
+          diffDb = diffDatabases(devDb, prodDb);
 
-            // Sort database arrays so that common tables appear first.
-            let commonTablesArray = [];
-            let differentTablesArray = [];
+          // Sort database arrays so that common tables appear first.
+          let commonTablesArray = [];
+          let differentTablesArray = [];
 
-            // Sort devDb.
-            devDb.forEach((table) => {
-              const foundTable = _.find(prodDb, { name: table.name });
+          // Sort devDb.
+          devDb.forEach((table) => {
+            const foundTable = _.find(prodDb, { name: table.name });
 
-              if (foundTable !== undefined) {
-                commonTablesArray.push(table);
-              } else {
-                differentTablesArray.push(table);
-              }
-            });
-
-            const sortedDevDb = commonTablesArray.concat(differentTablesArray);
-            commonTablesArray = [];
-            differentTablesArray = [];
-
-            // Sort prodDb.
-            prodDb.forEach((table) => {
-              const foundTable = _.find(devDb, { name: table.name });
-
-              if (foundTable !== undefined) {
-                commonTablesArray.push(table);
-              } else {
-                differentTablesArray.push(table);
-              }
-            });
-
-            const sortedProdDb = commonTablesArray.concat(differentTablesArray);
-            commonTablesArray = [];
-            differentTablesArray = [];
-
-            // Sort diffDb.
-            diffDb.forEach((table) => {
-              const foundTable1 = _.find(devDb, { name: table.name });
-              const foundTable2 = _.find(prodDb, { name: table.name });
-
-              if (foundTable1 !== undefined && foundTable2 !== undefined) {
-                commonTablesArray.push(table);
-              } else {
-                differentTablesArray.push(table);
-              }
-            });
-
-            const sortedDiffDb = commonTablesArray.concat(differentTablesArray);
-
-            this.setState({ devDb: sortedDevDb, prodDb: sortedProdDb, diffDb: sortedDiffDb });
+            if (foundTable !== undefined) {
+              commonTablesArray.push(table);
+            } else {
+              differentTablesArray.push(table);
+            }
           });
-      });
+
+          const sortedDevDb = commonTablesArray.concat(differentTablesArray);
+          commonTablesArray = [];
+          differentTablesArray = [];
+
+          // Sort prodDb.
+          prodDb.forEach((table) => {
+            const foundTable = _.find(devDb, { name: table.name });
+
+            if (foundTable !== undefined) {
+              commonTablesArray.push(table);
+            } else {
+              differentTablesArray.push(table);
+            }
+          });
+
+          const sortedProdDb = commonTablesArray.concat(differentTablesArray);
+          commonTablesArray = [];
+          differentTablesArray = [];
+
+          // Sort diffDb.
+          diffDb.forEach((table) => {
+            const foundTable1 = _.find(devDb, { name: table.name });
+            const foundTable2 = _.find(prodDb, { name: table.name });
+
+            if (foundTable1 !== undefined && foundTable2 !== undefined) {
+              commonTablesArray.push(table);
+            } else {
+              differentTablesArray.push(table);
+            }
+          });
+
+          const sortedDiffDb = commonTablesArray.concat(differentTablesArray);
+
+          this.setState({
+            devDb: sortedDevDb,
+            prodDb: sortedProdDb,
+            diffDb: sortedDiffDb,
+          });
+        });
+    });
   }
 
   setBackgroundColor(id) {
@@ -460,14 +549,6 @@ class MainContainer extends Component {
 
     backgroundColorsCopy[id] = !backgroundColorsCopy[id];
     this.setState({ backgroundColors: backgroundColorsCopy });
-  }
-
-  addScript(id, query) {
-    const { script } = this.state;
-    const scriptCopy = JSON.parse(JSON.stringify(script));
-
-    scriptCopy[id] = query;
-    this.setState({ script: scriptCopy });
   }
 
   changeDisplay(event) {
@@ -482,14 +563,48 @@ class MainContainer extends Component {
     this.setState({ [display]: true });
   }
 
+  addScript(id, query) {
+    const { script } = this.state;
+    const scriptCopy = JSON.parse(JSON.stringify(script));
+
+    scriptCopy[id] = query;
+    this.setState({ script: scriptCopy });
+  }
+
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = Object.assign({}, script);
-    console.log(scriptCopy,'OLD')
     delete scriptCopy[id];
-    console.log(scriptCopy,'NEW')
     this.setState({ script: scriptCopy });
   }
+
+  removeAllChanges() {
+    const backgroundColors = this.state;
+    const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
+
+    const ids = Object.keys(backgroundColorsCopy);
+
+    ids.forEach((id) => {
+      backgroundColorsCopy.id = false;
+    });
+
+    this.setState({ script: {}, backgroundColors: backgroundColorsCopy });
+    console.log('when remove, bg colors', this.state.backgroundColors)
+  }
+
+
+  addAllChanges(script) {
+    console.log(this.state.diffDbColors,'diffDB')
+    const { diffDbColors } = this.state;
+    const backgroundColorsCopy = JSON.parse(JSON.stringify(diffDbColors));
+    const ids = Object.keys(backgroundColorsCopy);
+    ids.forEach((id) => {
+      backgroundColorsCopy[id] = true;
+    });
+    this.setState({ script: script, backgroundColors: backgroundColorsCopy });
+    console.log('when add, bg: colors', this.state.backgroundColors);
+  }
+
 
   render() {
     const {
@@ -510,40 +625,63 @@ class MainContainer extends Component {
       addScript,
       removeScript,
       setBackgroundColor,
+      removeAllChanges,
+      addAllChanges,
     } = this;
 
     /* eslint-disable */
     return (
       <div>
-        <Nav bsStyle="tabs" onSelect={(k) => this.handleSelect(k)}>
-          <NavItem eventKey="1" onClick={(event) => {
-            console.log(this.props, 'workkk');
-            return this.props.history.push('/');
+        <button
+          onClick={event => {
+            return this.props.history.push("/");
           }}
-          >
-            Home
-          </NavItem>
-          <NavItem eventKey="2" id="devDbDisplay" onClick={(event) => { changeDisplay(event); }}>Dev DB</NavItem>
-          <NavItem eventKey="3" id="prodDbDisplay" onClick={(event) => { changeDisplay(event); }}>Prod DB</NavItem>
-          <NavItem eventKey="4" id="diffDbDisplay" onClick={(event) => { changeDisplay(event); }}>DB Diff</NavItem>
-          {/* <NavItem id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</NavItem> */}
-          </Nav>
-          {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
-          {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
-          {diffDbDisplay
-            ? (
-              <DiffDbDisplayContainer
-                db={diffDb}
-                diffDbColors={diffDbColors}
-                addScript={addScript}
-                removeScript={removeScript}
-                script={script}
-                backgroundColors={backgroundColors}
-                setBackgroundColor={setBackgroundColor}
-              />
-            )
-            : null}
-          {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
+        >
+          Home
+        </button>
+        <button
+          id="devDbDisplay"
+          onClick={event => {
+            changeDisplay(event);
+          }}
+        >
+          Dev DB
+        </button>
+        <button
+          id="prodDbDisplay"
+          onClick={event => {
+            changeDisplay(event);
+          }}
+        >
+          Prod DB
+        </button>
+        <button
+          id="diffDbDisplay"
+          onClick={event => {
+            changeDisplay(event);
+          }}
+        >
+          DB Diff
+        </button>
+        {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
+        {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
+        {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
+        {diffDbDisplay
+          ? (
+            <DiffDbDisplayContainer
+              db={diffDb}
+              diffDbColors={diffDbColors}
+              addScript={addScript}
+              removeScript={removeScript}
+              script={script}
+              backgroundColors={backgroundColors}
+              setBackgroundColor={setBackgroundColor}
+              removeAllChanges={removeAllChanges}
+              addAllChanges={addAllChanges}
+            />
+          )
+          : null}
+        {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
       </div>
     );
     /* eslint-enable */

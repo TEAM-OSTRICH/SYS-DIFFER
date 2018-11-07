@@ -11,6 +11,8 @@ const DiffDbDisplayContainer = (props) => {
     script,
     backgroundColors,
     setBackgroundColor,
+    removeAllChanges,
+    addAllChanges,
   } = props;
 
   const tables = db.map(tableInfo => (
@@ -30,7 +32,16 @@ const DiffDbDisplayContainer = (props) => {
       <div id="dbDisplayContainer">
         {tables}
       </div>
-      <ScriptContainer script={script} />
+      <ScriptContainer
+        script={script}
+        removeAllChanges={removeAllChanges}
+        db={db}
+        diffDbColors={diffDbColors}
+        addScript={addScript}
+        backgroundColors={backgroundColors}
+        setBackgroundColor={setBackgroundColor}
+        addAllChanges={addAllChanges}
+      />
     </div>
   );
 };

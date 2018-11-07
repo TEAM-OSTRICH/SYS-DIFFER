@@ -12,8 +12,8 @@ class App extends Component {
       // u2: '',
       input1: '',
       input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      inputLinkSchema1: 'public',
+      inputLinkSchema2: 'public',
 
       inputObj1User: '',
       inputObj1Pass: '',
@@ -78,120 +78,120 @@ class App extends Component {
     console.log(event, 'no');
     this.setState({
       inputObj1User: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput1pass(event) {
     this.setState({
       inputObj1Pass: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput1host(event) {
     this.setState({
       inputObj1Host: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput1port(event) {
     this.setState({
       inputObj1Port: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput1dbname(event) {
     this.setState({
       inputObj1Dbname: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput1schema(event) {
     this.setState({
       inputObj1Schema: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput2user(event) {
     this.setState({
       inputObj2User: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput2pass(event) {
     this.setState({
       inputObj2Pass: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput2host(event) {
     this.setState({
       inputObj2Host: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput2port(event) {
     this.setState({
       inputObj2Port: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput2dbname(event) {
     this.setState({
       inputObj2Dbname: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
   changeInput2schema(event) {
     this.setState({
       inputObj2Schema: event.target.value,
-      input1: '',
-      input2: '',
-      inputLinkSchema1: '',
-      inputLinkSchema2: '',
+      // input1: '',
+      // input2: '',
+      // inputLinkSchema1: '',
+      // inputLinkSchema2: '',
     });
   }
 
