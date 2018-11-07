@@ -5,7 +5,7 @@ const ScriptDisplay = (props) => {
   let scriptString = '';
 
   Object.values(script).map((query) => {
-    scriptString += `${query} \n`;
+    scriptString += `${query}\n\n`;
   });
 
   return (

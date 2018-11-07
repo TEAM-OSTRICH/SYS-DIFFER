@@ -79,7 +79,7 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
       return columnString;
     }
     // Must be 'red' so delete a column
-    return `ALTER TABLE ${tableName} DROP COLUMN ${name};/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`;
+    return `ALTER TABLE ${tableName} DROP COLUMN ${name};\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`;
   }
 
   // Four query params means add or delete data-type or constraint

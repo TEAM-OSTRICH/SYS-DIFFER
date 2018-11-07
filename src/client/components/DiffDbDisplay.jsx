@@ -98,7 +98,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           addScript(id, columnString);
         } else {
           // Must be 'red' so delete a column
-          addScript(id, `ALTER TABLE ${tableName} DROP COLUMN ${name};/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`);
+          addScript(id, `ALTER TABLE ${tableName} DROP COLUMN ${name};\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`);
         }
       }
       // Four query params means add or delete data-type or constraint
@@ -117,7 +117,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
         }
         if (queryParams[2] === 'dataType') {
           // add a dataType
-          addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} TYPE ${dataType}();`);
+          addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} TYPE ${dataType};`);
         }
         if (queryParams[2] === 'nullable') {
           console.log(diffDbColors[id]);
