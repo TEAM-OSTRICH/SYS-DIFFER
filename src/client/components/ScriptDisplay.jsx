@@ -10,8 +10,7 @@ const ScriptDisplay = (props) => {
 
   return (
     <div>
-      <h4><a href="#scriptTextArea" data-toggle="collapse">Scripts</a></h4>
-      <textarea id="scriptTextArea" className="collapse in" value={scriptString} readOnly />
+      <textarea id="scriptTextArea" value={scriptString} readOnly />
     </div>
   );
 };

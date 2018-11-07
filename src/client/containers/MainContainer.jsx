@@ -4,7 +4,6 @@ import { NavLink, Redirect, withRouter } from 'react-router-dom';
 import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
 import ScriptContainer from './ScriptContainer.jsx';
-import { Nav, NavItem } from 'react-bootstrap';
 
 const initOptions = {
   connect(client, dc, useCount) {
@@ -619,14 +618,8 @@ class MainContainer extends Component {
       diffDbColors,
       backgroundColors,
     } = this.state;
-
     const {
-      changeDisplay,
-      addScript,
-      removeScript,
-      setBackgroundColor,
-      removeAllChanges,
-      addAllChanges,
+      changeDisplay, addScript, removeScript, setBackgroundColor, removeAllChanges, addAllChanges,
     } = this;
 
     /* eslint-disable */
