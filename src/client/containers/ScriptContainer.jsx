@@ -10,7 +10,7 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
   // One query parameter means add or delete a table.
   if (queryParams.length === 1) {
     const { name, columns } = tableInfo;
-    if (diffDbColors[id] === 'green') {
+    if (diffDbColors[id] === 'darkseagreen') {
       // Add a table.
       let columnString = '';
 
@@ -48,7 +48,7 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
 
       // Add script to create a table.
       return `CREATE TABLE "${name}" (${columnString});`;
-    } if (diffDbColors[id] === 'red') {
+    } if (diffDbColors[id] === 'indianred') {
       // Add script to delete a table.
       return `DROP TABLE "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`;
     }
@@ -63,7 +63,7 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
 
     let columnString = `ALTER TABLE "${tableName}" `;
 
-    if (diffDbColors[id] === 'green') {
+    if (diffDbColors[id] === 'darkseagreen') {
       // Add a column
       columnString += `ADD COLUMN "${name}" ${dataType}`;
 
@@ -89,7 +89,7 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
 
       return columnString;
     }
-    // Must be 'red' so delete a column
+    // Must be 'indianred' so delete a column
     return `ALTER TABLE "${tableName}" DROP COLUMN "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`;
   }
 
@@ -102,7 +102,7 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
     if (queryParams[2] === 'constraintType') {
       let columnString = `ALTER TABLE "${tableName}" `;
 
-      if (diffDbColors[id] === 'green') {
+      if (diffDbColors[id] === 'darkseagreen') {
         // add a constraint
         columnString += 'ADD';
 
@@ -129,7 +129,7 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
 
     // Add or remove NOT NULL constraint.
     if (queryParams[2] === 'nullable') {
-      if (diffDbColors[id] === 'green') {
+      if (diffDbColors[id] === 'darkseagreen') {
         // add a "NOT NULL"
         console.log('kill myself');
         return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" SET NOT NULL;`;

@@ -14,8 +14,89 @@
     </head>
 
     <body>
+        <!-- the whole "title-bar" div is ge's homemade window bar -->
+        <div id="title-bar">
+            <div id="title">
+                <span style="vertical-align: middle;">
+                    <img src="./../assets/5pSf.gif" style="width:20px;height:20px;"/>
+                </span>
+                Chrisdiffer
+            </div>
+            <div id="title-bar-btns">
+                <button class="prettierBtn" id="close-btn">
+                  <span id="close-span">x</span>
+                </button>
+                <button class="prettierBtn" id="min-btn">
+                  <span id="min-span">-</span>
+                </button>
+                <button class="prettierBtn" id="max-btn">
+                  <span id="max-span">+</span>
+                </button>
+            </div>
+        </div>
+
         <div id="app"></div>
         <script src='./../dist/bundle.js'></script>
+
+        <!-- ge's homemade window bar's logic -->
+        <script>
+            (function () {
+                // Retrieve remote BrowserWindow
+                const {BrowserWindow} = require('electron').remote
+
+                function init() {
+                    // Minimize task
+                    document.getElementById("min-btn").addEventListener("click", (e) => {
+                        var window = BrowserWindow.getFocusedWindow();
+                        window.minimize();
+                    });
+
+                    // Maximize window
+                    document.getElementById("max-btn").addEventListener("click", (e) => {
+                        var window = BrowserWindow.getFocusedWindow();
+                        if(window.isMaximized()){
+                            window.unmaximize();
+                        }else{
+                            window.maximize();
+                        }
+                    });
+
+                    // Close app
+                    document.getElementById("close-btn").addEventListener("click", (e) => {
+                        var window = BrowserWindow.getFocusedWindow();
+                        window.close();
+                    });
+                };
+
+                document.onreadystatechange =  () => {
+                    if (document.readyState == "complete") {
+                        init();
+                    }
+                };
+            })();
+        </script>
+        <script>
+           
+                // function whatever() {
+                //     const test = document.getElementsByClassName("toggleScript");
+                //     console.log('kevin',test[0])
+                //     console.log(test);
+                //     console.log(Object.keys(test));
+                // }
+                // setTimeout(whatever,10000);
+            
+            // document.addEventListener('DOMContentLoaded', () => {
+
+            //     const test = document.getElementById("toggleScript");
+            //     console.log(test)
+            // })
+            // document.getElementsByClassName('toggleScript')[0].addEventListener("click", (e) => {
+            //     console.log('toggled')
+            // //  $('#DiffDbDisplayContainer').css({
+            // //     'grid-template-columns':'',
+            // //  });
+            // });
+        </script>
     </body>
 
 </html>

@@ -280,7 +280,7 @@ class MainContainer extends Component {
           // Table does not exist.
           diffDb.push(table);
           // Add color scheme.
-          diffDbColors[`${table.name}`] = 'green';
+          diffDbColors[`${table.name}`] = 'darkseagreen';
           backgroundColors[`${table.name}`] = false;
         } else {
           // Table exists.
@@ -294,7 +294,7 @@ class MainContainer extends Component {
               // Column does not exist.
               foundTable.columns.push(column);
               // Add color scheme.
-              diffDbColors[`${table.name}-${column.name}`] = 'green';
+              diffDbColors[`${table.name}-${column.name}`] = 'darkseagreen';
               backgroundColors[`${table.name}-${column.name}`] = false;
             } else {
               // Column exists.
@@ -323,7 +323,7 @@ class MainContainer extends Component {
                 // Add color scheme.
                 diffDbColors[
                   `${table.name}-${column.name}-nullable-${column.isNullable}`
-                ] = 'green';
+                ] = 'darkseagreen';
                 backgroundColors[
                   `${table.name}-${column.name}-nullable-${column.isNullable}`
                 ] = false;
@@ -346,7 +346,7 @@ class MainContainer extends Component {
                       `${table.name}-${
                         column.name
                       }-constraintType-${constraintType}`
-                    ] = 'green';
+                    ] = 'darkseagreen';
                     backgroundColors[
                       `${table.name}-${
                         column.name
@@ -364,7 +364,7 @@ class MainContainer extends Component {
               //     // Property does not exist.
               //     foundColumn[key] = column[key];
               //     // Add color scheme.
-              //     diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'green';
+              //     diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'darkseagreen';
               //     backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
               //   } else if (foundColumn[key] !== column[key]) {
               //     // Property has been modified.
@@ -386,7 +386,7 @@ class MainContainer extends Component {
         if (foundTable === undefined) {
           // Table does not exist.
           // Add color scheme.
-          diffDbColors[`${table.name}`] = 'red';
+          diffDbColors[`${table.name}`] = 'indianred';
           backgroundColors[`${table.name}`] = false;
         } else {
           // Table exists.
@@ -399,7 +399,7 @@ class MainContainer extends Component {
             if (foundColumn === undefined) {
               // Column does not exist.
               // Add color scheme.
-              diffDbColors[`${table.name}-${column.name}`] = 'red';
+              diffDbColors[`${table.name}-${column.name}`] = 'indianred';
               backgroundColors[`${table.name}-${column.name}`] = false;
             } else {
               // else if (column.constraintTypes !== undefined) {
@@ -420,7 +420,7 @@ class MainContainer extends Component {
                 // Add color scheme.
                 diffDbColors[
                   `${table.name}-${column.name}-nullable-${column.isNullable}`
-                ] = 'red';
+                ] = 'indianred';
                 backgroundColors[
                   `${table.name}-${column.name}-nullable-${column.isNullable}`
                 ] = false;
@@ -439,7 +439,7 @@ class MainContainer extends Component {
                       `${table.name}-${
                         column.name
                       }-constraintType-${constraintType}`
-                    ] = 'red';
+                    ] = 'indianred';
                     backgroundColors[
                       `${table.name}-${
                         column.name
@@ -455,7 +455,7 @@ class MainContainer extends Component {
               //   if (foundColumn[key] === undefined) {
               //     // Property does not exist.
               //     // Add color scheme.
-              //     diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'red';
+              //     diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'indianred';
               //     backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
               //   }
               // });
@@ -630,59 +630,61 @@ class MainContainer extends Component {
       <div>
         <div id="loading-screen" style={{visibility: showLoadingScreen ? 'visible' : 'hidden'}}>
           <div id="loading-box">
-            <h1 className="blinking" id="loading-message">Loading...</h1>
+            <h1 className="blinking" id="loading-message">Loading... </h1>
           </div>
         </div>
-        <button
-          onClick={event => {
-            return this.props.history.push("/");
-          }}
-        >
-          Home
-        </button>
-        <button
-          id="devDbDisplay"
-          onClick={event => {
-            changeDisplay(event);
-          }}
-        >
-          Dev DB
-        </button>
-        <button
-          id="prodDbDisplay"
-          onClick={event => {
-            changeDisplay(event);
-          }}
-        >
-          Prod DB
-        </button>
-        <button
-          id="diffDbDisplay"
-          onClick={event => {
-            changeDisplay(event);
-          }}
-        >
-          DB Diff
-        </button>
-        {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
-        {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
-        {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
-        {diffDbDisplay
-          ? (
-            <DiffDbDisplayContainer
-              db={diffDb}
-              diffDbColors={diffDbColors}
-              addScript={addScript}
-              removeScript={removeScript}
-              script={script}
-              backgroundColors={backgroundColors}
-              setBackgroundColor={setBackgroundColor}
-              removeAllChanges={removeAllChanges}
-              addAllChanges={addAllChanges}
-            />
-          )
-          : null}
-        {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
+        <div className="mainContainerBtns">
+          <button
+            onClick={event => {
+              return this.props.history.push("/");
+            }}
+          >
+            Home
+          </button>
+          <button
+            id="devDbDisplay"
+            onClick={event => {
+              changeDisplay(event);
+            }}
+          >
+            Dev DB
+          </button>
+          <button
+            id="prodDbDisplay"
+            onClick={event => {
+              changeDisplay(event);
+            }}
+          >
+            Prod DB
+          </button>
+          <button
+            id="diffDbDisplay"
+            onClick={event => {
+              changeDisplay(event);
+            }}
+          >
+            DB Diff
+          </button>
+          {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
+          {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
+          {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
+          {diffDbDisplay
+            ? (
+              <DiffDbDisplayContainer
+                db={diffDb}
+                diffDbColors={diffDbColors}
+                addScript={addScript}
+                removeScript={removeScript}
+                script={script}
+                backgroundColors={backgroundColors}
+                setBackgroundColor={setBackgroundColor}
+                removeAllChanges={removeAllChanges}
+                addAllChanges={addAllChanges}
+              />
+            )
+            : null}
+          {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
+        </div>
       </div>
     );
     /* eslint-enable */

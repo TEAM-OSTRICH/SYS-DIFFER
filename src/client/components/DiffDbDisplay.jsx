@@ -14,7 +14,6 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
     id = parentNode.id;
     target = parentNode;
   }
-
   if (diffDbColors[id] !== undefined) {
     if (target.style.backgroundColor === diffDbColors[id]) {
       // Background color is set meaning change is selected.
@@ -32,7 +31,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
       // One query parameter means add or delete a table.
       if (queryParams.length === 1) {
         const { name, columns } = tableInfo;
-        if (diffDbColors[id] === 'green') {
+        if (diffDbColors[id] === 'darkseagreen') {
           // Add a table.
           let columnString = '';
 
@@ -69,8 +68,8 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           columnString = columnString.slice(0, columnString.length - 2);
 
           // Add script to create a table.
-          addScript(id, `CREATE TABLE "${name}" (${columnString});`);
-        } else if (diffDbColors[id] === 'red') {
+          addScript(id, `CREATE TABLE ${name} (${columnString});`);
+        } else if (diffDbColors[id] === 'indianred') {
           // Add script to delete a table.
           addScript(id, `DROP TABLE "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`);
         }
@@ -82,10 +81,8 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           name, dataType, isNullable, constraintTypes,
         } = column;
         const tableName = tableInfo.name;
-
         let columnString = `ALTER TABLE "${tableName}" `;
-
-        if (diffDbColors[id] === 'green') {
+        if (diffDbColors[id] === 'darkseagreen') {
           // Add a column
           columnString += `ADD COLUMN "${name}" ${dataType}`;
 
@@ -111,7 +108,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
 
           addScript(id, columnString);
         } else {
-          // Must be 'red' so delete a column
+          // Must be 'indianred' so delete a column
           addScript(id, `ALTER TABLE "${tableName}" DROP COLUMN "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`);
         }
       }
@@ -125,7 +122,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
         if (queryParams[2] === 'constraintType') {
           let columnString = `ALTER TABLE "${tableName}" `;
 
-          if (diffDbColors[id] === 'green') {
+          if (diffDbColors[id] === 'darkseagreen') {
             // add a constraint
             columnString += 'ADD';
 
@@ -153,7 +150,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
 
         // Add or remove NOT NULL constraint.
         if (queryParams[2] === 'nullable') {
-          if (diffDbColors[id] === 'green') {
+          if (diffDbColors[id] === 'darkseagreen') {
             // add a "NOT NULL"
             console.log('kill myself');
             addScript(id, `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" SET NOT NULL;`);
@@ -173,10 +170,10 @@ const DiffDbDisplay = (props) => {
     tableInfo, diffDbColors, addScript, removeScript, backgroundColors, setBackgroundColor,
   } = props;
   const { name, columns } = tableInfo;
-
 /* eslint-disable */
   return (
-    // <ul className="list-group-item">
+    <div>      
+    {/* // <ul className="list-group-item"> */}
     <ul>
       <li
         id={name}
@@ -288,6 +285,7 @@ const DiffDbDisplay = (props) => {
         </li>))
       }
     </ul>
+    </div>
   );
   /* eslint-enable */
 };
