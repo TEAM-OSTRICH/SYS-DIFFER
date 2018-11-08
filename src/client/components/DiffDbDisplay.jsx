@@ -14,23 +14,21 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
     id = parentNode.id;
     target = parentNode;
   }
-  console.log(id, diffDbColors[id]);
-  console.log('e.t.s.b', event.target.style.backgroundColor, 'id', event.target.id, 'k', diffDbColors[id], 'scared');
+
   if (diffDbColors[id] !== undefined) {
     if (target.style.backgroundColor === diffDbColors[id]) {
-      // Background color is set meaning change is selected so deselect change and remove query from script.
-      // target.style.backgroundColor = null;
-      removeScript(id);
-      console.log(id, 'id');
+      // Background color is set meaning change is selected.
+      // Deselect change and remove query from script.
       setBackgroundColor(id);
+      removeScript(id);
     } else {
       // Select change.
-      // target.style.backgroundColor = diffDbColors[id];
       setBackgroundColor(id);
 
       // Create query.
+      // Determine type of query from id.
       const queryParams = id.split('-');
-      console.log(queryParams, 'params');
+
       // One query parameter means add or delete a table.
       if (queryParams.length === 1) {
         const { name, columns } = tableInfo;
@@ -38,13 +36,21 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           // Add a table.
           let columnString = '';
 
-          columns.forEach((column, index) => {
-            const { name, dataType, constraintTypes } = column;
+          // Build columns part of query.
+          columns.forEach((column) => {
+            const {
+              name, dataType, isNullable, constraintTypes,
+            } = column;
 
-            columnString += `${name} ${dataType}`;
+            columnString += `"${name}" ${dataType}`;
+
+            // Add NOT NULL constraint if it exists.
+            if (!isNullable) {
+              columnString += ' NOT NULL';
+            }
 
             if (constraintTypes !== undefined) {
-              // Add all constraint types.
+              // Loop through and add all constraint types.
               constraintTypes.forEach((constraintType) => {
                 if (constraintType.includes('REFERENCES')) {
                   const constraintTypeArray = constraintType.split(' ');
@@ -57,78 +63,104 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
             }
 
             columnString += ', ';
-
-            // if (constraintType.includes('REFERENCES')) {
-            //   console.log(constraintType);
-            //   const constraintTypeArray = constraintType.split(' ');
-            //   console.log(constraintTypeArray);
-            //   const foreignKey = `${constraintTypeArray[0]} ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
-            //   columnString += `${name} ${dataType} ${foreignKey}, `;
-            // } else {
-            //   columnString += `${name} ${dataType} ${constraintType}, `;
-            // }
           });
 
           // Remove last comma.
           columnString = columnString.slice(0, columnString.length - 2);
 
           // Add script to create a table.
-          addScript(id, `CREATE TABLE ${name} (${columnString});`);
+          addScript(id, `CREATE TABLE "${name}" (${columnString});`);
         } else if (diffDbColors[id] === 'red') {
           // Add script to delete a table.
-          addScript(id, `DROP TABLE ${name};`);
+          addScript(id, `DROP TABLE "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`);
         }
       }
+
       // Two query params means add or delete column from table
       if (queryParams.length === 2) {
-        // console.log('tableInfo', tableInfo);
-        const { name, dataType, constraintType } = column;
+        const {
+          name, dataType, isNullable, constraintTypes,
+        } = column;
         const tableName = tableInfo.name;
-        let columnString = `ALTER TABLE ${tableName} `;
+
+        let columnString = `ALTER TABLE "${tableName}" `;
+
         if (diffDbColors[id] === 'green') {
           // Add a column
-          columnString += `ADD COLUMN ${name}`;
-          if (dataType) {
-            columnString += ` ${dataType}`;
+          columnString += `ADD COLUMN "${name}" ${dataType}`;
+
+          // Add NOT NULL constraint if it exists.
+          if (!isNullable) {
+            columnString += ' NOT NULL';
           }
-          if (constraintType) {
-            columnString += ` ${constraintType}`;
+
+          if (constraintTypes !== undefined) {
+            // Loop through and add all constraint types.
+            constraintTypes.forEach((constraintType) => {
+              if (constraintType.includes('REFERENCES')) {
+                const constraintTypeArray = constraintType.split(' ');
+                const foreignKey = ` ${constraintTypeArray[0]} ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
+                columnString += `${foreignKey}`;
+              } else {
+                columnString += ` ${constraintType}`;
+              }
+            });
           }
+
           columnString += ';';
+
           addScript(id, columnString);
         } else {
           // Must be 'red' so delete a column
-          addScript(id, `ALTER TABLE ${tableName} DROP COLUMN ${name};\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`);
+          addScript(id, `ALTER TABLE "${tableName}" DROP COLUMN "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`);
         }
       }
+
       // Four query params means add or delete data-type or constraint
       if (queryParams.length === 4) {
-        // console.log('queryParams', queryParams);
-        const { name, dataType, constraintType } = column;
+        const { name, dataType } = column;
         const tableName = tableInfo.name;
+
+        // Add or remove a constraint.
         if (queryParams[2] === 'constraintType') {
+          let columnString = `ALTER TABLE "${tableName}" `;
+
           if (diffDbColors[id] === 'green') {
             // add a constraint
-            addScript(id, `ALTER TABLE ${tableName} ADD ${constraintType}(${name});`);
+            columnString += 'ADD';
+
+            if (queryParams[3].includes('REFERENCES')) {
+              const constraintTypeArray = queryParams[3].split(' ');
+              const foreignKey = ` FOREIGN KEY (${queryParams[1]}) REFERENCES ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
+
+              columnString += `${foreignKey}`;
+            } else {
+              columnString += ` ${queryParams[3]} ("${name}");`;
+            }
+            addScript(id, columnString);
           } else {
             // remove a constraint
-            addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} DROP ${constraintType};`);
+            columnString += `ALTER COLUMN "${name}" DROP ${queryParams[3]};`;
+            addScript(id, columnString);
           }
         }
+
+        // Modify a data type.
         if (queryParams[2] === 'dataType') {
           // add a dataType
-          addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} TYPE ${dataType};`);
+          addScript(id, `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" TYPE ${dataType};`);
         }
+
+        // Add or remove NOT NULL constraint.
         if (queryParams[2] === 'nullable') {
-          console.log(diffDbColors[id]);
           if (diffDbColors[id] === 'green') {
             // add a "NOT NULL"
             console.log('kill myself');
-            addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} SET NOT NULL;`);
+            addScript(id, `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" SET NOT NULL;`);
           } else {
-            console.log('die');
             // remove a "NOT NULL"
-            addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} DROP NOT NULL;`);
+            console.log('die');
+            addScript(id, `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" DROP NOT NULL;`);
           }
         }
       }

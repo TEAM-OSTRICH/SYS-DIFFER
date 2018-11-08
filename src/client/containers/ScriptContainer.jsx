@@ -4,10 +4,6 @@ import ScriptDisplay from '../components/ScriptDisplay.jsx';
 
 const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo, column) => {
   // Select change.
-
-  // GE commented below 1 line out just to test
-  // setBackgroundColor(id);
-
   // Create query.
   const queryParams = id.split('-');
 
@@ -18,13 +14,21 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
       // Add a table.
       let columnString = '';
 
-      columns.forEach((column, index) => {
-        const { name, dataType, constraintTypes } = column;
+      // Build columns part of query.
+      columns.forEach((column) => {
+        const {
+          name, dataType, isNullable, constraintTypes,
+        } = column;
 
-        columnString += `${name} ${dataType}`;
+        columnString += `"${name}" ${dataType}`;
+
+        // Add NOT NULL constraint if it exists.
+        if (!isNullable) {
+          columnString += ' NOT NULL';
+        }
 
         if (constraintTypes !== undefined) {
-          // Add all constraint types.
+          // Loop through and add all constraint types.
           constraintTypes.forEach((constraintType) => {
             if (constraintType.includes('REFERENCES')) {
               const constraintTypeArray = constraintType.split(' ');
@@ -37,76 +41,102 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
         }
 
         columnString += ', ';
-
-        // if (constraintType.includes('REFERENCES')) {
-        //   console.log(constraintType);
-        //   const constraintTypeArray = constraintType.split(' ');
-        //   console.log(constraintTypeArray);
-        //   const foreignKey = `${constraintTypeArray[0]} ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
-        //   columnString += `${name} ${dataType} ${foreignKey}, `;
-        // } else {
-        //   columnString += `${name} ${dataType} ${constraintType}, `;
-        // }
       });
 
       // Remove last comma.
       columnString = columnString.slice(0, columnString.length - 2);
 
       // Add script to create a table.
-      return `CREATE TABLE ${name} (${columnString});`;
+      return `CREATE TABLE "${name}" (${columnString});`;
     } if (diffDbColors[id] === 'red') {
       // Add script to delete a table.
-      return `DROP TABLE ${name};`;
+      return `DROP TABLE "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`;
     }
   }
 
   // Two query params means add or delete column from table
   if (queryParams.length === 2) {
-    // console.log('tableInfo', tableInfo);
-    const { name, dataType, constraintType } = column;
+    const {
+      name, dataType, isNullable, constraintTypes,
+    } = column;
     const tableName = tableInfo.name;
-    let columnString = `ALTER TABLE ${tableName} `;
+
+    let columnString = `ALTER TABLE "${tableName}" `;
+
     if (diffDbColors[id] === 'green') {
       // Add a column
-      columnString += `ADD COLUMN ${name}`;
-      if (dataType) {
-        columnString += ` ${dataType}`;
+      columnString += `ADD COLUMN "${name}" ${dataType}`;
+
+      // Add NOT NULL constraint if it exists.
+      if (!isNullable) {
+        columnString += ' NOT NULL';
       }
-      if (constraintType) {
-        columnString += ` ${constraintType}`;
+
+      if (constraintTypes !== undefined) {
+        // Loop through and add all constraint types.
+        constraintTypes.forEach((constraintType) => {
+          if (constraintType.includes('REFERENCES')) {
+            const constraintTypeArray = constraintType.split(' ');
+            const foreignKey = ` ${constraintTypeArray[0]} ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
+            columnString += `${foreignKey}`;
+          } else {
+            columnString += ` ${constraintType}`;
+          }
+        });
       }
+
       columnString += ';';
+
       return columnString;
     }
     // Must be 'red' so delete a column
-    return `ALTER TABLE ${tableName} DROP COLUMN ${name};\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`;
+    return `ALTER TABLE "${tableName}" DROP COLUMN "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`;
   }
 
   // Four query params means add or delete data-type or constraint
   if (queryParams.length === 4) {
-    // console.log('queryParams', queryParams);
-    const { name, dataType, constraintType } = column;
+    const { name, dataType } = column;
     const tableName = tableInfo.name;
+
+    // Add or remove a constraint.
     if (queryParams[2] === 'constraintType') {
+      let columnString = `ALTER TABLE "${tableName}" `;
+
       if (diffDbColors[id] === 'green') {
         // add a constraint
-        return `ALTER TABLE ${tableName} ADD ${constraintType}(${name});`;
+        columnString += 'ADD';
+
+        if (queryParams[3].includes('REFERENCES')) {
+          const constraintTypeArray = queryParams[3].split(' ');
+          const foreignKey = ` FOREIGN KEY (${queryParams[1]}) REFERENCES ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
+
+          columnString += `${foreignKey}`;
+        } else {
+          columnString += ` ${queryParams[3]} ("${name}");`;
+        }
+        return columnString;
       }
       // remove a constraint
-      return `ALTER TABLE ${tableName} ALTER COLUMN ${name} DROP ${constraintType};`;
+      columnString += `ALTER COLUMN "${name}" DROP ${queryParams[3]};`;
+      return columnString;
     }
+
+    // Modify a data type.
     if (queryParams[2] === 'dataType') {
       // add a dataType
-      return `ALTER TABLE ${tableName} ALTER COLUMN ${name} TYPE ${dataType}();`;
+      return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" TYPE ${dataType};`;
     }
+
+    // Add or remove NOT NULL constraint.
     if (queryParams[2] === 'nullable') {
-      console.log(diffDbColors[id]);
       if (diffDbColors[id] === 'green') {
         // add a "NOT NULL"
-        return `ALTER TABLE ${tableName} ALTER COLUMN ${name} SET NOT NULL;`;
+        console.log('kill myself');
+        return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" SET NOT NULL;`;
       }
       // remove a "NOT NULL"
-      return `ALTER TABLE ${tableName} ALTER COLUMN ${name} DROP NOT NULL;`;
+      console.log('die');
+      return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" DROP NOT NULL;`;
     }
   }
 };
@@ -118,7 +148,6 @@ const selectAll = (db, diffDbColors, addScript, backgroundColors, setBackgroundC
   // Loop through all ids of backgroundColors and select changes.
 
   ids.forEach((id) => {
-    // if (backgroundColors[id] === false) {
     const idArray = id.split('-');
     const tableName = idArray[0];
     const foundTable = _.find(db, { name: tableName });
@@ -130,29 +159,62 @@ const selectAll = (db, diffDbColors, addScript, backgroundColors, setBackgroundC
       const foundColumn = _.find(foundTable.columns, { name: columnName });
       script[id] = handleClick(id, diffDbColors, addScript, setBackgroundColor, foundTable, foundColumn);
     }
-    // }
-    console.log(id, script[id]);
   });
-  console.log(script, 'script');
+
   addAllChanges(script);
 };
 
-const ScriptContainer = (props) => {
-  const {
-    script, removeAllChanges, db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges,
-  } = props;
-  return (
-    <div id="scriptContainer">
-      Script
-      <ScriptDisplay script={script} />
-      <button onClick={() => { selectAll(db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges); }
-      }
-      >
-      Add All
-      </button>
-      <button onClick={removeAllChanges}>Remove All</button>
-    </div>
-  );
-};
+// const ScriptContainer = (props) => {
+//   const {
+//     script, removeAllChanges, db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges,
+//   } = props;
+
+//   return (
+//     <div id="scriptContainer" ref="scriptContainer">
+//       Script
+//       <ScriptDisplay script={script} />
+//       <button onClick={() => { selectAll(db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges); }
+//       }
+//       >
+//       Add All
+//       </button>
+//       <button onClick={removeAllChanges}>Remove All</button>
+//     </div>
+//   );
+// };
+
+class ScriptContainer extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  toggleShowScript() {
+    if (ReactDOM.findDOMNode(this.refs.diffDbDisplayContainer).id === 'diffDbDisplayContainer') {
+      ReactDOM.findDOMNode(this.refs.diffDbDisplayContainer).id = 'hideScriptBox';
+    } else {
+      ReactDOM.findDOMNode(this.refs.diffDbDisplayContainer).id = 'diffDbDisplayContainer';
+    }
+  }
+
+  render() {
+    const {
+      script, removeAllChanges, db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges,
+    } = this.props;
+
+    return (
+      <div id="scriptContainer" ref="scriptContainer">
+        Script
+
+        <ScriptDisplay script={script} />
+        <button onClick={() => { selectAll(db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges); }
+        }
+        >
+        Add All
+        </button>
+        <button onClick={removeAllChanges}>Remove All</button>
+      </div>
+    );
+  }
+}
 
 export default ScriptContainer;

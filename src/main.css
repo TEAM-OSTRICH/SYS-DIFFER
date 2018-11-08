@@ -30,10 +30,16 @@
                                 supported by Chrome and Opera */
 }
 
-#DiffDbDisplayContainer {
+#diffDbDisplayContainer {
   display: grid;
   /* background-color: red; */
   grid-template-columns: 1fr 1fr;
+}
+
+#hideScriptBox {
+  display: grid;
+  /* background-color: red; */
+  grid-template-columns: 1fr;
 }
 
 span {
@@ -182,4 +188,58 @@ ul {
 .alert-hidden {
   opacity: 0;
   transition: all 250ms linear;
+}
+
+.missing-fields-msg {
+  text-align: center;
+  margin: 10px 20%;
+  padding: 10px 10px;
+  grid-column: 1 / 3;
+  position: relative;
+  z-index: 2;
+}
+
+.connection-failed-msg {
+  text-align: center;
+  margin: 10px 20%;
+  padding: 10px 10px;
+  grid-column: 1 / 3;
+  position: relative;
+  z-index: 2;
+}
+
+#loading-screen {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#loading-box {
+  background-color: lightyellow;
+  z-index: 5;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+#loading-message {
+  color: plum;
+}
+
+.blinking {
+  animation: blinkingText 2s linear infinite;
+}
+
+@keyframes blinkingText {
+  50% {
+    opacity: 0;
+  }
 }
