@@ -140,10 +140,10 @@ const DiffDbDisplay = (props) => {
     tableInfo, diffDbColors, addScript, removeScript, backgroundColors, setBackgroundColor,
   } = props;
   const { name, columns } = tableInfo;
-
 /* eslint-disable */
   return (
-    // <ul className="list-group-item">
+    <div>      
+    {/* // <ul className="list-group-item"> */}
     <ul>
       <li
         id={name}
@@ -255,6 +255,7 @@ const DiffDbDisplay = (props) => {
         </li>))
       }
     </ul>
+    </div>
   );
   /* eslint-enable */
 };

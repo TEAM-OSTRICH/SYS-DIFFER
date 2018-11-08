@@ -20,8 +20,9 @@ const DiffDbDisplayContainer = (props) => {
   ));
 
   return (
+    <div>
     <div id="DiffDbDisplayContainer">
-      <div id="dbDisplayContainer">
+      <div id="dbDisplayContainer" >
         {tables}
       </div>
       <ScriptContainer
@@ -34,6 +35,7 @@ const DiffDbDisplayContainer = (props) => {
         setBackgroundColor={setBackgroundColor}
         addAllChanges={addAllChanges}
       />
+    </div>
     </div>
   );
 };

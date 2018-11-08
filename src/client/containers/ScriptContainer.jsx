@@ -38,15 +38,15 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
 
         columnString += ', ';
 
-        // if (constraintType.includes('REFERENCES')) {
-        //   console.log(constraintType);
-        //   const constraintTypeArray = constraintType.split(' ');
-        //   console.log(constraintTypeArray);
-        //   const foreignKey = `${constraintTypeArray[0]} ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
-        //   columnString += `${name} ${dataType} ${foreignKey}, `;
-        // } else {
-        //   columnString += `${name} ${dataType} ${constraintType}, `;
-        // }
+        if (constraintType.includes('REFERENCES')) {
+          console.log(constraintType);
+          const constraintTypeArray = constraintType.split(' ');
+          console.log(constraintTypeArray);
+          const foreignKey = `${constraintTypeArray[0]} ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
+          columnString += `${name} ${dataType} ${foreignKey}, `;
+        } else {
+          columnString += `${name} ${dataType} ${constraintType}, `;
+        }
       });
 
       // Remove last comma.
