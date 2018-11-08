@@ -15,7 +15,6 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
     target = parentNode;
   }
   console.log(id, diffDbColors[id]);
-  console.log('e.t.s.b', event.target.style.backgroundColor, 'id', event.target.id, 'k', diffDbColors[id], 'scared');
   if (diffDbColors[id] !== undefined) {
     if (target.style.backgroundColor === diffDbColors[id]) {
       // Background color is set meaning change is selected so deselect change and remove query from script.
@@ -34,7 +33,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
       // One query parameter means add or delete a table.
       if (queryParams.length === 1) {
         const { name, columns } = tableInfo;
-        if (diffDbColors[id] === 'green') {
+        if (diffDbColors[id] === 'darkseagreen') {
           // Add a table.
           let columnString = '';
 
@@ -74,7 +73,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
 
           // Add script to create a table.
           addScript(id, `CREATE TABLE ${name} (${columnString});`);
-        } else if (diffDbColors[id] === 'red') {
+        } else if (diffDbColors[id] === 'indianred') {
           // Add script to delete a table.
           addScript(id, `DROP TABLE ${name};`);
         }
@@ -85,7 +84,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
         const { name, dataType, constraintType } = column;
         const tableName = tableInfo.name;
         let columnString = `ALTER TABLE ${tableName} `;
-        if (diffDbColors[id] === 'green') {
+        if (diffDbColors[id] === 'darkseagreen') {
           // Add a column
           columnString += `ADD COLUMN ${name}`;
           if (dataType) {
@@ -97,22 +96,22 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
           columnString += ';';
           addScript(id, columnString);
         } else {
-          // Must be 'red' so delete a column
+          // Must be 'indianred' so delete a column
           addScript(id, `ALTER TABLE ${tableName} DROP COLUMN ${name};/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`);
         }
       }
       // Four query params means add or delete data-type or constraint
       if (queryParams.length === 4) {
-        // console.log('queryParams', queryParams);
-        const { name, dataType, constraintType } = column;
+        const { name, dataType, constraintTypes } = column;
+        console.log('constra', constraintTypes);
         const tableName = tableInfo.name;
         if (queryParams[2] === 'constraintType') {
-          if (diffDbColors[id] === 'green') {
+          if (diffDbColors[id] === 'darkseagreen') {
             // add a constraint
-            addScript(id, `ALTER TABLE ${tableName} ADD ${constraintType}(${name});`);
+            addScript(id, `ALTER TABLE ${tableName} ADD ${constraintTypes}(${name});`);
           } else {
             // remove a constraint
-            addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} DROP ${constraintType};`);
+            addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} DROP ${constraintTypes};`);
           }
         }
         if (queryParams[2] === 'dataType') {
@@ -121,7 +120,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
         }
         if (queryParams[2] === 'nullable') {
           console.log(diffDbColors[id]);
-          if (diffDbColors[id] === 'green') {
+          if (diffDbColors[id] === 'darkseagreen') {
             // add a "NOT NULL"
             console.log('kill myself');
             addScript(id, `ALTER TABLE ${tableName} ALTER COLUMN ${name} SET NOT NULL;`);
@@ -141,10 +140,10 @@ const DiffDbDisplay = (props) => {
     tableInfo, diffDbColors, addScript, removeScript, backgroundColors, setBackgroundColor,
   } = props;
   const { name, columns } = tableInfo;
-
 /* eslint-disable */
   return (
-    // <ul className="list-group-item">
+    <div>      
+    {/* // <ul className="list-group-item"> */}
     <ul>
       <li
         id={name}
@@ -256,6 +255,7 @@ const DiffDbDisplay = (props) => {
         </li>))
       }
     </ul>
+    </div>
   );
   /* eslint-enable */
 };

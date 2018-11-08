@@ -33,15 +33,29 @@ let mainWindow;
 
 
 function createWindow() {
-  mainWindow = new BrowserWindow({ width: 1000, height: 720 });
+  mainWindow = new BrowserWindow({
+    frame: false,
+    // titleBarStyle: 'hidden',
+    width: 960,
+    height: 760,
+    // minHeight: 680,
+    backgroundColor: '#b5beda',
+    // show: false,
+  });
+
+  // ge tried to fix white flash but failed
+  // mainWindow.on('ready-to-show', function() {
+  //   mainWindow.show();
+  //   mainWindow.focus();
+  // });
 
   mainWindow.loadURL(
 
-    // isDev ? 'http://localhost:3000' : 
+    // isDev ? 'http://localhost:3000' :
     `file://${path.join(__dirname, './../dist/index.html')}`,
 
   );
-
+  // ge commented it out just to test
   mainWindow.on('closed', () => mainWindow = null);
 
 
