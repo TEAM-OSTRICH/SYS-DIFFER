@@ -38,6 +38,7 @@ class MainContainer extends Component {
       diffDbDisplay: false,
       scriptDisplay: false,
       backgroundColors: {},
+      showLoadingScreen: true,
     };
 
     this.changeDisplay = this.changeDisplay.bind(this);
@@ -537,6 +538,7 @@ class MainContainer extends Component {
             devDb: sortedDevDb,
             prodDb: sortedProdDb,
             diffDb: sortedDiffDb,
+            showLoadingScreen: false,
           });
         });
     });
@@ -588,19 +590,19 @@ class MainContainer extends Component {
     });
 
     this.setState({ script: {}, backgroundColors: backgroundColorsCopy });
-    console.log('when remove, bg colors', this.state.backgroundColors)
+    console.log('when remove, bg colors', this.state.backgroundColors);
   }
 
 
   addAllChanges(script) {
-    console.log(this.state.diffDbColors,'diffDB')
+    console.log(this.state.diffDbColors, 'diffDB');
     const { diffDbColors } = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(diffDbColors));
     const ids = Object.keys(backgroundColorsCopy);
     ids.forEach((id) => {
       backgroundColorsCopy[id] = true;
     });
-    this.setState({ script: script, backgroundColors: backgroundColorsCopy });
+    this.setState({ script, backgroundColors: backgroundColorsCopy });
     console.log('when add, bg: colors', this.state.backgroundColors);
   }
 
@@ -617,6 +619,7 @@ class MainContainer extends Component {
       scriptDisplay,
       diffDbColors,
       backgroundColors,
+      showLoadingScreen,
     } = this.state;
     const {
       changeDisplay, addScript, removeScript, setBackgroundColor, removeAllChanges, addAllChanges,
@@ -624,57 +627,64 @@ class MainContainer extends Component {
 
     /* eslint-disable */
     return (
-      <div className="mainContainerBtns">
-        <button
-          onClick={event => {
-            return this.props.history.push("/");
-          }}
-        >
-          Home
-        </button>
-        <button
-          id="devDbDisplay"
-          onClick={event => {
-            changeDisplay(event);
-          }}
-        >
-          Dev DB
-        </button>
-        <button
-          id="prodDbDisplay"
-          onClick={event => {
-            changeDisplay(event);
-          }}
-        >
-          Prod DB
-        </button>
-        <button
-          id="diffDbDisplay"
-          onClick={event => {
-            changeDisplay(event);
-          }}
-        >
-          DB Diff
-        </button>
-        {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
-        {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
-        {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
-        {diffDbDisplay
-          ? (
-            <DiffDbDisplayContainer
-              db={diffDb}
-              diffDbColors={diffDbColors}
-              addScript={addScript}
-              removeScript={removeScript}
-              script={script}
-              backgroundColors={backgroundColors}
-              setBackgroundColor={setBackgroundColor}
-              removeAllChanges={removeAllChanges}
-              addAllChanges={addAllChanges}
-            />
-          )
-          : null}
-        {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
+      <div>
+        <div id="loading-screen" style={{visibility: showLoadingScreen ? 'visible' : 'hidden'}}>
+          <div id="loading-box">
+            <h1 className="blinking" id="loading-message">Loading... </h1>
+          </div>
+        </div>
+        <div className="mainContainerBtns">
+          <button
+            onClick={event => {
+              return this.props.history.push("/");
+            }}
+          >
+            Home
+          </button>
+          <button
+            id="devDbDisplay"
+            onClick={event => {
+              changeDisplay(event);
+            }}
+          >
+            Dev DB
+          </button>
+          <button
+            id="prodDbDisplay"
+            onClick={event => {
+              changeDisplay(event);
+            }}
+          >
+            Prod DB
+          </button>
+          <button
+            id="diffDbDisplay"
+            onClick={event => {
+              changeDisplay(event);
+            }}
+          >
+            DB Diff
+          </button>
+          {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
+          {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
+          {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
+          {diffDbDisplay
+            ? (
+              <DiffDbDisplayContainer
+                db={diffDb}
+                diffDbColors={diffDbColors}
+                addScript={addScript}
+                removeScript={removeScript}
+                script={script}
+                backgroundColors={backgroundColors}
+                setBackgroundColor={setBackgroundColor}
+                removeAllChanges={removeAllChanges}
+                addAllChanges={addAllChanges}
+              />
+            )
+            : null}
+          {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
+        </div>
       </div>
     );
     /* eslint-enable */

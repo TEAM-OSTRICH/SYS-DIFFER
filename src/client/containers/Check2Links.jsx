@@ -37,19 +37,23 @@ class Check2Links extends Component {
         inputObj1Port: false,
         inputObj1Dbname: false,
       },
+      showRequiredFieldsMsg1: false,
+      showRequiredFieldsMsg2: false,
+      showConnectionFailedMsg1: false,
+      showConnectionFailedMsg2: false,
     };
 
     this.checkBoth = this.checkBoth.bind(this);
-    this.skipThisIsh = this.skipThisIsh.bind(this);
   }
 
   checkBoth(event) {
     event.preventDefault();
 
     // Validate user input.
+    const { id } = event.target;
     const displayMissing = JSON.parse(JSON.stringify(this.state.displayMissing));
 
-    if (event.target.id === 'notLinks') {
+    if (id === 'notLinks') {
       displayMissing.inputObj1User = this.props.inputObj1User === '';
       displayMissing.inputObj1Pass = this.props.inputObj1Pass === '';
       displayMissing.inputObj1Host = this.props.inputObj1Host === '';
@@ -77,10 +81,10 @@ class Check2Links extends Component {
         || displayMissing.inputObj2Port === true
         || displayMissing.inputObj2Schema === true
       ) {
-        this.setState({ displayMissing });
+        this.setState({ displayMissing, showRequiredFieldsMsg2: true });
         return;
       }
-    } else if (event.target.id === 'links') {
+    } else if (id === 'links') {
       displayMissing.input1 = this.props.input1 === '';
       displayMissing.inputLinkSchema1 = this.props.inputLinkSchema1 === '';
       displayMissing.input2 = this.props.input2 === '';
@@ -92,7 +96,7 @@ class Check2Links extends Component {
         || displayMissing.input2 === true
         || displayMissing.inputLinkSchema2 === true
       ) {
-        this.setState({ displayMissing });
+        this.setState({ displayMissing, showRequiredFieldsMsg1: true });
         return;
       }
     }
@@ -101,10 +105,10 @@ class Check2Links extends Component {
     let input1;
     let input2;
 
-    if (event.target.id === 'notLinks') {
+    if (id === 'notLinks') {
       input1 = `postgres://${this.props.inputObj1User}:${this.props.inputObj1Pass}@${this.props.inputObj1Host}:${this.props.inputObj1Port}/${this.props.inputObj1Dbname}`;
       input2 = `postgres://${this.props.inputObj2User}:${this.props.inputObj2Pass}@${this.props.inputObj2Host}:${this.props.inputObj2Port}/${this.props.inputObj2Dbname}`;
-    } else if (event.target.id === 'links') {
+    } else if (id === 'links') {
       input1 = this.props.input1;
       input2 = this.props.input2;
     }
@@ -114,22 +118,34 @@ class Check2Links extends Component {
     const promise1 = db1.connect()
       .then((obj) => {
         obj.done(); // success, release the connection;
+        console.log('inside db1.connect');
         // return 200;
-      })
+      });
       // .catch(err=>console.log(err, 'nooooo1'));
     const db2 = pgp(input2);
     const promise2 = db2.connect()
       .then((obj) => {
         obj.done(); // success, release the connection;
+        console.log('inside db2.connect');
         // return 200;
-      })
+      });
       // .catch(err=>console.log(err, 'nooooo2'));
     Promise.all([promise1, promise2])
-      .then(()=>{
+      .then(() => {
         console.log('kevinnnn');
-        this.props.history.push('/kevin')
+        this.props.history.push('/kevin');
       })
-      .catch(err => console.log(err, 'noooooAll'));
+      .catch((err) => {
+        console.log(err, 'inside not links connection err');
+        if (id === 'notLinks') {
+          console.log('this.state.showConnectionFailedMsg2', this.state.showConnectionFailedMsg2);
+          this.setState({ showConnectionFailedMsg2: true });
+        } else {
+          console.log(err, 'inside links connection err');
+          console.log('this.state.showConnectionFailedMsg1', this.state.showConnectionFailedMsg1);
+          this.setState({ showConnectionFailedMsg1: true });
+        }
+      });
 
 
     // const db1 = pgp(input1);
@@ -179,29 +195,19 @@ class Check2Links extends Component {
     //   });
   }
 
-  skipThisIsh() {
-    const { setInput } = this.props;
-    setInput(
-      'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw',
-      'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk',
-      'public',
-      'public',
-    );
-    this.props.history.push('/kevin');
-  }
-
   render() {
     const {
       input1, input2, inputLinkSchema1, inputLinkSchema2, change1, change2, changeLinkSchema1, changeLinkSchema2, inputObj1User, inputObj1Pass,
       inputObj1Host, inputObj1Schema, inputObj1Port, inputObj1Dbname, inputObj2User, inputObj2Pass, inputObj2Host, inputObj2Port, inputObj2Dbname, inputObj2Schema, changeInput1user, changeInput1pass, changeInput1host, changeInput1port, changeInput1dbname, changeInput1schema, changeInput2user, changeInput2pass, changeInput2host, changeInput2port, changeInput2dbname, changeInput2schema,
     } = this.props;
-    const { displayMissing } = this.state;
+    const {
+      displayMissing, showRequiredFieldsMsg1, showRequiredFieldsMsg2, showConnectionFailedMsg1, showConnectionFailedMsg2,
+    } = this.state;
     const { checkBoth } = this;
 
     return (
       <div>
         <h1 className="centerText">❤CHRISDIFFER❤</h1>
-        <button className="centerText" onClick={this.skipThisIsh}>Skip This Shit</button>
         <h2 className="centerText">PROVIDE LINKS</h2>
         <div className="inputGridContainer">
           <div className="inputGrid">
@@ -230,6 +236,8 @@ class Check2Links extends Component {
             {' '}
             <span style={{ visibility: displayMissing.link2Scehma ? 'visible' : 'hidden' }}>◀</span>
           </div>
+          <p className="missing-fields-msg" style={{ display: showRequiredFieldsMsg1 ? 'block' : 'none' }}>Please enter the required fields.</p>
+          <p className="connection-failed-msg" style={{ display: showConnectionFailedMsg1 ? 'block' : 'none' }}>Could not connect to database.</p>
           <button className="buttonGrid" type="submit" id="links" onClick={checkBoth}>GO</button>
         </div>
         <h2 className="centerText">OR</h2>
@@ -312,6 +320,8 @@ class Check2Links extends Component {
             {' '}
             <span style={{ visibility: displayMissing.inputObj2Schema ? 'visible' : 'hidden' }}>◀</span>
           </div>
+          <p className="missing-fields-msg" style={{ display: showRequiredFieldsMsg2 ? 'block' : 'none' }}>Please enter the required fields.</p>
+          <p className="connection-failed-msg" style={{ display: showConnectionFailedMsg2 ? 'block' : 'none' }}>Could not connect to database.</p>
           <button className="buttonGrid" type="submit" id="notLinks" onClick={checkBoth}>GO</button>
         </div>
       </div>

@@ -8,10 +8,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      // u1: '',
-      // u2: '',
-      input1: '',
-      input2: '',
+      input1: 'postgres://mwurqajq:OOablzzXX3Fu64yYjvjAO_dTUQETLPus@stampy.db.elephantsql.com:5432/mwurqajq',
+      input2: 'postgres://aafcjjpk:kRa120MMxvgg_eahaRY4dnjeHKmS_jvh@stampy.db.elephantsql.com:5432/aafcjjpk',
       inputLinkSchema1: 'public',
       inputLinkSchema2: 'public',
 
@@ -20,13 +18,13 @@ class App extends Component {
       inputObj1Host: '',
       inputObj1Port: '',
       inputObj1Dbname: '',
-      inputObj1Schema: '',
+      inputObj1Schema: 'public',
       inputObj2User: '',
       inputObj2Pass: '',
       inputObj2Host: '',
       inputObj2Port: '',
       inputObj2Dbname: '',
-      inputObj2Schema: '',
+      inputObj2Schema: 'public',
     };
 
     this.change1 = this.change1.bind(this);
