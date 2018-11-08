@@ -15,7 +15,6 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "deep-diff": "^1.0.2",
-    "electromon": "^1.0.10",
     "express": "^4.16.4",
     "lodash": "^4.17.11",
     "pg": "^7.6.0",
