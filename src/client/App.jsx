@@ -8,7 +8,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      input1: 'postgres://mwurqajq:OOablzzXX3Fu64yYjvjAO_dTUQETLPus@stampy.db.elephantsql.com:5432/mwurqajq',
+      input1: 'postgres://qycgeurz:EWz1OdxTyn2M3QpeC_RYlycDSjLlVSZp@pellefant.db.elephantsql.com:5432/qycgeurz',
       input2: 'postgres://aafcjjpk:kRa120MMxvgg_eahaRY4dnjeHKmS_jvh@stampy.db.elephantsql.com:5432/aafcjjpk',
       inputLinkSchema1: 'public',
       inputLinkSchema2: 'public',
