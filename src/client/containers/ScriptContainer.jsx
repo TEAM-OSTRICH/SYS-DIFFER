@@ -47,7 +47,7 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
       columnString = columnString.slice(0, columnString.length - 2);
 
       // Add script to create a table.
-      return `CREATE TABLE "${name}" (${columnString});`;
+      return `CREATE TABLE ${name} (${columnString});`;
     } if (diffDbColors[id] === 'indianred') {
       // Add script to delete a table.
       return `DROP TABLE "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`;
@@ -60,9 +60,7 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
       name, dataType, isNullable, constraintTypes,
     } = column;
     const tableName = tableInfo.name;
-
     let columnString = `ALTER TABLE "${tableName}" `;
-
     if (diffDbColors[id] === 'darkseagreen') {
       // Add a column
       columnString += `ADD COLUMN "${name}" ${dataType}`;
@@ -95,9 +93,11 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
 
   // Four query params means add or delete data-type or constraint
   if (queryParams.length === 4) {
-    const { name, dataType } = column;
+    const {
+      name, dataType, constraintTypes, constraintNames,
+    } = column;
     const tableName = tableInfo.name;
-
+    console.log('qParams2', queryParams, 'column2', column, 'tableInfo2', tableInfo);
     // Add or remove a constraint.
     if (queryParams[2] === 'constraintType') {
       let columnString = `ALTER TABLE "${tableName}" `;
@@ -117,14 +117,14 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
         return columnString;
       }
       // remove a constraint
-      columnString += `ALTER COLUMN "${name}" DROP ${queryParams[3]};`;
+      columnString += `DROP "${constraintNames[constraintTypes.indexOf(queryParams[3])]}";`;
       return columnString;
     }
 
     // Modify a data type.
     if (queryParams[2] === 'dataType') {
       // add a dataType
-      return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" TYPE ${dataType};`;
+      return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" TYPE ${dataType} USING "${name}"::${dataType};`;
     }
 
     // Add or remove NOT NULL constraint.
