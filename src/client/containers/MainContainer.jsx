@@ -648,11 +648,7 @@ ORDER BY table_name, column_name
         <div id="loading-screen" style={{visibility: showLoadingScreen ? 'visible' : 'hidden'}}>
           <div id="loading-box">
             <h1 className="blinking" id="loading-message">Loading... </h1>
-<<<<<<< HEAD
             <img src={loadingIcon} style={{width: '50px',height: '50px'}}/>
-=======
-            <img src='https://66.media.tumblr.com/72e9156d7b4e554ede622c9e4c71a9e5/tumblr_inline_mv12xbjzW01s278uh.gif' style={{width: '50px',height: '50px'}}/>
->>>>>>> master
           </div>
         </div>
         <div className="mainContainerBtns">
