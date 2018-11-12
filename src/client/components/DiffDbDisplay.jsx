@@ -115,9 +115,11 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
 
       // Four query params means add or delete data-type or constraint
       if (queryParams.length === 4) {
-        const { name, dataType } = column;
+        const {
+          name, dataType, constraintTypes, constraintNames,
+        } = column;
         const tableName = tableInfo.name;
-
+        console.log('qParams2', queryParams, 'column2', column, 'tableInfo2', tableInfo);
         // Add or remove a constraint.
         if (queryParams[2] === 'constraintType') {
           let columnString = `ALTER TABLE "${tableName}" `;
@@ -137,7 +139,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
             addScript(id, columnString);
           } else {
             // remove a constraint
-            columnString += `ALTER COLUMN "${name}" DROP ${queryParams[3]};`;
+            columnString += `DROP "${constraintNames[constraintTypes.indexOf(queryParams[3])]}";`;
             addScript(id, columnString);
           }
         }
@@ -145,7 +147,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
         // Modify a data type.
         if (queryParams[2] === 'dataType') {
           // add a dataType
-          addScript(id, `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" TYPE ${dataType};`);
+          addScript(id, `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" TYPE ${dataType} USING "${name}"::${dataType};`);
         }
 
         // Add or remove NOT NULL constraint.
