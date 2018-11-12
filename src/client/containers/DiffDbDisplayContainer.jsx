@@ -79,7 +79,7 @@ class DiffDbDisplayContainer extends Component {
 
     return (
       <div>
-        <button onClick={killGrayBox}>Ge Kill Kevin</button>
+        {/* <button onClick={killGrayBox}>Ge Kill Kevin</button> */}
         <div id="diffDbDisplayContainer" ref="diffDbDisplayContainer">
           <div id="dbDisplayContainer">
             {tables}

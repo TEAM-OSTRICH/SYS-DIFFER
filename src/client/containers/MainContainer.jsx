@@ -4,6 +4,8 @@ import { NavLink, Redirect, withRouter } from 'react-router-dom';
 import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
 import ScriptContainer from './ScriptContainer.jsx';
+import SaveLoadDisplay from '../components/SaveLoadDisplay.jsx';
+import loadingIcon from '../../assets/5pSf.gif';
 
 const initOptions = {
   connect(client, dc, useCount) {
@@ -37,6 +39,7 @@ class MainContainer extends Component {
       prodDbDisplay: false,
       diffDbDisplay: false,
       scriptDisplay: false,
+      saveLoadMenu: false,
       backgroundColors: {},
       showLoadingScreen: true,
     };
@@ -560,6 +563,7 @@ class MainContainer extends Component {
       prodDbDisplay: false,
       diffDbDisplay: false,
       scriptDisplay: false,
+      saveLoadDisplay: false,
     });
     this.setState({ [display]: true });
   }
@@ -617,6 +621,7 @@ class MainContainer extends Component {
       prodDbDisplay,
       diffDbDisplay,
       scriptDisplay,
+      saveLoadDisplay,
       diffDbColors,
       backgroundColors,
       showLoadingScreen,
@@ -631,6 +636,7 @@ class MainContainer extends Component {
         <div id="loading-screen" style={{visibility: showLoadingScreen ? 'visible' : 'hidden'}}>
           <div id="loading-box">
             <h1 className="blinking" id="loading-message">Loading... </h1>
+            <img src={loadingIcon} style={{width: '50px',height: '50px'}}/>
           </div>
         </div>
         <div className="mainContainerBtns">
@@ -665,6 +671,14 @@ class MainContainer extends Component {
           >
             DB Diff
           </button>
+          <button
+            id="saveLoadDisplay"
+            onClick={event => {
+              changeDisplay(event);
+            }}
+          >
+            Save / Load
+          </button>
           {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
           {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
           {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
@@ -684,6 +698,7 @@ class MainContainer extends Component {
             )
             : null}
           {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
+          {saveLoadDisplay ? <SaveLoadDisplay /> : null}
         </div>
       </div>
     );
