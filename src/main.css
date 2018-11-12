@@ -346,15 +346,18 @@ ul {
 }
 
 #close-btn {
-  background-color: #ff4443
+  background-color: #ff4443;
+  text-align: center;
 }
 
 #min-btn {
-  background-color: #ffbb00
+  background-color: #ffbb00;
+  text-align: center;
 }
 
 #max-btn {
-  background-color: #00d746
+  background-color: #00d746;
+  text-align: center;
 }
 
 #close-btn:hover span {
