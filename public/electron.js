@@ -64,34 +64,40 @@ function createWindow() {
 }
 
 exports.createScriptWindow = () => {
-  scriptWindow = new BrowserWindow({
-    frame: false,
-    // titleBarStyle: 'hidden',
-    width: 380,
-    height: 480,
-    // minHeight: 680,
-    backgroundColor: '#b5beda',
-    alwaysOnTop: true,
-    // show: false,
-  });
+  if (!scriptWindow) {
+    const mainWindowPos = mainWindow.getPosition();
 
-  // ge tried to fix white flash but failed
-  // mainWindow.on('ready-to-show', function() {
-  //   mainWindow.show();
-  //   mainWindow.focus();
-  // });
+    scriptWindow = new BrowserWindow({
+      frame: false,
+      // titleBarStyle: 'hidden',
+      width: 400,
+      height: 600,
+      // minHeight: 680,
+      backgroundColor: '#b5beda',
+      // show: false,
+      x: mainWindowPos[0] + 960,
+      y: mainWindowPos[1],
+      alwaysOnTop: true,
+    });
 
-  scriptWindow.loadURL(
+    // ge tried to fix white flash but failed
+    // mainWindow.on('ready-to-show', function() {
+    //   mainWindow.show();
+    //   mainWindow.focus();
+    // });
 
-    // isDev ? 'http://localhost:3000' :
-    `file://${path.join(__dirname, './../public/script.html')}`,
+    scriptWindow.loadURL(
 
-  );
-  // ge commented it out just to test
-  scriptWindow.on('closed', () => mainWindow = null);
+      // isDev ? 'http://localhost:3000' :
+      `file://${path.join(__dirname, './../public/script.html')}`,
 
+    );
+    // ge commented it out just to test
+    scriptWindow.on('closed', () => scriptWindow = null);
 
+    // mainWindow.focus();
   // BrowserWindow.addDevToolsExtension('/path/to/extension');
+  }
 };
 
 // function loadFile() {
@@ -133,6 +139,10 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('Hi', (event, item) => {
-  scriptWindow.webContents.send('Hi', item);
+ipcMain.on('updateScript', (event, script) => {
+  scriptWindow.webContents.send('updateScript', script);
+});
+
+ipcMain.on('addAll', (event) => {
+  mainWindow.webContents.send('addAll');
 });

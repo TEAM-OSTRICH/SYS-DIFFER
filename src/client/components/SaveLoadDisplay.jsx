@@ -94,7 +94,6 @@ class SaveLoadDisplay extends Component {
         console.error(err, 'err in get');
       } else {
         console.log(data, 'getback');
-        
       }
     });
   }

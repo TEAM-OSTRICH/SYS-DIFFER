@@ -2,14 +2,21 @@ const electron = require('electron');
 
 const { ipcRenderer } = electron;
 
-ipcRenderer.on('Hi', (event, item) => {
+ipcRenderer.on('updateScript', (event, script) => {
   const scriptTextArea = document.getElementById('scriptTextArea');
-  const queries = Object.values(item);
   let queryString = '';
 
-  queries.forEach((query) => {
-    queryString += `${query}\n`;
+  script.forEach((query) => {
+    queryString += `${query.query}\n`;
   });
 
   scriptTextArea.value = queryString;
 });
+
+const addAll = () => {
+  ipcRenderer.send('addAll');
+};
+
+const removeAll = () => {
+
+};
