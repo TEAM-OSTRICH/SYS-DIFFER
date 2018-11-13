@@ -712,7 +712,7 @@ ORDER BY table_name, column_name
             )
             : null}
           {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
-          {saveLoadDisplay ? <SaveLoadDisplay /> : null}
+          {saveLoadDisplay ? <SaveLoadDisplay testData={this.state}/> : null}
         </div>
       </div>
     );

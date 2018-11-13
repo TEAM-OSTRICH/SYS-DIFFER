@@ -15,6 +15,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "deep-diff": "^1.0.2",
+    "electron-storage": "^1.0.7",
     "express": "^4.16.4",
     "lodash": "^4.17.11",
     "pg": "^7.6.0",
@@ -40,6 +41,7 @@
     "electron-is-dev": "^1.0.1",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "json-loader": "^0.5.7",
     "style-loader": "^0.23.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.23.1",

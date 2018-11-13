@@ -71,6 +71,7 @@ exports.createScriptWindow = () => {
     height: 480,
     // minHeight: 680,
     backgroundColor: '#b5beda',
+    alwaysOnTop: true,
     // show: false,
   });
 
