@@ -30,6 +30,7 @@ const {
 
 
 let mainWindow;
+let scriptWindow;
 
 
 function createWindow() {
@@ -62,30 +63,60 @@ function createWindow() {
   // BrowserWindow.addDevToolsExtension('/path/to/extension');
 }
 
-
-function loadFile() {
-  fs.readFile('localfile.json', 'utf8', (err, data) => {
-    if (err) {
-      console.log(err);
-
-      return;
-    }
-
-    const jsondata = JSON.parse(data);
-
-    const filedata = jsondata.key;
-
-    mainWindow.webContents.send(LOCAL_FILE_TEXT, filedata);
+exports.createScriptWindow = () => {
+  scriptWindow = new BrowserWindow({
+    frame: false,
+    // titleBarStyle: 'hidden',
+    width: 380,
+    height: 480,
+    // minHeight: 680,
+    backgroundColor: '#b5beda',
+    // show: false,
   });
-}
+
+  // ge tried to fix white flash but failed
+  // mainWindow.on('ready-to-show', function() {
+  //   mainWindow.show();
+  //   mainWindow.focus();
+  // });
+
+  scriptWindow.loadURL(
+
+    // isDev ? 'http://localhost:3000' :
+    `file://${path.join(__dirname, './../public/script.html')}`,
+
+  );
+  // ge commented it out just to test
+  scriptWindow.on('closed', () => mainWindow = null);
 
 
-ipcMain.on(LOAD_LOCAL_FILE, () => {
-  loadFile();
-});
+  // BrowserWindow.addDevToolsExtension('/path/to/extension');
+};
+
+// function loadFile() {
+//   fs.readFile('localfile.json', 'utf8', (err, data) => {
+//     if (err) {
+//       console.log(err);
+
+//       return;
+//     }
+
+//     const jsondata = JSON.parse(data);
+
+//     const filedata = jsondata.key;
+
+//     mainWindow.webContents.send(LOCAL_FILE_TEXT, filedata);
+//   });
+// }
+
+
+// ipcMain.on(LOAD_LOCAL_FILE, () => {
+//   loadFile();
+// });
 
 
 app.on('ready', createWindow);
+// app.on('ready', createScriptWindow);
 
 
 app.on('window-all-closed', () => {
@@ -97,5 +128,10 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
+    // createScriptWindow();
   }
+});
+
+ipcMain.on('Hi', (event, item) => {
+  scriptWindow.webContents.send('Hi', item);
 });

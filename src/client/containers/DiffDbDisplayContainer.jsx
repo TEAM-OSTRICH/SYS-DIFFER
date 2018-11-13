@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import DiffDbDisplay from '../components/DiffDbDisplay.jsx';
 import ScriptContainer from './ScriptContainer.jsx';
 
+const remote = require('electron').remote;
+
+const main = remote.require('./electron.js');
+
 // const DiffDbDisplayContainer = (props) => {
 //   const {
 //     db, diffDbColors, addScript, removeScript, script, backgroundColors, setBackgroundColor, removeAllChanges, addAllChanges,
@@ -49,6 +53,7 @@ class DiffDbDisplayContainer extends Component {
     super(props);
 
     this.killGrayBox = this.killGrayBox.bind(this);
+    this.openScriptWindow = this.openScriptWindow.bind(this);
   }
 
   killGrayBox() {
@@ -57,6 +62,10 @@ class DiffDbDisplayContainer extends Component {
     } else {
       ReactDOM.findDOMNode(this.refs.diffDbDisplayContainer).id = 'diffDbDisplayContainer';
     }
+  }
+
+  openScriptWindow() {
+    main.createScriptWindow();
   }
 
   render() {
@@ -80,11 +89,12 @@ class DiffDbDisplayContainer extends Component {
     return (
       <div>
         <button onClick={killGrayBox}>kevin</button>
+        <button onClick={this.openScriptWindow}>Script</button>
         <div id="diffDbDisplayContainer" ref="diffDbDisplayContainer">
           <div id="dbDisplayContainer">
             {tables}
           </div>
-          <ScriptContainer
+          {/* <ScriptContainer
             script={script}
             removeAllChanges={removeAllChanges}
             db={db}
@@ -93,7 +103,7 @@ class DiffDbDisplayContainer extends Component {
             backgroundColors={backgroundColors}
             setBackgroundColor={setBackgroundColor}
             addAllChanges={addAllChanges}
-          />
+          /> */}
         </div>
       </div>
     );

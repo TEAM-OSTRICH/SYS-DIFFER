@@ -7,6 +7,10 @@ import ScriptContainer from './ScriptContainer.jsx';
 import SaveLoadDisplay from '../components/SaveLoadDisplay.jsx';
 import loadingIcon from '../../assets/5pSf.gif';
 
+const electron = require('electron');
+
+const { ipcRenderer } = electron;
+
 const initOptions = {
   connect(client, dc, useCount) {
     const cp = client.connectionParameters;
@@ -582,6 +586,7 @@ ORDER BY table_name, column_name
     const scriptCopy = JSON.parse(JSON.stringify(script));
 
     scriptCopy[id] = query;
+    ipcRenderer.send('Hi', scriptCopy);
     this.setState({ script: scriptCopy });
   }
 
