@@ -8,11 +8,13 @@ class App extends Component {
     super(props);
 
     this.state = {
+      // the top two links on entry page
       input1: 'postgres://qycgeurz:EWz1OdxTyn2M3QpeC_RYlycDSjLlVSZp@pellefant.db.elephantsql.com:5432/qycgeurz',
       input2: 'postgres://aafcjjpk:kRa120MMxvgg_eahaRY4dnjeHKmS_jvh@stampy.db.elephantsql.com:5432/aafcjjpk',
       inputLinkSchema1: 'public',
       inputLinkSchema2: 'public',
 
+      // use these to create links (bottom of entry page)
       inputObj1User: '',
       inputObj1Pass: '',
       inputObj1Host: '',
@@ -46,18 +48,17 @@ class App extends Component {
     this.changeLinkSchema1 = this.changeLinkSchema1.bind(this);
     this.changeLinkSchema2 = this.changeLinkSchema2.bind(this);
 
-    this.change
-
-    this.setInput = this.setInput.bind(this);
+    // this.setInput = this.setInput.bind(this);
   }
 
-  // For testing only.
-  setInput(input1, input2, inputLinkSchema1, inputLinkSchema2) {
-    this.setState({
-      input1, input2, inputLinkSchema1, inputLinkSchema2,
-    });
-  }
+  // if it still works delete this:
+  // setInput(input1, input2, inputLinkSchema1, inputLinkSchema2) {
+  //   this.setState({
+  //     input1, input2, inputLinkSchema1, inputLinkSchema2,
+  //   });
+  // }
 
+  // update state to most recent entries
   change1(event) {
     this.setState({ input1: event.target.value });
   }
@@ -74,12 +75,12 @@ class App extends Component {
     this.setState({ inputLinkSchema2: event.target.value });
   }
 
+  // for functions below also clear inputs from first two inputs if user enters info in bottom input windows
   changeInput1user(event) {
-    console.log(event, 'no');
     this.setState({
       inputObj1User: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -88,8 +89,8 @@ class App extends Component {
   changeInput1pass(event) {
     this.setState({
       inputObj1Pass: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -98,8 +99,8 @@ class App extends Component {
   changeInput1host(event) {
     this.setState({
       inputObj1Host: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -108,8 +109,8 @@ class App extends Component {
   changeInput1port(event) {
     this.setState({
       inputObj1Port: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -118,8 +119,8 @@ class App extends Component {
   changeInput1dbname(event) {
     this.setState({
       inputObj1Dbname: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -128,8 +129,8 @@ class App extends Component {
   changeInput1schema(event) {
     this.setState({
       inputObj1Schema: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -138,8 +139,8 @@ class App extends Component {
   changeInput2user(event) {
     this.setState({
       inputObj2User: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -148,8 +149,8 @@ class App extends Component {
   changeInput2pass(event) {
     this.setState({
       inputObj2Pass: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -158,8 +159,8 @@ class App extends Component {
   changeInput2host(event) {
     this.setState({
       inputObj2Host: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -168,8 +169,8 @@ class App extends Component {
   changeInput2port(event) {
     this.setState({
       inputObj2Port: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -178,8 +179,8 @@ class App extends Component {
   changeInput2dbname(event) {
     this.setState({
       inputObj2Dbname: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
@@ -188,15 +189,11 @@ class App extends Component {
   changeInput2schema(event) {
     this.setState({
       inputObj2Schema: event.target.value,
-      // input1: '',
-      // input2: '',
+      input1: '',
+      input2: '',
       // inputLinkSchema1: '',
       // inputLinkSchema2: '',
     });
-  }
-
-  changeAllState(newState) {
-    this.setState({ newState })
   }
 
   render() {
@@ -236,8 +233,6 @@ class App extends Component {
                     inputObj2Port={inputObj2Port}
                     inputObj2Dbname={inputObj2Dbname}
                     inputObj2Schema={inputObj2Schema}
-
-
                   />
                 )
               }
@@ -248,8 +243,6 @@ class App extends Component {
                 props => (
                   <Check2Links
                     {...props}
-                    // u1={u1}
-                    // u2={u2}
                     input1={input1}
                     input2={input2}
                     inputLinkSchema1={inputLinkSchema1}
@@ -297,10 +290,6 @@ class App extends Component {
           </Switch>
         </div>
       </BrowserRouter>
-      // <div>
-      //   <MainContainer />
-      //   <Check2Links />
-      // </div>
     );
   }
 }

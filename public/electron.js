@@ -1,68 +1,38 @@
 const {
-
   electron,
-
   app,
-
   BrowserWindow,
-
   ipcMain,
-
 } = require('electron');
 
-
 const path = require('path');
-
 const url = require('url');
-
 const isDev = require('electron-is-dev');
-
 const fs = require('fs');
-
-
-const {
-
-  LOAD_LOCAL_FILE,
-
-  LOCAL_FILE_TEXT,
-
-} = require('../src/constants.js');
-
 
 let mainWindow;
 let scriptWindow;
 
-
-function createWindow() {
+// create main window and initialize options
+function createMainWindow() {
   mainWindow = new BrowserWindow({
     frame: false,
-    // titleBarStyle: 'hidden',
     width: 960,
     height: 760,
-    // minHeight: 680,
+    // minWidth: 960,
+    // minHeight: 760,
     backgroundColor: '#b5beda',
-    // show: false,
   });
 
-  // ge tried to fix white flash but failed
-  // mainWindow.on('ready-to-show', function() {
-  //   mainWindow.show();
-  //   mainWindow.focus();
-  // });
-
   mainWindow.loadURL(
-
     // isDev ? 'http://localhost:3000' :
     `file://${path.join(__dirname, './../dist/index.html')}`,
-
   );
-  // ge commented it out just to test
+
   mainWindow.on('closed', () => mainWindow = null);
-
-
-  // BrowserWindow.addDevToolsExtension('/path/to/extension');
 }
 
+// create script window and set options
 exports.createScriptWindow = () => {
   if (!scriptWindow) {
     const mainWindowPos = mainWindow.getPosition();
@@ -72,59 +42,28 @@ exports.createScriptWindow = () => {
       // titleBarStyle: 'hidden',
       width: 400,
       height: 600,
+      minWidth: 400,
+      minHeight: 600,
       // minHeight: 680,
       backgroundColor: '#b5beda',
       // show: false,
       x: mainWindowPos[0] + 960,
       y: mainWindowPos[1],
       alwaysOnTop: true,
+      parent: mainWindow, // return to this
     });
 
-    // ge tried to fix white flash but failed
-    // mainWindow.on('ready-to-show', function() {
-    //   mainWindow.show();
-    //   mainWindow.focus();
-    // });
-
     scriptWindow.loadURL(
-
       // isDev ? 'http://localhost:3000' :
       `file://${path.join(__dirname, './../public/script.html')}`,
-
     );
-    // ge commented it out just to test
-    scriptWindow.on('closed', () => scriptWindow = null);
 
-    // mainWindow.focus();
-  // BrowserWindow.addDevToolsExtension('/path/to/extension');
+    scriptWindow.on('closed', () => scriptWindow = null);
   }
 };
 
-// function loadFile() {
-//   fs.readFile('localfile.json', 'utf8', (err, data) => {
-//     if (err) {
-//       console.log(err);
-
-//       return;
-//     }
-
-//     const jsondata = JSON.parse(data);
-
-//     const filedata = jsondata.key;
-
-//     mainWindow.webContents.send(LOCAL_FILE_TEXT, filedata);
-//   });
-// }
-
-
-// ipcMain.on(LOAD_LOCAL_FILE, () => {
-//   loadFile();
-// });
-
-
-app.on('ready', createWindow);
+app.on('ready', createMainWindow);
 // app.on('ready', createScriptWindow);
-
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -134,15 +73,17 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (mainWindow === null) {
-    createWindow();
+    createMainWindow();
     // createScriptWindow();
   }
 });
 
+// listening for 'updateScript' from MainContainer -> send 'updateScript' and script-array with all queries to display to scriptWindow
 ipcMain.on('updateScript', (event, script) => {
   scriptWindow.webContents.send('updateScript', script);
 });
 
+// listening for 'addAll' from script.js -> send 'addAll' to DiffDbDisplayContainer component in mainWindow
 ipcMain.on('addAll', (event) => {
   mainWindow.webContents.send('addAll');
 });

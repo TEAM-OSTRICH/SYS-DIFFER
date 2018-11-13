@@ -6,8 +6,8 @@ ipcRenderer.on('updateScript', (event, script) => {
   const scriptTextArea = document.getElementById('scriptTextArea');
   let queryString = '';
 
-  script.forEach((query) => {
-    queryString += `${query.query}\n`;
+  script.forEach((queryObj) => {
+    queryString += `${queryObj.query}\n`;
   });
 
   scriptTextArea.value = queryString;

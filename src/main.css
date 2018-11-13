@@ -395,6 +395,8 @@ ul {
 #scriptTextArea {
   height: 90%;
   width: 90%;
+  min-height: 90%;
+  min-width: 90%;
   background-color: seashell;
   /* grid-column: 1 / 3; */
 }
