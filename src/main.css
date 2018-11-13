@@ -34,7 +34,7 @@
   display: grid;
   /* background-color: red; */
   /* grid-template-columns: 1fr 1fr; */
-  grid-template-columns: 1fr 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr 1fr; */
 
 }
 
@@ -377,4 +377,10 @@ ul {
 
 #max-span {
   visibility: hidden;
+}
+#scriptTextArea{
+  margin-left:5vw;
+  width: 90vw;
+  height: 75vh;
+  background: whitesmoke;
 }
