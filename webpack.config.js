@@ -77,6 +77,12 @@ module.exports = {
         include: defaultInclude,
 
       },
+     
+      {
+        test: /\.json$/,
+        use: [{ loader: 'json-loader' }],
+        include: defaultInclude,
+      }
 
     ],
 

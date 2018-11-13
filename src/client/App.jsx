@@ -46,6 +46,8 @@ class App extends Component {
     this.changeLinkSchema1 = this.changeLinkSchema1.bind(this);
     this.changeLinkSchema2 = this.changeLinkSchema2.bind(this);
 
+    this.change
+
     this.setInput = this.setInput.bind(this);
   }
 
@@ -193,6 +195,10 @@ class App extends Component {
     });
   }
 
+  changeAllState(newState) {
+    this.setState({ newState })
+  }
+
   render() {
     const {
       input1, input2, inputLinkSchema1, inputLinkSchema2, inputObj1User, inputObj1Pass,
@@ -230,6 +236,8 @@ class App extends Component {
                     inputObj2Port={inputObj2Port}
                     inputObj2Dbname={inputObj2Dbname}
                     inputObj2Schema={inputObj2Schema}
+
+
                   />
                 )
               }

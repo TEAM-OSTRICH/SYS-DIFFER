@@ -77,6 +77,7 @@ exports.createScriptWindow = () => {
       // show: false,
       x: mainWindowPos[0] + 960,
       y: mainWindowPos[1],
+      alwaysOnTop: true,
     });
 
     // ge tried to fix white flash but failed

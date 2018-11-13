@@ -34,7 +34,7 @@
   display: grid;
   /* background-color: red; */
   /* grid-template-columns: 1fr 1fr; */
-  grid-template-columns: 1fr 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr 1fr; */
 
 }
 
@@ -81,7 +81,7 @@ span {
   margin: 2px 0;
   background-color: whitesmoke;
   border: none;
-  margin-right: 22%;
+  margin-right: 15%;
   /* width: 50%; */
 }
 
@@ -288,7 +288,7 @@ ul {
 }
 
 .mainContainerBtns{
-  margin-left: 20px;
+  /* margin-left: 20px; */
 }
 
 .mainContainerBtns > button{
