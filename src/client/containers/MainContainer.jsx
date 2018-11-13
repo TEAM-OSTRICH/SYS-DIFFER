@@ -38,7 +38,7 @@ class MainContainer extends Component {
       devDb: [],
       prodDb: [],
       diffDb: [],
-      script: {},
+      script: [],
       devDbDisplay: true,
       prodDbDisplay: false,
       diffDbDisplay: false,
@@ -583,17 +583,18 @@ ORDER BY table_name, column_name
 
   addScript(id, query) {
     const { script } = this.state;
-    const scriptCopy = JSON.parse(JSON.stringify(script));
+    const scriptCopy = script.slice();
 
-    scriptCopy[id] = query;
-    ipcRenderer.send('Hi', scriptCopy);
+    scriptCopy.push({ id, query });
+    ipcRenderer.send('updateScript', scriptCopy);
     this.setState({ script: scriptCopy });
   }
 
   removeScript(id) {
     const { script } = this.state;
-    const scriptCopy = Object.assign({}, script);
-    delete scriptCopy[id];
+    const scriptCopy = script.filter(query => query.id !== id);
+
+    ipcRenderer.send('updateScript', scriptCopy);
     this.setState({ script: scriptCopy });
   }
 

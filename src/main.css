@@ -378,3 +378,30 @@ ul {
 #max-span {
   visibility: hidden;
 }
+
+#scriptContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  width: 90vw;
+  margin: auto;
+  position: relative;
+  top: 50px;
+  display: block;
+  /* grid-column: 1 / 3; */
+}
+
+#scriptTextArea {
+  height: 90%;
+  width: 90%;
+  background-color: seashell;
+  /* grid-column: 1 / 3; */
+}
+
+#loadTextArea {
+  height: 75vh;
+  width: 35vw;
+  background-color: seashell;
+  /* grid-column: 1 / 3; */
+}
