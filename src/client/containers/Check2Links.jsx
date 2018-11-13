@@ -113,7 +113,6 @@ class Check2Links extends Component {
       input2 = this.props.input2;
     }
 
-    // ge tried to break things with kevin's help
     const db1 = pgp(input1);
     const promise1 = db1.connect()
       .then((obj) => {
@@ -329,27 +328,5 @@ class Check2Links extends Component {
   }
 }
 
-// const cn = {
-//  host: ‘namethatcard-dev.cgbcdoczmmnf.us-east-1.rds.amazonaws.com’,
-//  port: 5432,
-//  database: ‘namecard’,
-//  user: ‘root’,
-//  password: ‘12345678’,
-
-// };
-
-// const input1 = ‘postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk’;
-// postgres://aajsrbbl:elmer.db.elephantsql.com:5432/aajsrbbl
-//  const input2 = postgres://root:12345678@namethatcard-dev.cgbcdoczmmnf.us-east-1.rds.amazonaws.com:5432/namecard
-//  const input3 = postgres://test:12345678@ostriches.cevlz1oddeme.us-east-2.rds.amazonaws.com:5432/ostrich
-
-// const cn = {
-//   host: ‘ostriches.cevlz1oddeme.us-east-2.rds.amazonaws.com’,
-//   port: 5432,
-//   database: ‘ostrich’,
-//   user: ‘test’,
-//   password: ‘12345678’,
-
-//  };
 
 export default withRouter(Check2Links);
