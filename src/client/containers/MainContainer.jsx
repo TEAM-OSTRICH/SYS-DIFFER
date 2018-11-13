@@ -7,6 +7,10 @@ import ScriptContainer from './ScriptContainer.jsx';
 import SaveLoadDisplay from '../components/SaveLoadDisplay.jsx';
 import loadingIcon from '../../assets/5pSf.gif';
 
+const electron = require('electron');
+
+const { ipcRenderer } = electron;
+
 const initOptions = {
   connect(client, dc, useCount) {
     const cp = client.connectionParameters;
@@ -79,69 +83,67 @@ class MainContainer extends Component {
     // const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
 
     const query = `
+      SELECT 
+      table_name,
+      column_name,
+      is_nullable,
+      data_type,
+      character_maximum_length,
+      string_agg(constraint_type, ', ') AS constraint_types,
+      string_agg(foreign_table_name, ', ') AS foreign_table_name,
+      string_agg(foreign_column_name, ', ') AS foreign_column_name,
+      string_agg(constraint_name, ', ') AS constraint_names
+      FROM
+        (
+          SELECT
+          tc.constraint_name,
+          t.table_name,
+          c.column_name,
+          c.is_nullable,
+          c.data_type,
+          c.character_maximum_length,
+          tc.constraint_type,
+          null AS foreign_table_name,
+          null AS foreign_column_name
+          FROM
+          information_schema.tables AS t JOIN information_schema.columns AS c
+            ON t.table_name = c.table_name
+          LEFT JOIN information_schema.key_column_usage AS kcu
+            ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+          LEFT JOIN information_schema.table_constraints AS tc
+            ON kcu.constraint_name = tc.constraint_name
+          LEFT JOIN information_schema.constraint_column_usage AS ccu 
+            ON tc.constraint_name = ccu.constraint_name
+          WHERE t.table_type = 'BASE TABLE'
+          AND t.table_schema = '${inputLinkSchema1}'
+          AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
+          UNION ALL
+          SELECT
+          tc.constraint_name,
+          t.table_name,
+          c.column_name,
+          c.is_nullable,
+          c.data_type,
+          c.character_maximum_length,
+          tc.constraint_type,
+          ccu.table_name AS foreign_table_name,
+          ccu.column_name AS foreign_column_name
+          FROM
+          information_schema.tables AS t JOIN information_schema.columns as c
+            ON t.table_name = c.table_name
+          LEFT JOIN information_schema.key_column_usage as kcu
+            ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+          LEFT JOIN information_schema.table_constraints as tc
+            ON kcu.constraint_name = tc.constraint_name
+          LEFT JOIN information_schema.constraint_column_usage AS ccu
+            ON tc.constraint_name = ccu.constraint_name
+          WHERE t.table_type = 'BASE TABLE'
+          AND t.table_schema = '${inputLinkSchema1}'
+          AND tc.constraint_type = 'FOREIGN KEY'
         
-SELECT 
-table_name,
-column_name,
-is_nullable,
-data_type,
-character_maximum_length,
-string_agg(constraint_type, ', ') AS constraint_types,
-string_agg(foreign_table_name, ', ') AS foreign_table_name,
-string_agg(foreign_column_name, ', ') AS foreign_column_name,
-string_agg(constraint_name, ', ') AS constraint_names
-FROM
-  (
-    SELECT
-    tc.constraint_name,
-    t.table_name,
-    c.column_name,
-    c.is_nullable,
-    c.data_type,
-    c.character_maximum_length,
-    tc.constraint_type,
-    null AS foreign_table_name,
-    null AS foreign_column_name
-    FROM
-    information_schema.tables AS t JOIN information_schema.columns AS c
-      ON t.table_name = c.table_name
-    LEFT JOIN information_schema.key_column_usage AS kcu
-      ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-    LEFT JOIN information_schema.table_constraints AS tc
-      ON kcu.constraint_name = tc.constraint_name
-    LEFT JOIN information_schema.constraint_column_usage AS ccu 
-      ON tc.constraint_name = ccu.constraint_name
-    WHERE t.table_type = 'BASE TABLE'
-    AND t.table_schema = '${inputLinkSchema1}'
-    AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
-    UNION ALL
-    SELECT
-    tc.constraint_name,
-    t.table_name,
-    c.column_name,
-    c.is_nullable,
-    c.data_type,
-    c.character_maximum_length,
-    tc.constraint_type,
-    ccu.table_name AS foreign_table_name,
-    ccu.column_name AS foreign_column_name
-    FROM
-    information_schema.tables AS t JOIN information_schema.columns as c
-      ON t.table_name = c.table_name
-    LEFT JOIN information_schema.key_column_usage as kcu
-      ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-    LEFT JOIN information_schema.table_constraints as tc
-      ON kcu.constraint_name = tc.constraint_name
-    LEFT JOIN information_schema.constraint_column_usage AS ccu
-      ON tc.constraint_name = ccu.constraint_name
-    WHERE t.table_type = 'BASE TABLE'
-    AND t.table_schema = '${inputLinkSchema1}'
-    AND tc.constraint_type = 'FOREIGN KEY'
-  
-  ) AS subquery
-GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
-ORDER BY table_name, column_name
-
+        ) AS subquery
+      GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
+      ORDER BY table_name, column_name
       `;
     const query2 = `
     
@@ -267,7 +269,6 @@ ORDER BY table_name, column_name
             column.constraintTypes.push(constraintTypeTemp);
             column.constraintNames.push(constraintNamesArray[index]);
           });
-          
         }
 
         // Add new column object to table.
@@ -585,6 +586,7 @@ ORDER BY table_name, column_name
     const scriptCopy = JSON.parse(JSON.stringify(script));
 
     scriptCopy[id] = query;
+    ipcRenderer.send('Hi', scriptCopy);
     this.setState({ script: scriptCopy });
   }
 
