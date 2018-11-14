@@ -87,3 +87,7 @@ ipcMain.on('updateScript', (event, script) => {
 ipcMain.on('addAll', (event) => {
   mainWindow.webContents.send('addAll');
 });
+
+ipcMain.on('removeAll', (event) => {
+  mainWindow.webContents.send('removeAll');
+});

@@ -348,12 +348,15 @@ ORDER BY table_name, column_name
               // Check constraint types.
               if (column.constraintTypes !== undefined) {
                 column.constraintTypes.forEach((constraintType) => {
+                  if (column.name === 'sid' && table.name === 'studentClass') {
+                    console.log('1234', constraintType, foundColumn.constraintTypes, !foundColumn.constraintTypes.includes(constraintType));
+                  }
                   if (
                     foundColumn.constraintTypes === undefined
                     || !foundColumn.constraintTypes.includes(constraintType)
                   ) {
                     // Property does not exist.
-                    if (foundColumn.contstraintTypes === undefined) {
+                    if (foundColumn.constraintTypes === undefined) {
                       foundColumn.constraintTypes = [];
                     }
                     foundColumn.constraintTypes.push(constraintType);
@@ -500,6 +503,7 @@ ORDER BY table_name, column_name
         })
         // Determine differences between databases.
         .then(() => {
+          console.log(devDb, prodDb);
           diffDb = diffDatabases(devDb, prodDb);
 
           // Sort database arrays so that common tables appear first.
@@ -599,30 +603,31 @@ ORDER BY table_name, column_name
   }
 
   removeAllChanges() {
+    console.log('this.removeAllChanges');
     const backgroundColors = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
-
     const ids = Object.keys(backgroundColorsCopy);
 
     ids.forEach((id) => {
-      backgroundColorsCopy.id = false;
+      backgroundColorsCopy[id] = false;
     });
 
-    this.setState({ script: {}, backgroundColors: backgroundColorsCopy });
-    console.log('when remove, bg colors', this.state.backgroundColors);
+    ipcRenderer.send('updateScript', []);
+    this.setState({ script: [], backgroundColors: backgroundColorsCopy });
   }
 
 
   addAllChanges(script) {
-    console.log(this.state.diffDbColors, 'diffDB');
     const { diffDbColors } = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(diffDbColors));
     const ids = Object.keys(backgroundColorsCopy);
+
     ids.forEach((id) => {
       backgroundColorsCopy[id] = true;
     });
+
+    ipcRenderer.send('updateScript', script);
     this.setState({ script, backgroundColors: backgroundColorsCopy });
-    console.log('when add, bg: colors', this.state.backgroundColors);
   }
 
 
