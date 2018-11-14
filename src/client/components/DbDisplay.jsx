@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 const DbDisplay = (props) => {
+  console.log('props: ', props)
   const { tableInfo } = props;
   const { name, columns } = tableInfo;
   // console.log(columns,'clm nullable')
