@@ -7,6 +7,9 @@ import ScriptContainer from './ScriptContainer.jsx';
 import SaveLoadDisplay from '../components/SaveLoadDisplay.jsx';
 import loadingIcon from '../../assets/5pSf.gif';
 
+const remote = require('electron').remote;
+
+const main = remote.require('./electron.js');
 const electron = require('electron');
 
 const { ipcRenderer } = electron;
@@ -54,6 +57,7 @@ class MainContainer extends Component {
     this.setBackgroundColor = this.setBackgroundColor.bind(this);
     this.removeAllChanges = this.removeAllChanges.bind(this);
     this.addAllChanges = this.addAllChanges.bind(this);
+    this.openScriptWindow = this.openScriptWindow.bind(this);
   }
 
   componentWillMount() {
@@ -630,6 +634,9 @@ ORDER BY table_name, column_name
     this.setState({ script, backgroundColors: backgroundColorsCopy });
   }
 
+  openScriptWindow() {
+    main.createScriptWindow();
+  }
 
   render() {
     const {
@@ -647,7 +654,7 @@ ORDER BY table_name, column_name
       showLoadingScreen,
     } = this.state;
     const {
-      changeDisplay, addScript, removeScript, setBackgroundColor, removeAllChanges, addAllChanges,
+      changeDisplay, addScript, removeScript, setBackgroundColor, removeAllChanges, addAllChanges, openScriptWindow,
     } = this;
 
     /* eslint-disable */
@@ -692,9 +699,15 @@ ORDER BY table_name, column_name
             DB Diff
           </button>
           <button
+            id="diffDbDisplay"
+            onClick={openScriptWindow}
+          >
+            Script
+          </button>
+          <button
             id="saveLoadDisplay"
             onClick={event => {
-              changeDisplay(event);
+              openScrip(event);
             }}
           >
             Save / Load

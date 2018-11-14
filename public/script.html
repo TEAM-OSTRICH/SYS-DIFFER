@@ -69,7 +69,12 @@
                     // Close app
                     document.getElementById("close-btn").addEventListener("click", (e) => {
                         var window = BrowserWindow.getFocusedWindow();
-                        window.close();
+                        // window.close();
+                        if(window.isMaximized()){
+                            window.unmaximize();
+                        }else{
+                            window.maximize();
+                        }
                     });
                 };
 
