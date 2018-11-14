@@ -7,7 +7,7 @@ ipcRenderer.on('updateScript', (event, script) => {
   let queryString = '';
 
   script.forEach((queryObj) => {
-    queryString += `${queryObj.query}\n`;
+    queryString += `${queryObj.query}\n\n`;
   });
 
   scriptTextArea.value = queryString;
@@ -18,5 +18,5 @@ const addAll = () => {
 };
 
 const removeAll = () => {
-
+  ipcRenderer.send('removeAll');
 };
