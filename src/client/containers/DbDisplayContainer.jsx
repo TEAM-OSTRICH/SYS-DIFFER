@@ -14,10 +14,10 @@ class DbDisplayContainer extends Component {
     const { db } = this.props;
     const arrTest = this.state.allRefs.slice();
     db.forEach(ele => {
-      console.log(ele,'ele')
+      // console.log(ele,'ele')
       // ele.props.tableInfo.columns.forEach(e=>arrTest.push(e))
     });
-    console.log(db, 'pray');
+    // console.log(db, 'pray');
   }
 
   render() {
