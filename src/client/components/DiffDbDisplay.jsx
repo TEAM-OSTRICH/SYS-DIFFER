@@ -186,7 +186,7 @@ const DiffDbDisplay = (props) => {
     <ul>
       <li
         id={name}
-        className="list-group-item"
+        className="list-group-item photos"
         style={
           {
             borderColor: diffDbColors[name]

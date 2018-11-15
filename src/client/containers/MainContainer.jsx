@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
 import SaveLoadDisplay from '../components/SaveLoadDisplay.jsx';
 import loadingIcon from '../../assets/5pSf.gif';
+
 
 const { remote } = require('electron');
 
@@ -231,7 +234,7 @@ class MainContainer extends Component {
     const prodDbConn = pgp(input2);
 
 
-/**
+    /**
  * Parse schemaInfo to create table objects.
  * @param {string} dbName - name of the database (dev or prod)
  * @param {object} schemaInfo - the metadata about tables returned from database
@@ -487,7 +490,7 @@ class MainContainer extends Component {
 
     // ********************    HERE IS WHERE WE LEFT OFF COMMENTING    ********************
 
-    
+
     // Query new and current database for schema information.
     // Run diffing algorithm.
     devDbConn.any(query2).then((schemaInfo) => {
@@ -570,8 +573,8 @@ class MainContainer extends Component {
     this.setState({ backgroundColors: backgroundColorsCopy });
   }
 
-  changeDisplay(event) {
-    const display = event.target.id;
+  changeDisplay(display) {
+    // const display = event.target.id;
     // Reset all displays to false to clear previous selected tab
     this.setState({
       devDbDisplay: false,
@@ -658,55 +661,61 @@ class MainContainer extends Component {
         <div id="loading-screen" style={{visibility: showLoadingScreen ? 'visible' : 'hidden'}}>
           <div id="loading-box">
             <h1 className="blinking" id="loading-message">Loading... </h1>
-            <img src={loadingIcon} style={{width: '50px',height: '50px'}}/>
+            <img src={loadingIcon} style={{width: '20px',height: '20px'}}/>
           </div>
         </div>
         <div className="mainContainerBtns">
-          <button
+          <Button
+            variant="contained" color="primary"
             onClick={event => {
               return this.props.history.push("/");
             }}
           >
             Home
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="contained" color="primary"
             id="devDbDisplay"
             onClick={event => {
-              changeDisplay(event);
+              changeDisplay('devDbDisplay');
             }}
           >
             Dev DB
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="contained" color="primary"
             id="prodDbDisplay"
             onClick={event => {
-              changeDisplay(event);
+              changeDisplay('prodDbDisplay');
             }}
           >
             Prod DB
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="contained" color="primary"
             id="diffDbDisplay"
+            onClick={event => {
+              changeDisplay('diffDbDisplay');
+            }}
+          >
+            DB Diff
+          </Button>
+          <Button
+            variant="contained" color="primary"
+            id="scriptDisplay"
+            onClick={openScriptWindow}
+          >
+            Script
+          </Button>
+          <Button
+            variant="contained" color="primary"
+            id="saveLoadDisplay"
             onClick={event => {
               changeDisplay(event);
             }}
           >
-            DB Diff
-          </button>
-          <button
-            id="diffDbDisplay"
-            onClick={openScriptWindow}
-          >
-            Script
-          </button>
-          <button
-            id="saveLoadDisplay"
-            onClick={event => {
-              openScrip(event);
-            }}
-          >
             Save / Load
-          </button>
+          </Button>
           {/* render page depending on which tab is selected (only one can be selected) */}
           {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
           {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}

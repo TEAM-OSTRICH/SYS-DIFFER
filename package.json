@@ -13,6 +13,7 @@
   "author": "Ge Sun, Lee Rogers, Kevin Mui",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^3.5.1",
     "body-parser": "^1.18.3",
     "deep-diff": "^1.0.2",
     "electron": "^3.0.6",
@@ -30,6 +31,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "request": "^2.79.0",
+    "typeface-roboto": "0.0.54",
     "webpack-dashboard": "^2.0.0"
   },
   "devDependencies": {

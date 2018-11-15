@@ -21,7 +21,8 @@ function createMainWindow() {
     height: 760,
     // minWidth: 960,
     // minHeight: 760,
-    backgroundColor: '#b5beda',
+    // backgroundColor: '#b5beda',
+    backgroundColor: '#f1f2f4',
   });
 
   mainWindow.loadURL(
@@ -45,7 +46,8 @@ exports.createScriptWindow = () => {
       minWidth: 400,
       minHeight: 600,
       // minHeight: 680,
-      backgroundColor: '#b5beda',
+      // backgroundColor: '#b5beda',
+      backgroundColor: '#f1f2f4',
       // show: false,
       x: mainWindowPos[0] + 960,
       y: mainWindowPos[1],
