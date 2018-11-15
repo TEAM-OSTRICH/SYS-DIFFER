@@ -13,7 +13,7 @@ class DbDisplay extends Component {
   }
 
   componentDidMount() {
-    const { tableInfo } = this.props;
+    const { tableInfo, storePositions } = this.props;
     const { name, columns } = tableInfo;
     // console.log(columns,'clm nullable')
 
@@ -55,15 +55,21 @@ class DbDisplay extends Component {
     // loop through columns again to check which element contains 'REFERENCES'
     // which means it has a foreign key reference
 
-    // for (let i = 0; i < this.state.newColumns.length; i++) {
-    //   if (this.state.newColumns[i].ref.includes('REFERENCES')) {
-    //     // ReactDOM
-    //     //   .findDOMNode(this.refs[`${this.state.newColumns[i].ref}`])
-    //     //   .getBoundingClientRect();
-    //     // console.log(ReactDOM.findDOMNode(this.refs[`${newColumns[i].ref}`]),
-    //     //   'r');
-    //   }
-    // }
+    for (let i = 0; i < this.state.newColumns.length; i++) {
+      
+      if (this.state.newColumns[i].ref.includes('REFERENCES')) {
+        // ReactDOM
+        //   .findDOMNode(this.refs[`${this.state.newColumns[i].ref}`])
+        //   .getBoundingClientRect();
+        console.log(ReactDOM.findDOMNode(this.refs[`${this.state.newColumns[i].ref}`]), 'r');
+      }
+    }
+    const refArr = [];
+    newColumns.forEach(li=>{
+      console.log(li,'llllliiiii')
+      // refArr.push(li.getPosition());
+    })
+    storePositions(refArr);
   }
 
   test() {
@@ -78,7 +84,7 @@ class DbDisplay extends Component {
 
   render() {
     return (
-      <div>
+      <div className="singleTable">
         <ul ref="hi">
           <li className="list-group-item" onClick={this.test}>
             {this.state.name}
@@ -124,5 +130,6 @@ class DbDisplay extends Component {
 
   // );
 }
+
 
 export default DbDisplay;

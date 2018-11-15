@@ -266,6 +266,8 @@ ORDER BY table_name, column_name
 
             if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
 
+            // add another key in column obj? 
+            
             column.constraintTypes.push(constraintTypeTemp);
             column.constraintNames.push(constraintNamesArray[index]);
           });
@@ -700,7 +702,7 @@ ORDER BY table_name, column_name
             Save / Load
           </button>
           {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
-          {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
+          {devDbDisplay ? <DbDisplayContainer db={devDb} id="d31"/> : null}
           {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
           {diffDbDisplay
             ? (
