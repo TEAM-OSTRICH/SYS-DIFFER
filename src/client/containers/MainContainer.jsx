@@ -227,7 +227,7 @@ class MainContainer extends Component {
           ) AS subquery
         GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
         ORDER BY table_name, column_name
-              `;
+        `;
 
     // connect to each database
     const devDbConn = pgp(input1);
@@ -428,7 +428,6 @@ class MainContainer extends Component {
               diffDbColors[`${table.name}-${column.name}`] = 'indianred';
               backgroundColors[`${table.name}-${column.name}`] = false;
             } else {
-              // else if (column.constraintTypes !== undefined) {
               // Column exists.
               // Check column properties.
               // Do not have to check if data type exists because all columns must have a data type.
@@ -592,7 +591,9 @@ class MainContainer extends Component {
     const scriptCopy = script.slice();
 
     scriptCopy.push({ id, query });
-    ipcRenderer.send('updateScript', scriptCopy);
+
+    main.createScriptWindow();
+    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 200);
     this.setState({ script: scriptCopy });
   }
 
@@ -600,6 +601,8 @@ class MainContainer extends Component {
     const { script } = this.state;
     const scriptCopy = script.filter(query => query.id !== id);
 
+    main.createScriptWindow();
+    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 200);
     ipcRenderer.send('updateScript', scriptCopy);
     this.setState({ script: scriptCopy });
   }
@@ -666,15 +669,16 @@ class MainContainer extends Component {
         </div>
         <div className="mainContainerBtns">
           <Button
-            variant="contained" color="primary"
+            variant="outlined" color="primary"
             onClick={event => {
+              main.closeScriptWindow();
               return this.props.history.push("/");
             }}
           >
             Home
           </Button>
           <Button
-            variant="contained" color="primary"
+            variant="outlined" color="primary"
             id="devDbDisplay"
             onClick={event => {
               changeDisplay('devDbDisplay');
@@ -683,7 +687,7 @@ class MainContainer extends Component {
             Dev DB
           </Button>
           <Button
-            variant="contained" color="primary"
+            variant="outlined" color="primary"
             id="prodDbDisplay"
             onClick={event => {
               changeDisplay('prodDbDisplay');
@@ -692,7 +696,7 @@ class MainContainer extends Component {
             Prod DB
           </Button>
           <Button
-            variant="contained" color="primary"
+            variant="outlined" color="primary"
             id="diffDbDisplay"
             onClick={event => {
               changeDisplay('diffDbDisplay');
@@ -701,14 +705,14 @@ class MainContainer extends Component {
             DB Diff
           </Button>
           <Button
-            variant="contained" color="primary"
+            variant="outlined" color="primary"
             id="scriptDisplay"
             onClick={openScriptWindow}
           >
             Script
           </Button>
           <Button
-            variant="contained" color="primary"
+            variant="outlined" color="primary"
             id="saveLoadDisplay"
             onClick={event => {
               changeDisplay(event);

@@ -280,10 +280,13 @@ ul {
 }
 
 .prettierBtn{
-  border-radius: 13px;
-  width: 13px;
-  height: 13px;
-  border: none;
+  border-radius: 50% 50% 50% 50%;
+
+  height: 20px;
+  text-align: center;
+  width: 20px;
+  vertical-align:middle;
+  display:table-cell
 }
 
 .prettierBtn:focus{

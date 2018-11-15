@@ -64,6 +64,13 @@ exports.createScriptWindow = () => {
   }
 };
 
+exports.closeScriptWindow = () => {
+  if (scriptWindow) {
+    scriptWindow.close();
+    scriptWindow = null;
+  }
+};
+
 app.on('ready', createMainWindow);
 // app.on('ready', createScriptWindow);
 
