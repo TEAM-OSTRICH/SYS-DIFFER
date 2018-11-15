@@ -7,7 +7,6 @@ import ScriptContainer from './ScriptContainer.jsx';
 const remote = require('electron').remote;
 
 const main = remote.require('./electron.js');
-
 const electron = require('electron');
 
 const { ipcRenderer } = electron;
@@ -62,6 +61,8 @@ class DiffDbDisplayContainer extends Component {
   }
 
   componentDidMount() {
+    const { removeAllChanges } = this.props;
+
     main.createScriptWindow();
 
     ipcRenderer.on('addAll', (event) => {
@@ -69,6 +70,10 @@ class DiffDbDisplayContainer extends Component {
         db, diffDbColors, addScript, removeScript, script, backgroundColors, setBackgroundColor, removeAllChanges, addAllChanges,
       } = this.props;
       selectAll(db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges);
+    });
+
+    ipcRenderer.on('removeAll', (event) => {
+      removeAllChanges();
     });
   }
 
@@ -89,7 +94,7 @@ class DiffDbDisplayContainer extends Component {
       db, diffDbColors, addScript, removeScript, script, backgroundColors, setBackgroundColor, removeAllChanges, addAllChanges,
     } = this.props;
     const { killGrayBox } = this;
-
+    console.log(diffDbColors);
     const tables = db.map(tableInfo => (
       <DiffDbDisplay
         key={tableInfo.name}
@@ -269,7 +274,7 @@ const handleClick = (id, diffDbColors, addScript, setBackgroundColor, tableInfo,
 
 const selectAll = (db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges) => {
   const ids = Object.keys(diffDbColors);
-  const script = {};
+  const script = [];
   // console.log(backgroundColors);
   // Loop through all ids of backgroundColors and select changes.
 
@@ -279,11 +284,11 @@ const selectAll = (db, diffDbColors, addScript, backgroundColors, setBackgroundC
     const foundTable = _.find(db, { name: tableName });
 
     if (idArray.length === 1) {
-      script[id] = handleClick(id, diffDbColors, addScript, setBackgroundColor, foundTable);
+      script.push({ id, query: handleClick(id, diffDbColors, addScript, setBackgroundColor, foundTable) });
     } else {
       const columnName = idArray[1];
       const foundColumn = _.find(foundTable.columns, { name: columnName });
-      script[id] = handleClick(id, diffDbColors, addScript, setBackgroundColor, foundTable, foundColumn);
+      script.push({ id, query: handleClick(id, diffDbColors, addScript, setBackgroundColor, foundTable, foundColumn) });
     }
   });
 

@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import handleClick from './HandleClick.js';
 
-// // added function to change clicked element's background color
-// const handleClick = (event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column) => {
-//   event.stopPropagation();
-//   let id;
-//   let target;
-//   const { parentNode } = event.target;
+const remote = require('electron').remote;
+
+const main = remote.require('./electron.js');
+
+// added function to change clicked element's background color
+const handleClick = (event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column) => {
+  event.stopPropagation();
+
+  // main.createScriptWindow();
+
+  let id;
+  let target;
+  const { parentNode } = event.target;
 
 //   if (diffDbColors[event.target.id] !== undefined) {
 //     id = event.target.id;

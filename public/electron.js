@@ -19,6 +19,8 @@ function createMainWindow() {
     frame: false,
     width: 960,
     height: 760,
+    x: 50,
+    y: 0,
     // minWidth: 960,
     // minHeight: 760,
     backgroundColor: '#b5beda',
@@ -86,4 +88,8 @@ ipcMain.on('updateScript', (event, script) => {
 // listening for 'addAll' from script.js -> send 'addAll' to DiffDbDisplayContainer component in mainWindow
 ipcMain.on('addAll', (event) => {
   mainWindow.webContents.send('addAll');
+});
+
+ipcMain.on('removeAll', (event) => {
+  mainWindow.webContents.send('removeAll');
 });

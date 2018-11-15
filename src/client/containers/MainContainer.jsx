@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { NavLink, Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
-import ScriptContainer from './ScriptContainer.jsx';
 import SaveLoadDisplay from '../components/SaveLoadDisplay.jsx';
 import loadingIcon from '../../assets/5pSf.gif';
 
+const { remote } = require('electron');
+
+const main = remote.require('./electron.js');
 const electron = require('electron');
 
 const { ipcRenderer } = electron;
 
+// options for connecting to databases
 const initOptions = {
   connect(client, dc, useCount) {
     const cp = client.connectionParameters;
@@ -54,33 +57,48 @@ class MainContainer extends Component {
     this.setBackgroundColor = this.setBackgroundColor.bind(this);
     this.removeAllChanges = this.removeAllChanges.bind(this);
     this.addAllChanges = this.addAllChanges.bind(this);
+    this.openScriptWindow = this.openScriptWindow.bind(this);
   }
 
+  /**
+   * Getting database URL from entry page (either entire URL at top, or by creating URL from inputs)
+   */
   componentWillMount() {
     let {
       input1,
       input2,
       inputLinkSchema1,
       inputLinkSchema2,
+      inputObj1User,
+      inputObj1Pass,
+      inputObj1Host,
+      inputObj1Port,
+      inputObj1Dbname,
+      inputObj2User,
+      inputObj2Pass,
+      inputObj2Host,
+      inputObj2Port,
+      inputObj2Dbname,
       inputObj1Schema,
       inputObj2Schema,
     } = this.props;
+
     if (input1 === '' || input2 === '') {
-      input1 = `postgres://${this.props.inputObj1User}:${
-        this.props.inputObj1Pass
-      }@${this.props.inputObj1Host}:${this.props.inputObj1Port}/${
-        this.props.inputObj1Dbname
+      input1 = `postgres://${inputObj1User}:${
+        inputObj1Pass
+      }@${inputObj1Host}:${inputObj1Port}/${
+        inputObj1Dbname
       }`;
-      input2 = `postgres://${this.props.inputObj2User}:${
-        this.props.inputObj2Pass
-      }@${this.props.inputObj2Host}:${this.props.inputObj2Port}/${
-        this.props.inputObj2Dbname
+
+      input2 = `postgres://${inputObj2User}:${
+        inputObj2Pass
+      }@${inputObj2Host}:${inputObj2Port}/${
+        inputObj2Dbname
       }`;
+
       inputLinkSchema1 = inputObj1Schema;
       inputLinkSchema2 = inputObj2Schema;
     }
-    // const input1 = 'postgres://vhbazswk:J2WpO0mnB5nPzOHhhGLGiBgAE26Twt_Z@stampy.db.elephantsql.com:5432/vhbazswk';
-    // const input2 = 'postgres://dslgjgaw:vSOX1FK3PujhRKJSgm3lKL_86UADa2CU@stampy.db.elephantsql.com:5432/dslgjgaw';
 
     const query = `
       SELECT 
@@ -140,87 +158,90 @@ class MainContainer extends Component {
           WHERE t.table_type = 'BASE TABLE'
           AND t.table_schema = '${inputLinkSchema1}'
           AND tc.constraint_type = 'FOREIGN KEY'
-        
         ) AS subquery
       GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
       ORDER BY table_name, column_name
       `;
+
     const query2 = `
-    
-SELECT 
-table_name,
-column_name,
-is_nullable,
-data_type,
-character_maximum_length,
-string_agg(constraint_type, ', ') AS constraint_types,
-string_agg(foreign_table_name, ', ') AS foreign_table_name,
-string_agg(foreign_column_name, ', ') AS foreign_column_name,
-string_agg(constraint_name, ', ') AS constraint_names
-FROM
-  (
-    SELECT
-    tc.constraint_name,
-    t.table_name,
-    c.column_name,
-    c.is_nullable,
-    c.data_type,
-    c.character_maximum_length,
-    tc.constraint_type,
-    null AS foreign_table_name,
-    null AS foreign_column_name
-    FROM
-    information_schema.tables AS t JOIN information_schema.columns AS c
-      ON t.table_name = c.table_name
-    LEFT JOIN information_schema.key_column_usage AS kcu
-      ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-    LEFT JOIN information_schema.table_constraints AS tc
-      ON kcu.constraint_name = tc.constraint_name
-    LEFT JOIN information_schema.constraint_column_usage AS ccu 
-      ON tc.constraint_name = ccu.constraint_name
-    WHERE t.table_type = 'BASE TABLE'
-    AND t.table_schema = '${inputLinkSchema2}'
-    AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
-    UNION ALL
-    SELECT
-    tc.constraint_name,
-    t.table_name,
-    c.column_name,
-    c.is_nullable,
-    c.data_type,
-    c.character_maximum_length,
-    tc.constraint_type,
-    ccu.table_name AS foreign_table_name,
-    ccu.column_name AS foreign_column_name
-    FROM
-    information_schema.tables AS t JOIN information_schema.columns as c
-      ON t.table_name = c.table_name
-    LEFT JOIN information_schema.key_column_usage as kcu
-      ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-    LEFT JOIN information_schema.table_constraints as tc
-      ON kcu.constraint_name = tc.constraint_name
-    LEFT JOIN information_schema.constraint_column_usage AS ccu
-      ON tc.constraint_name = ccu.constraint_name
-    WHERE t.table_type = 'BASE TABLE'
-    AND t.table_schema = '${inputLinkSchema2}'
-    AND tc.constraint_type = 'FOREIGN KEY'
-  
-  ) AS subquery
-GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
-ORDER BY table_name, column_name
+        SELECT 
+        table_name,
+        column_name,
+        is_nullable,
+        data_type,
+        character_maximum_length,
+        string_agg(constraint_type, ', ') AS constraint_types,
+        string_agg(foreign_table_name, ', ') AS foreign_table_name,
+        string_agg(foreign_column_name, ', ') AS foreign_column_name,
+        string_agg(constraint_name, ', ') AS constraint_names
+        FROM
+          (
+            SELECT
+            tc.constraint_name,
+            t.table_name,
+            c.column_name,
+            c.is_nullable,
+            c.data_type,
+            c.character_maximum_length,
+            tc.constraint_type,
+            null AS foreign_table_name,
+            null AS foreign_column_name
+            FROM
+            information_schema.tables AS t JOIN information_schema.columns AS c
+              ON t.table_name = c.table_name
+            LEFT JOIN information_schema.key_column_usage AS kcu
+              ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+            LEFT JOIN information_schema.table_constraints AS tc
+              ON kcu.constraint_name = tc.constraint_name
+            LEFT JOIN information_schema.constraint_column_usage AS ccu 
+              ON tc.constraint_name = ccu.constraint_name
+            WHERE t.table_type = 'BASE TABLE'
+            AND t.table_schema = '${inputLinkSchema2}'
+            AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
+            UNION ALL
+            SELECT
+            tc.constraint_name,
+            t.table_name,
+            c.column_name,
+            c.is_nullable,
+            c.data_type,
+            c.character_maximum_length,
+            tc.constraint_type,
+            ccu.table_name AS foreign_table_name,
+            ccu.column_name AS foreign_column_name
+            FROM
+            information_schema.tables AS t JOIN information_schema.columns as c
+              ON t.table_name = c.table_name
+            LEFT JOIN information_schema.key_column_usage as kcu
+              ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
+            LEFT JOIN information_schema.table_constraints as tc
+              ON kcu.constraint_name = tc.constraint_name
+            LEFT JOIN information_schema.constraint_column_usage AS ccu
+              ON tc.constraint_name = ccu.constraint_name
+            WHERE t.table_type = 'BASE TABLE'
+            AND t.table_schema = '${inputLinkSchema2}'
+            AND tc.constraint_type = 'FOREIGN KEY'
+          ) AS subquery
+        GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
+        ORDER BY table_name, column_name
+              `;
 
-      `;
-
+    // connect to each database
     const devDbConn = pgp(input1);
     const prodDbConn = pgp(input2);
 
-    // Parse schemaInfo to create table objects.
-    const setDbInfo = (dbName, schemaInfo) => {
-      const dbCopy = [];
 
-      let currentTableName;
+/**
+ * Parse schemaInfo to create table objects.
+ * @param {string} dbName - name of the database (dev or prod)
+ * @param {object} schemaInfo - the metadata about tables returned from database
+ */
+
+    const setDbInfo = (schemaInfo) => {
+      // this array will contain all the table objects
+      const dbCopy = [];
+      // table object to create each table, then push onto dbCopy array
       let table = {};
-      console.log(schemaInfo, 'info');
       schemaInfo.forEach((row) => {
         const {
           table_name,
@@ -234,13 +255,11 @@ ORDER BY table_name, column_name
           constraint_names,
         } = row;
 
-        if (currentTableName === undefined) {
-          currentTableName = table_name;
+        if (table.name === undefined) {
           table.name = table_name;
         }
 
-        if (currentTableName !== undefined && currentTableName !== table_name) {
-          currentTableName = table_name;
+        if (table.name !== undefined && table.name !== table_name) {
           // Add table to oldDb array.
           dbCopy.push(table);
           // Reset table.
@@ -248,14 +267,17 @@ ORDER BY table_name, column_name
           table.name = table_name;
         }
 
-        // Create new column object.
+        // Create new column object to push into table object.
         const column = {};
         column.name = column_name;
-        column.isNullable = (is_nullable == 'YES');
+        column.isNullable = (is_nullable === 'YES');
 
+        // This is for data-types only:
         column.dataType = data_type;
         if (data_type === 'character varying') { column.dataType = `varchar (${character_maximum_length})`; }
         if (data_type === 'double precision') column.dataType = 'float';
+
+        // For contraints only:
         if (constraint_types !== null) {
           const constraintTypesArray = constraint_types.split(', ');
           const constraintNamesArray = constraint_names.split(', ');
@@ -263,7 +285,7 @@ ORDER BY table_name, column_name
           column.constraintNames = [];
           constraintTypesArray.forEach((constraintType, index) => {
             let constraintTypeTemp = constraintType;
-
+            // create Foreign Key statement
             if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
 
             column.constraintTypes.push(constraintTypeTemp);
@@ -279,12 +301,16 @@ ORDER BY table_name, column_name
       // Push the last table.
       dbCopy.push(table);
 
-      // this.setState({ [dbName]: dbCopy });
       return dbCopy;
     };
 
-    // Create diffDb by comparing table objects in database arrays.
+    /**
+     * Create diffDb by comparing table objects in database arrays.
+     * @param {array} devDb
+     * @param {array} prodDb
+     */
     const diffDatabases = (devDb, prodDb) => {
+      // make a deep copy of prodDb
       const diffDb = JSON.parse(JSON.stringify(prodDb));
       const diffDbColors = {};
       const backgroundColors = {};
@@ -353,7 +379,7 @@ ORDER BY table_name, column_name
                     || !foundColumn.constraintTypes.includes(constraintType)
                   ) {
                     // Property does not exist.
-                    if (foundColumn.contstraintTypes === undefined) {
+                    if (foundColumn.constraintTypes === undefined) {
                       foundColumn.constraintTypes = [];
                     }
                     foundColumn.constraintTypes.push(constraintType);
@@ -371,25 +397,6 @@ ORDER BY table_name, column_name
                   }
                 });
               }
-
-              // const keys = Object.keys(column);
-
-              // keys.forEach((key) => {
-              //   // console.log(foundColumn[key], column[key]);
-              //   if (foundColumn[key] === undefined) {
-              //     // Property does not exist.
-              //     foundColumn[key] = column[key];
-              //     // Add color scheme.
-              //     diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'darkseagreen';
-              //     backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
-              //   } else if (foundColumn[key] !== column[key]) {
-              //     // Property has been modified.
-              //     foundColumn[key] = column[key];
-              //     // Add color scheme.
-              //     diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'yellow';
-              //     backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
-              //   }
-              // });
             }
           });
         }
@@ -464,21 +471,11 @@ ORDER BY table_name, column_name
                   }
                 });
               }
-
-              // const keys = Object.keys(column);
-
-              // keys.forEach((key) => {
-              //   if (foundColumn[key] === undefined) {
-              //     // Property does not exist.
-              //     // Add color scheme.
-              //     diffDbColors[`${table.name}-${column.name}-${key}-${column[key]}`] = 'indianred';
-              //     backgroundColors[`${table.name}-${column.name}-${key}-${column[key]}`] = false;
-              //   }
-              // });
             }
           });
         }
       });
+
       this.setState({ diffDbColors, backgroundColors });
       return diffDb;
     };
@@ -487,22 +484,22 @@ ORDER BY table_name, column_name
     let prodDb;
     let diffDb;
 
-    // Query new and current database for schema information.
-    // Run diffing algorithm.
-    devDbConn.any(query2).then((schemaInfo) => {
-      devDb = setDbInfo('devDb', schemaInfo);
 
-      // inputLinkSchema1 = inputLinkSchema2;
+    // query dev database for schema info
+    devDbConn.any(query2).then((schemaInfo) => {
+      devDb = setDbInfo(schemaInfo);
+
+      // query production database for schema info
       prodDbConn
         .any(query)
         .then((schemaInfo2) => {
-          prodDb = setDbInfo('prodDb', schemaInfo2);
+          prodDb = setDbInfo(schemaInfo2);
         })
-        // Determine differences between databases.
         .then(() => {
+          // Determine differences between databases.
           diffDb = diffDatabases(devDb, prodDb);
 
-          // Sort database arrays so that common tables appear first.
+          // Create database arrays to sort so that common tables appear first for easier visual comparison
           let commonTablesArray = [];
           let differentTablesArray = [];
 
@@ -510,13 +507,16 @@ ORDER BY table_name, column_name
           devDb.forEach((table) => {
             const foundTable = _.find(prodDb, { name: table.name });
 
+            // tables that in both databases:
             if (foundTable !== undefined) {
               commonTablesArray.push(table);
             } else {
+              // tables only in one database or the other
               differentTablesArray.push(table);
             }
           });
 
+          // combine arrays of databases (tables in both databases appear first)
           const sortedDevDb = commonTablesArray.concat(differentTablesArray);
           commonTablesArray = [];
           differentTablesArray = [];
@@ -524,14 +524,16 @@ ORDER BY table_name, column_name
           // Sort prodDb.
           prodDb.forEach((table) => {
             const foundTable = _.find(devDb, { name: table.name });
-
+            // tables in both databases
             if (foundTable !== undefined) {
               commonTablesArray.push(table);
             } else {
+              // tables only in one db or the other
               differentTablesArray.push(table);
             }
           });
 
+          // combine arrays of databases (tables in both databases appear first)
           const sortedProdDb = commonTablesArray.concat(differentTablesArray);
           commonTablesArray = [];
           differentTablesArray = [];
@@ -570,7 +572,7 @@ ORDER BY table_name, column_name
 
   changeDisplay(event) {
     const display = event.target.id;
-    // Reset all displays to false.
+    // Reset all displays to false to clear previous selected tab
     this.setState({
       devDbDisplay: false,
       prodDbDisplay: false,
@@ -578,9 +580,15 @@ ORDER BY table_name, column_name
       scriptDisplay: false,
       saveLoadDisplay: false,
     });
+    // whichever tab was clicked gets set to true
     this.setState({ [display]: true });
   }
 
+  /**
+   * Function to add SQL command scripts to script window
+   * @param {string} id - id of the element to be changed
+   * @param {string} query - update SQL command script
+   */
   addScript(id, query) {
     const { script } = this.state;
     const scriptCopy = script.slice();
@@ -590,6 +598,7 @@ ORDER BY table_name, column_name
     this.setState({ script: scriptCopy });
   }
 
+  // removing from pop-up script window
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = script.filter(query => query.id !== id);
@@ -598,33 +607,39 @@ ORDER BY table_name, column_name
     this.setState({ script: scriptCopy });
   }
 
+  // removing all from script window AND de-selects all.
   removeAllChanges() {
     const backgroundColors = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
-
     const ids = Object.keys(backgroundColorsCopy);
 
     ids.forEach((id) => {
-      backgroundColorsCopy.id = false;
+      backgroundColorsCopy[id] = false;
     });
 
-    this.setState({ script: {}, backgroundColors: backgroundColorsCopy });
-    console.log('when remove, bg colors', this.state.backgroundColors);
+    ipcRenderer.send('updateScript', []);
+    this.setState({ script: [], backgroundColors: backgroundColorsCopy });
   }
 
-
+  // selects all and adds all scripts to window
   addAllChanges(script) {
-    console.log(this.state.diffDbColors, 'diffDB');
     const { diffDbColors } = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(diffDbColors));
     const ids = Object.keys(backgroundColorsCopy);
+
     ids.forEach((id) => {
       backgroundColorsCopy[id] = true;
     });
+
+    ipcRenderer.send('updateScript', script);
     this.setState({ script, backgroundColors: backgroundColorsCopy });
-    console.log('when add, bg: colors', this.state.backgroundColors);
   }
 
+  openScriptWindow() {
+    main.createScriptWindow();
+  }
+
+  // ************************************  STOPPED COMMENTING HERE   ************************************
 
   render() {
     const {
@@ -642,7 +657,7 @@ ORDER BY table_name, column_name
       showLoadingScreen,
     } = this.state;
     const {
-      changeDisplay, addScript, removeScript, setBackgroundColor, removeAllChanges, addAllChanges,
+      changeDisplay, addScript, removeScript, setBackgroundColor, removeAllChanges, addAllChanges, openScriptWindow,
     } = this;
 
     /* eslint-disable */
@@ -687,14 +702,20 @@ ORDER BY table_name, column_name
             DB Diff
           </button>
           <button
+            id="diffDbDisplay"
+            onClick={openScriptWindow}
+          >
+            Script
+          </button>
+          <button
             id="saveLoadDisplay"
             onClick={event => {
-              changeDisplay(event);
+              openScrip(event);
             }}
           >
             Save / Load
           </button>
-          {/* <button id="scriptDisplay" onClick={(event) => { changeDisplay(event); }}>Script</button> */}
+          {/* render page depending on which tab is selected (only one can be selected) */}
           {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
           {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
           {diffDbDisplay

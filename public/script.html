@@ -6,11 +6,8 @@
         <link rel='stylesheet' href="./../src/main.css">
         <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,500,700" rel="stylesheet">
         <meta charset="utf-8">
-
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <title>Chrisdiffer</title>
-
     </head>
 
     <body>
@@ -24,20 +21,21 @@
             </div>
             <div id="title-bar-btns">
                 <button class="prettierBtn" id="close-btn">
-                  <span id="close-span">x</span>
+                  <span id="close-span"></span>
                 </button>
                 <button class="prettierBtn" id="min-btn">
-                  <span id="min-span">-</span>
+                  <span id="min-span"></span>
                 </button>
                 <button class="prettierBtn" id="max-btn">
-                  <span id="max-span">+</span>
+                  <span id="max-span"></span>
                 </button>
             </div>
         </div>
 
         <div id="scriptContainer">
-          <textarea id="scriptTextArea" readonly>
-          </textarea>
+            <textarea id="scriptTextArea" readonly>
+            </textarea>
+            <!-- buttons to add and remove all scripts -->
           <button onclick="addAll()">Add All</button>
           <button onclick="removeAll()">Remove All</button>
         </div>
@@ -70,6 +68,11 @@
                     document.getElementById("close-btn").addEventListener("click", (e) => {
                         var window = BrowserWindow.getFocusedWindow();
                         window.close();
+                        // if(window.isMaximized()){
+                        //     window.unmaximize();
+                        // }else{
+                        //     window.maximize();
+                        // }
                     });
                 };
 
@@ -80,28 +83,5 @@
                 };
             })();
         </script>
-        <script>
-           
-                // function whatever() {
-                //     const test = document.getElementsByClassName("toggleScript");
-                //     console.log('kevin',test[0])
-                //     console.log(test);
-                //     console.log(Object.keys(test));
-                // }
-                // setTimeout(whatever,10000);
-            
-            // document.addEventListener('DOMContentLoaded', () => {
-
-            //     const test = document.getElementById("toggleScript");
-            //     console.log(test)
-            // })
-            // document.getElementsByClassName('toggleScript')[0].addEventListener("click", (e) => {
-            //     console.log('toggled')
-            // //  $('#DiffDbDisplayContainer').css({
-            // //     'grid-template-columns':'',
-            // //  });
-            // });
-        </script>
     </body>
-
 </html>
