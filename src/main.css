@@ -401,9 +401,14 @@ ul {
   /* grid-column: 1 / 3; */
 }
 
+#scriptTextArea:focus {
+  outline: none
+}
+
 #loadTextArea {
   height: 75vh;
   width: 35vw;
   background-color: seashell;
   /* grid-column: 1 / 3; */
 }
+
