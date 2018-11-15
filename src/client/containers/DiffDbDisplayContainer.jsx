@@ -7,7 +7,6 @@ import ScriptContainer from './ScriptContainer.jsx';
 const remote = require('electron').remote;
 
 const main = remote.require('./electron.js');
-
 const electron = require('electron');
 
 const { ipcRenderer } = electron;
