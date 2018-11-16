@@ -212,12 +212,12 @@ class Check2Links extends Component {
           <div className="inputGrid">
             <h5>DB 1</h5>
             <br />
-            <span>Link 1: </span>
+            <span className="homePageFields">Link 1: </span>
             <input value={input1} onChange={change1} />
             {' '}
             <span style={{ visibility: displayMissing.input1 ? 'visible' : 'hidden' }}>◀</span>
             <br />
-            <span>Schema: </span>
+            <span className="homePageFields">Schema: </span>
             <input value={inputLinkSchema1} onChange={changeLinkSchema1} />
             {' '}
             <span style={{ visibility: displayMissing.inputLinkSchema1 ? 'visible' : 'hidden' }}>◀</span>
@@ -225,12 +225,12 @@ class Check2Links extends Component {
           <div className="inputGrid">
             <h5>DB 2</h5>
             <br />
-            <span>Link 2: </span>
+            <span className="homePageFields">Link 2: </span>
             <input value={input2} onChange={change2} />
             {' '}
             <span style={{ visibility: displayMissing.input2 ? 'visible' : 'hidden' }}>◀</span>
             <br />
-            <span>Schema: </span>
+            <span className="homePageFields">Schema: </span>
             <input value={inputLinkSchema2} onChange={changeLinkSchema2} />
             {' '}
             <span style={{ visibility: displayMissing.link2Scehma ? 'visible' : 'hidden' }}>◀</span>
@@ -244,37 +244,51 @@ class Check2Links extends Component {
           <div className="inputGrid">
             <h5>DB 1</h5>
             <br />
+            <span className="homePageFields">
+            
             Username:
+            </span>
             {' '}
             <input value={inputObj1User} onChange={changeInput1user} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj1User ? 'visible' : 'hidden' }}>◀</span>
             <br />
+            <span className="homePageFields">
+            
             Password:
+            </span>
             {' '}
             <input value={inputObj1Pass} onChange={changeInput1pass} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj1Pass ? 'visible' : 'hidden' }}>◀</span>
             <br />
+            <span className="homePageFields">
             Host:
+            </span>
             {' '}
             <input value={inputObj1Host} onChange={changeInput1host} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj1Host ? 'visible' : 'hidden' }}>◀</span>
             <br />
+            <span className="homePageFields">
             DB Name:
+            </span>
             {' '}
             <input value={inputObj1Dbname} onChange={changeInput1dbname} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj1Dbname ? 'visible' : 'hidden' }}>◀</span>
             <br />
+            <span className="homePageFields">
             Port:
+            </span>
             {' '}
             <input value={inputObj1Port} onChange={changeInput1port} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj1Port ? 'visible' : 'hidden' }}>◀</span>
             <br />
+            <span className="homePageFields">
             Schema:
+            </span>
             {' '}
             <input value={inputObj1Schema} onChange={changeInput1schema} />
             {' '}
@@ -283,37 +297,49 @@ class Check2Links extends Component {
           <div className="inputGrid">
             <h5>DB 2</h5>
             <br />
+            <span className="homePageFields">
             Username:
+            </span>
             {' '}
             <input value={inputObj2User} onChange={changeInput2user} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj2User ? 'visible' : 'hidden' }}>◀</span>
             <br />
+            <span className="homePageFields">
             Password:
+            </span>
             {' '}
             <input value={inputObj2Pass} onChange={changeInput2pass} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj2Pass ? 'visible' : 'hidden' }}>◀</span>
             <br />
+            <span className="homePageFields">
             Host:
+            </span>
             {' '}
             <input value={inputObj2Host} onChange={changeInput2host} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj2Host ? 'visible' : 'hidden' }}>◀</span>
             <br />
+            <span className="homePageFields">
             DB Name:
+            </span>
             {' '}
             <input value={inputObj2Dbname} onChange={changeInput2dbname} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj2Dbname ? 'visible' : 'hidden' }}>◀</span>
             <br />
+            <span className="homePageFields">
             Port:
+            </span>
             {' '}
             <input value={inputObj2Port} onChange={changeInput2port} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj2Port ? 'visible' : 'hidden' }}>◀</span>
             <br />
+            <span className="homePageFields">
             Schema:
+            </span>
             {' '}
             <input value={inputObj2Schema} onChange={changeInput2schema} />
             {' '}

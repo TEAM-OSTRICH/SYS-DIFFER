@@ -269,7 +269,7 @@ const DiffDbDisplay = (props) => {
           {
             column.constraintTypes
               ? (
-                column.constraintTypes.map(constraintType => (
+                column.constraintTypes.map((constraintType, index) => (
                   <span
                     id={`${name}-${column.name}-constraintType-${constraintType}`}
                     className="column-property"
@@ -287,6 +287,7 @@ const DiffDbDisplay = (props) => {
                     onClick={(event) => {handleClick(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)}}
                   >
                     {constraintType}
+                    {index !== column.constraintTypes - 1 ? ' ' : null }
                   </span>
                   )
                 )

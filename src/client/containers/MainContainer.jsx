@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
 import SaveLoadDisplay from '../components/SaveLoadDisplay.jsx';
 import loadingIcon from '../../assets/5pSf.gif';
+
 
 const { remote } = require('electron');
 
@@ -224,14 +227,14 @@ class MainContainer extends Component {
           ) AS subquery
         GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
         ORDER BY table_name, column_name
-              `;
+        `;
 
     // connect to each database
     const devDbConn = pgp(input1);
     const prodDbConn = pgp(input2);
 
 
-/**
+    /**
  * Parse schemaInfo to create table objects.
  * @param {string} dbName - name of the database (dev or prod)
  * @param {object} schemaInfo - the metadata about tables returned from database
@@ -287,6 +290,8 @@ class MainContainer extends Component {
             let constraintTypeTemp = constraintType;
             // create Foreign Key statement
             if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
+
+            // add another key in column obj?
 
             column.constraintTypes.push(constraintTypeTemp);
             column.constraintNames.push(constraintNamesArray[index]);
@@ -425,7 +430,6 @@ class MainContainer extends Component {
               diffDbColors[`${table.name}-${column.name}`] = 'indianred';
               backgroundColors[`${table.name}-${column.name}`] = false;
             } else {
-              // else if (column.constraintTypes !== undefined) {
               // Column exists.
               // Check column properties.
               // Do not have to check if data type exists because all columns must have a data type.
@@ -483,7 +487,6 @@ class MainContainer extends Component {
     let devDb;
     let prodDb;
     let diffDb;
-
 
     // query dev database for schema info
     devDbConn.any(query2).then((schemaInfo) => {
@@ -570,8 +573,8 @@ class MainContainer extends Component {
     this.setState({ backgroundColors: backgroundColorsCopy });
   }
 
-  changeDisplay(event) {
-    const display = event.target.id;
+  changeDisplay(display) {
+    // const display = event.target.id;
     // Reset all displays to false to clear previous selected tab
     this.setState({
       devDbDisplay: false,
@@ -594,7 +597,9 @@ class MainContainer extends Component {
     const scriptCopy = script.slice();
 
     scriptCopy.push({ id, query });
-    ipcRenderer.send('updateScript', scriptCopy);
+
+    main.createScriptWindow();
+    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 200);
     this.setState({ script: scriptCopy });
   }
 
@@ -603,6 +608,8 @@ class MainContainer extends Component {
     const { script } = this.state;
     const scriptCopy = script.filter(query => query.id !== id);
 
+    main.createScriptWindow();
+    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 200);
     ipcRenderer.send('updateScript', scriptCopy);
     this.setState({ script: scriptCopy });
   }
@@ -636,7 +643,10 @@ class MainContainer extends Component {
   }
 
   openScriptWindow() {
+    const { script } = this.state;
+
     main.createScriptWindow();
+    setTimeout(() => ipcRenderer.send('updateScript', script), 200);
   }
 
   // ************************************  STOPPED COMMENTING HERE   ************************************
@@ -666,55 +676,62 @@ class MainContainer extends Component {
         <div id="loading-screen" style={{visibility: showLoadingScreen ? 'visible' : 'hidden'}}>
           <div id="loading-box">
             <h1 className="blinking" id="loading-message">Loading... </h1>
-            <img src={loadingIcon} style={{width: '50px',height: '50px'}}/>
+            <img src={loadingIcon} style={{width: '20px',height: '20px'}}/>
           </div>
         </div>
         <div className="mainContainerBtns">
-          <button
+          <Button
+            variant="outlined" color="primary"
             onClick={event => {
+              main.closeScriptWindow();
               return this.props.history.push("/");
             }}
           >
             Home
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outlined" color="primary"
             id="devDbDisplay"
             onClick={event => {
-              changeDisplay(event);
+              changeDisplay('devDbDisplay');
             }}
           >
             Dev DB
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outlined" color="primary"
             id="prodDbDisplay"
             onClick={event => {
-              changeDisplay(event);
+              changeDisplay('prodDbDisplay');
             }}
           >
             Prod DB
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outlined" color="primary"
             id="diffDbDisplay"
+            onClick={event => {
+              changeDisplay('diffDbDisplay');
+            }}
+          >
+            DB Diff
+          </Button>
+          <Button
+            variant="outlined" color="primary"
+            id="scriptDisplay"
+            onClick={openScriptWindow}
+          >
+            Script
+          </Button>
+          <Button
+            variant="outlined" color="primary"
+            id="saveLoadDisplay"
             onClick={event => {
               changeDisplay(event);
             }}
           >
-            DB Diff
-          </button>
-          <button
-            id="diffDbDisplay"
-            onClick={openScriptWindow}
-          >
-            Script
-          </button>
-          <button
-            id="saveLoadDisplay"
-            onClick={event => {
-              openScrip(event);
-            }}
-          >
             Save / Load
-          </button>
+          </Button>
           {/* render page depending on which tab is selected (only one can be selected) */}
           {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
           {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}

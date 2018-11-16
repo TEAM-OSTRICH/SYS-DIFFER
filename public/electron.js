@@ -23,7 +23,8 @@ function createMainWindow() {
     y: 0,
     // minWidth: 960,
     // minHeight: 760,
-    backgroundColor: '#b5beda',
+    // backgroundColor: '#b5beda',
+    backgroundColor: '#f1f2f4',
   });
 
   mainWindow.loadURL(
@@ -47,7 +48,8 @@ exports.createScriptWindow = () => {
       minWidth: 400,
       minHeight: 600,
       // minHeight: 680,
-      backgroundColor: '#b5beda',
+      // backgroundColor: '#b5beda',
+      backgroundColor: '#f1f2f4',
       // show: false,
       x: mainWindowPos[0] + 960,
       y: mainWindowPos[1],
@@ -61,6 +63,13 @@ exports.createScriptWindow = () => {
     );
 
     scriptWindow.on('closed', () => scriptWindow = null);
+  }
+};
+
+exports.closeScriptWindow = () => {
+  if (scriptWindow) {
+    scriptWindow.close();
+    scriptWindow = null;
   }
 };
 
