@@ -3,12 +3,16 @@
   display: block;
   padding: .75rem 1.25rem;
   margin-bottom: -1px;
-  background-color: #fff;
-  border: 2px solid rgba(0,0,0,.125);
+  /* background-color: #fff; */
+  background-color:white;
+  /* border: 2px solid rgba(0,0,0,.125); */
+  border: 2px solid #f1f2f4;
+  border-radius: 6px;
 }
 
 .list-group-item:first-child { 
-  background-color: pink;
+  /* background-color: pink; */
+  background-color: #b0e1f2;
 }
 
 #dbDisplayContainer {
@@ -36,7 +40,6 @@
   /* background-color: red; */
   /* grid-template-columns: 1fr 1fr; */
   /* grid-template-columns: 1fr 1fr 1fr; */
-
 }
 
 #hideScriptBox {
@@ -70,8 +73,8 @@ span {
 }
 
 .inputGrid {
-
-  background: pink;
+  /* background: pink; */
+  background: #b0e1f2;
   text-align: center;
   padding: 20px 20px;
   margin: 0 2%;
@@ -142,6 +145,8 @@ body {
   margin: 0;
   padding: 0;
   /* font-family: 'Ubuntu', sans-serif; */
+  /* font-family: 'Nunito', sans-serif;
+  background: #f1f2f4; */
   font-family: 'Open Sans', sans-serif;
   background: #b5beda;
   font-weight: 500;
@@ -240,7 +245,7 @@ ul {
 }
 
 #loading-box {
-  background-color: lightyellow;
+  background-color: #b0e1f2;
   z-index: 5;
   border-radius: 10px;
   display: flex;
@@ -251,7 +256,7 @@ ul {
 }
 
 #loading-message {
-  color: plum;
+  color: white;
 }
 
 .blinking {
@@ -285,7 +290,6 @@ ul {
   top: 1px;
   right: 6px;
   color:white;
-
 }
 
 #title-bar-btns {
@@ -296,6 +300,14 @@ ul {
 }
 
 .prettierBtn{
+  /* border-radius: 50% 50% 50% 50%;
+
+  height: 20px;
+  text-align: center;
+  width: 20px;
+  vertical-align:middle;
+  display:table-cell */
+  
   border-radius: 13px;
   width: 13px;
   height: 13px;
@@ -311,26 +323,26 @@ ul {
 }
 
 .mainContainerBtns{
-  /* margin-left: 20px; */
+  margin-left: 1em;
 }
 
-.mainContainerBtns > button{
+/* .mainContainerBtns > button{
   background: whitesmoke;
   padding: 15px;
   border-radius: 5px;
   border: none;
-}
+} */
 
-.mainContainerBtns > button:focus{ 
+/* .mainContainerBtns > button:focus{ 
   outline: none; 
   background: rosybrown;
   -webkit-transition: all 0.1s ease 0s; 
-}
+} */
 
-.mainContainerBtns > button:hover{
+/* .mainContainerBtns > button:hover{
   background: wheat;
   -webkit-transition: all 0.1s ease 0s; 
-}
+} */
 
 #dbDisplayContainer{
   /* display: none; */
