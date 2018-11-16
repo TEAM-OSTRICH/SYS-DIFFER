@@ -87,7 +87,6 @@ class DiffDbDisplayContainer extends Component {
                 { x: test[i].getBoundingClientRect().x, y: test[i].getBoundingClientRect().y + 10 },
                 { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].getBoundingClientRect().y + 10 },
                 { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
-                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
                 { x: test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
                 { x: test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[j].getBoundingClientRect().y + 10 },
                 { x: test[j].getBoundingClientRect().x, y: test[j].getBoundingClientRect().y + 10 }];
