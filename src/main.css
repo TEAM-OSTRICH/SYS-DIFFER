@@ -76,44 +76,57 @@ span {
   /* background: pink; */
   background: #b0e1f2;
   text-align: center;
-  padding: 20px 10px;
-  margin: 0 1%;
+  padding: 20px 20px;
+  margin: 0 2%;
   border-radius: 10px;
   text-align: right;
+  
+  background:
+    linear-gradient(
+    rgba(35,43,85,0.75),
+    rgba(35,43,85,0.95));
+  background-size: cover;
+  
 }
 
 .inputGrid > input {
   margin: 2px 0;
-  background-color: whitesmoke;
+  background-color: rgba(255,255,255,.2);
+  text-indent: 2%;
+  border-radius:8px;
+  color: rgba(255,255,255,.8);
+  font-size:10px;
+  font-weight: 100;
   border: none;
   margin-right: 15%;
   /* width: 50%; */
 }
 
 .buttonGrid {
-  border:3px solid seashell;
+  border:3px solid rgb(20, 84, 233);
   /* height: 100%; */
-  background: seashell;
+  background: rgb(20, 84, 233);
   text-align: center;
-  margin: 10px 20%;
+  /* margin: 10px 20%; */
+  margin: 15px 37% 10px 37%;
   padding: 10px 10px;
   border-radius: 10px;
   grid-column: 1 / 3;
   position: relative;
   z-index: 2;
+  color:white;
+  font-size: 12px;  
 }
 
 .buttonGrid:hover {
-  /* color: seashell; */
-  color: white;
+  color: blue;
   -webkit-transition: all 0.3s ease 0s; 
 }
 
 .buttonGrid:after { 
   content: "";
   height: 100%; 
-  /* background-color: rosybrown; */
-  background-color: #b0e1f2;
+  background-color: rgba(255,255,255,0.9);
   left: 0; 
   top: 0; 
   width: 0px;  
@@ -132,8 +145,10 @@ body {
   margin: 0;
   padding: 0;
   /* font-family: 'Ubuntu', sans-serif; */
-  font-family: 'Nunito', sans-serif;
-  background: #f1f2f4;
+  /* font-family: 'Nunito', sans-serif;
+  background: #f1f2f4; */
+  font-family: 'Open Sans', sans-serif;
+  background: #b5beda;
   font-weight: 500;
   
 }
@@ -148,9 +163,13 @@ input:focus {
 
 h5 {
   text-align: center;
-  background: whitesmoke;
+  /* background: whitesmoke; */
+  font-weight: 300;
+  color:#ffffff;
+  padding-bottom: 5px;
+  border-bottom: solid 2px rgb(20, 84, 233);
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .centerText {
@@ -159,14 +178,13 @@ h5 {
 
 h1 {
   font-size: 44px;
-  /* color: seashell; */
-  color: rgba(0,0,0,.5);
+  color: rgba(0,0,0,0.4);
 }
 
 h2 {
   font-size: 20px;
-  margin-top: 2px;
-  color: rgba(0,0,0,.5);
+  margin-top: -2px;
+  color: rgba(0,0,0,.3);
 }
 
 ul {
@@ -257,7 +275,7 @@ ul {
   text-align: center;
   line-height: 40px;
   vertical-align: middle;
-  background-color:rgb(133, 149, 165);
+  background:linear-gradient( #36383F, #272831);
   padding: none;
   margin: 0px;
   position: fixed;
@@ -444,11 +462,26 @@ ul {
 } */
 .svg-content-responsive {
   display: inline-block;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: -5;
 }
 .singleTable{
   padding: 10px;
+}
+
+/* ge is here to break your hard work */
+body{
+  background:
+    linear-gradient(
+    rgba(246,247,249,0.7),
+    rgba(246,247,249,0.7)),
+    url(https://images.pexels.com/photos/515294/pexels-photo-515294.jpeg) no-repeat center center fixed;
+  background-size: cover;
+}
+.homePageFields{
+  color:rgba(255,255,255,.7);
+  font-size: 12px;
+  margin-right: 8px;
 }
