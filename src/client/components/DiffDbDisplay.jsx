@@ -5,15 +5,15 @@ const remote = require('electron').remote;
 
 const main = remote.require('./electron.js');
 
-// added function to change clicked element's background color
-const handleClick = (event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column) => {
-  event.stopPropagation();
+// // added function to change clicked element's background color
+// const handleClick = (event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column) => {
+//   event.stopPropagation();
 
-  // main.createScriptWindow();
+//   // main.createScriptWindow();
 
-  let id;
-  let target;
-  const { parentNode } = event.target;
+//   let id;
+//   let target;
+//   const { parentNode } = event.target;
 
 //   if (diffDbColors[event.target.id] !== undefined) {
 //     id = event.target.id;
@@ -174,6 +174,7 @@ const handleClick = (event, diffDbColors, addScript, removeScript, setBackground
 //     }
 //   }
 // };
+// }
 
 const DiffDbDisplay = (props) => {
   const {

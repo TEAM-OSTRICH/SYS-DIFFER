@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 
 // added function to change clicked element's background color
 const handleClick = (event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column) => {
+
+  console.log('event ', event);
+  console.log('diffDbColors ', diffDbColors);
+  console.log('addScript ', addScript);
+  console.log('removeScript ', removeScript);
+  console.log('setBackgroundColor ', setBackgroundColor);
+  console.log('tableInfo ', tableInfo);
+  console.log('column ', column);
   event.stopPropagation();
   let id;
   let target;
