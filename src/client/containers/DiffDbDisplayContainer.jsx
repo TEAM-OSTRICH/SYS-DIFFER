@@ -4,7 +4,7 @@ import _ from 'lodash';
 import * as d3 from 'd3';
 import DiffDbDisplay from '../components/DiffDbDisplay.jsx';
 import ScriptContainer from './ScriptContainer.jsx';
-// import selectAll from './SelectAll';
+import selectAll from './SelectAll';
 
 const remote = require('electron').remote;
 
@@ -86,7 +86,6 @@ class DiffDbDisplayContainer extends Component {
               const lineData = [
                 { x: test[i].getBoundingClientRect().x, y: test[i].getBoundingClientRect().y + 10 },
                 { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].getBoundingClientRect().y + 10 },
-                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
                 { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
                 { x: test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
                 { x: test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[j].getBoundingClientRect().y + 10 },

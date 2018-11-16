@@ -589,6 +589,7 @@ class MainContainer extends Component {
 
   /**
    * Function to add SQL command scripts to script window
+   * Waits 500ms to give window time to open before scripts are sent
    * @param {string} id - id of the element to be changed
    * @param {string} query - update SQL command script
    */
@@ -599,7 +600,7 @@ class MainContainer extends Component {
     scriptCopy.push({ id, query });
 
     main.createScriptWindow();
-    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 200);
+    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 500);
     this.setState({ script: scriptCopy });
   }
 
@@ -609,8 +610,7 @@ class MainContainer extends Component {
     const scriptCopy = script.filter(query => query.id !== id);
 
     main.createScriptWindow();
-    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 200);
-    ipcRenderer.send('updateScript', scriptCopy);
+    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 500);
     this.setState({ script: scriptCopy });
   }
 
@@ -646,10 +646,8 @@ class MainContainer extends Component {
     const { script } = this.state;
 
     main.createScriptWindow();
-    setTimeout(() => ipcRenderer.send('updateScript', script), 200);
+    setTimeout(() => ipcRenderer.send('updateScript', script), 500);
   }
-
-  // ************************************  STOPPED COMMENTING HERE   ************************************
 
   render() {
     const {
