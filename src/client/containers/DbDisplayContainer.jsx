@@ -11,7 +11,7 @@ class DbDisplayContainer extends Component {
       allPositions: [],
       width: window.innerWidth,
       height: window.innerHeight,
-
+      colors: ['#ae63e4','darkblue','gray','lightgray','white','cornflowerblue','darkgoldenrod']
     };
     this.storePositions = this.storePositions.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -67,18 +67,18 @@ class DbDisplayContainer extends Component {
                 .classed("svg-content-responsive", true); 
 
               // The line SVG Path we draw
-              function getRandomColor() {
-                var letters = '0123456789ABCDEF';
-                var color = '#';
-                for (var i = 0; i < 6; i++) {
-                  color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-              }
+              // function getRandomColor() {
+              //   var letters = '0123456789ABCDEF';
+              //   var color = '#';
+              //   for (var i = 0; i < 6; i++) {
+              //     color += letters[Math.floor(Math.random() * 16)];
+              //   }
+              //   return color;
+              // }
 
               const lineGraph = svgContainer.append('path')
                 .attr('d', lineFunction(lineData))
-                .attr('stroke', getRandomColor())
+                .attr('stroke', this.state.colors[i%(this.state.colors.length)])
                 .attr('stroke-width', 2)
                 .attr('fill', 'none');
             }
@@ -137,20 +137,20 @@ class DbDisplayContainer extends Component {
                 // .attr("viewBox", "0 0 600 400")
                 .classed("svg-content-responsive", true); 
 
-              function getRandomColor() {
-                var letters = '0123456789ABCDEF';
-                var color = '#';
-                for (var i = 0; i < 6; i++) {
-                  color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-              }
+              // function getRandomColor() {
+              //   var letters = '0123456789ABCDEF';
+              //   var color = '#';
+              //   for (var i = 0; i < 6; i++) {
+              //     color += letters[Math.floor(Math.random() * 16)];
+              //   }
+              //   return color;
+              // }
               
               // let color = ['pink', 'lightblue', 'indigo', 'darkcyan']
               // The line SVG Path we draw
               const lineGraph = svgContainer.append('path')
                 .attr('d', lineFunction(lineData))
-                .attr('stroke', getRandomColor())
+                .attr('stroke', this.state.colors[i%(this.state.colors.length)])
                 .attr('stroke-width', 2)
                 .attr('fill', 'none');
               
@@ -160,7 +160,7 @@ class DbDisplayContainer extends Component {
         }
       }
      
-    }, 2000);
+    }, 1000);
   }
  
 
