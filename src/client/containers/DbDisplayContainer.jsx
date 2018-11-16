@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import DbDisplay from '../components/DbDisplay.jsx';
 
@@ -7,11 +6,8 @@ class DbDisplayContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      allRefs: [],
-      allPositions: [],
       width: window.innerWidth,
       height: window.innerHeight,
-      // colors: ['#ae63e4', 'darkblue', 'gray', 'lightgray', 'white', 'cornflowerblue', 'darkgoldenrod'],
       colors: [
         'navy',
         'blue',
@@ -28,14 +24,12 @@ class DbDisplayContainer extends Component {
         'purples',
       ],
     };
-    this.storePositions = this.storePositions.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
   }
 
 
   componentDidMount() {
     // this.drawLines();
-
     window.addEventListener('resize', this.updateDimensions);
     window.addEventListener('scroll', this.updateDimensions);
 
@@ -46,13 +40,10 @@ class DbDisplayContainer extends Component {
     let test;
     setTimeout(() => {
       test = document.getElementsByClassName('list-group-item');
-      console.log(test, ',');
       for (let i = 0; i < test.length; i += 1) {
         if (test[i].textContent.includes('REFERENCES')) {
           const tt = test[i].textContent.split(' ');
-
           for (let j = 0; j < test.length; j += 1) {
-            // console.log(tt[tt.indexOf('REFERENCES') + 3], tt[tt.indexOf('REFERENCES') + 1]);
             if (test[j].textContent.includes(tt[tt.indexOf('REFERENCES') + 1]) && (!test[j].textContent.includes('REFERENCES')) && (test[j].parentNode.childNodes[0].textContent === (tt[tt.indexOf('REFERENCES') + 3]))) {
               // The data for our line
               const lineData = [
@@ -82,15 +73,6 @@ class DbDisplayContainer extends Component {
                 .classed('svg-content-responsive', true);
 
               // The line SVG Path we draw
-              // function getRandomColor() {
-              //   var letters = '0123456789ABCDEF';
-              //   var color = '#';
-              //   for (var i = 0; i < 6; i++) {
-              //     color += letters[Math.floor(Math.random() * 16)];
-              //   }
-              //   return color;
-              // }
-
               const lineGraph = svgContainer.append('path')
                 .attr('d', lineFunction(lineData))
                 .attr('stroke', this.state.colors[i % (this.state.colors.length)])
@@ -170,16 +152,9 @@ class DbDisplayContainer extends Component {
     }, 2000);
   }
 
-  storePositions(stuff) {
-    // const positions = this.state.allPositions.slice();
-    // positions.push(stuff);
-    this.setState({ allPositions: stuff });
-    console.log(stuff, 'stuff', this.state.allPositions);
-  }
-
   render() {
     const { db } = this.props;
-    const tables = db.map(tableInfo => <DbDisplay key={tableInfo.name} tableInfo={tableInfo} ref={tableInfo.name} storePositions={this.storePositions} />);
+    const tables = db.map(tableInfo => <DbDisplay key={tableInfo.name} tableInfo={tableInfo} />);
     console.log(tables, 'tbl');
     // const arrTest = this.state.allRefs.slice();
     // db.forEach(ele => {
