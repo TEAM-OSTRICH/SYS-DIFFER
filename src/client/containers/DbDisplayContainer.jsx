@@ -11,7 +11,22 @@ class DbDisplayContainer extends Component {
       allPositions: [],
       width: window.innerWidth,
       height: window.innerHeight,
-      colors: ['#ae63e4','darkblue','gray','lightgray','white','cornflowerblue','darkgoldenrod']
+      // colors: ['#ae63e4', 'darkblue', 'gray', 'lightgray', 'white', 'cornflowerblue', 'darkgoldenrod'],
+      colors: [
+        'navy',
+        'blue',
+        'aqua',
+        'teal',
+        'olive',
+        'green',
+        'lime',
+        'yellow',
+        'orange',
+        'red',
+        'maroon',
+        'fuscia',
+        'purples',
+      ],
     };
     this.storePositions = this.storePositions.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -20,10 +35,10 @@ class DbDisplayContainer extends Component {
 
   componentDidMount() {
     // this.drawLines();
-    
+
     window.addEventListener('resize', this.updateDimensions);
-    
-    console.log(this.state.width,this.state.height,'w,h')
+
+    console.log(this.state.width, this.state.height, 'w,h');
     const { db } = this.props;
 
     let test;
@@ -37,24 +52,22 @@ class DbDisplayContainer extends Component {
           for (let j = 0; j < test.length; j += 1) {
             // console.log(tt[tt.indexOf('REFERENCES') + 3], tt[tt.indexOf('REFERENCES') + 1]);
             if (test[j].textContent.includes(tt[tt.indexOf('REFERENCES') + 1]) && (!test[j].textContent.includes('REFERENCES')) && (test[j].parentNode.childNodes[0].textContent === (tt[tt.indexOf('REFERENCES') + 3]))) {
-              
-
               // The data for our line
               const lineData = [
-                { x: test[i].getBoundingClientRect().x, y: test[i].getBoundingClientRect().y+10 },
-                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].getBoundingClientRect().y+10 },
-                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y+10 },
-                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y+10 },
-                { x: test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y+10 },
-                { x: test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[j].getBoundingClientRect().y+10 },
-                { x: test[j].getBoundingClientRect().x, y: test[j].getBoundingClientRect().y+10 }];
+                { x: test[i].getBoundingClientRect().x, y: test[i].getBoundingClientRect().y + 10 },
+                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].getBoundingClientRect().y + 10 },
+                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
+                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
+                { x: test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
+                { x: test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[j].getBoundingClientRect().y + 10 },
+                { x: test[j].getBoundingClientRect().x, y: test[j].getBoundingClientRect().y + 10 }];
 
               // This is the accessor function we talked about above
               const lineFunction = d3.line()
                 .x(d => d.x)
                 .y(d => d.y)
                 .curve(d3.curveBasis);
-              
+
               const bodyCanvas = document.getElementById('dbDisplayContainer');
               const svgContainer = d3.select(bodyCanvas)
                 .append('div')
@@ -64,7 +77,7 @@ class DbDisplayContainer extends Component {
                 .attr('height', '100%')
                 // .attr('preserveAspectRatio', 'xMinYMin meet')
                 // .attr("viewBox", "0 0 600 400")
-                .classed("svg-content-responsive", true); 
+                .classed('svg-content-responsive', true);
 
               // The line SVG Path we draw
               // function getRandomColor() {
@@ -78,24 +91,21 @@ class DbDisplayContainer extends Component {
 
               const lineGraph = svgContainer.append('path')
                 .attr('d', lineFunction(lineData))
-                .attr('stroke', this.state.colors[i%(this.state.colors.length)])
+                .attr('stroke', this.state.colors[i % (this.state.colors.length)])
                 .attr('stroke-width', 2)
                 .attr('fill', 'none');
             }
           }
-          
         }
       }
-     
     }, 1000);
-
   }
 
   updateDimensions() {
-  //  d3.select('svg').remove();
-   d3.selectAll('svg').remove();
-   
-   const { db } = this.props;
+    // d3.select('svg').remove();
+    d3.selectAll('svg').remove();
+
+    const { db } = this.props;
 
     let test;
     setTimeout(() => {
@@ -108,8 +118,6 @@ class DbDisplayContainer extends Component {
           for (let j = 0; j < test.length; j += 1) {
             // console.log(tt[tt.indexOf('REFERENCES') + 3], tt[tt.indexOf('REFERENCES') + 1]);
             if (test[j].textContent.includes(tt[tt.indexOf('REFERENCES') + 1]) && (!test[j].textContent.includes('REFERENCES')) && (test[j].parentNode.childNodes[0].textContent === (tt[tt.indexOf('REFERENCES') + 3]))) {
-              
-
               // The data for our line
               const lineData = [
                 { x: test[i].getBoundingClientRect().x, y: test[i].getBoundingClientRect().y },
@@ -125,7 +133,7 @@ class DbDisplayContainer extends Component {
                 .x(d => d.x)
                 .y(d => d.y)
                 .curve(d3.curveBasis);
-              
+
               const bodyCanvas = document.getElementById('dbDisplayContainer');
               const svgContainer = d3.select(bodyCanvas)
                 .append('div')
@@ -135,7 +143,7 @@ class DbDisplayContainer extends Component {
                 .attr('height', '100%')
                 // .attr('preserveAspectRatio', 'xMinYMin meet')
                 // .attr("viewBox", "0 0 600 400")
-                .classed("svg-content-responsive", true); 
+                .classed('svg-content-responsive', true);
 
               // function getRandomColor() {
               //   var letters = '0123456789ABCDEF';
@@ -145,25 +153,20 @@ class DbDisplayContainer extends Component {
               //   }
               //   return color;
               // }
-              
+
               // let color = ['pink', 'lightblue', 'indigo', 'darkcyan']
               // The line SVG Path we draw
               const lineGraph = svgContainer.append('path')
                 .attr('d', lineFunction(lineData))
-                .attr('stroke', this.state.colors[i%(this.state.colors.length)])
+                .attr('stroke', this.state.colors[i % (this.state.colors.length)])
                 .attr('stroke-width', 2)
                 .attr('fill', 'none');
-              
             }
           }
-          
         }
       }
-     
-    }, 1000);
+    }, 2000);
   }
- 
-
 
   storePositions(stuff) {
     // const positions = this.state.allPositions.slice();
@@ -171,7 +174,6 @@ class DbDisplayContainer extends Component {
     this.setState({ allPositions: stuff });
     console.log(stuff, 'stuff', this.state.allPositions);
   }
-
 
   render() {
     const { db } = this.props;

@@ -291,8 +291,8 @@ class MainContainer extends Component {
             // create Foreign Key statement
             if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
 
-            // add another key in column obj? 
-            
+            // add another key in column obj?
+
             column.constraintTypes.push(constraintTypeTemp);
             column.constraintNames.push(constraintNamesArray[index]);
           });
@@ -643,7 +643,10 @@ class MainContainer extends Component {
   }
 
   openScriptWindow() {
+    const { script } = this.state;
+
     main.createScriptWindow();
+    setTimeout(() => ipcRenderer.send('updateScript', script), 200);
   }
 
   // ************************************  STOPPED COMMENTING HERE   ************************************
