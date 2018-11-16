@@ -240,7 +240,7 @@ class MainContainer extends Component {
  * @param {object} schemaInfo - the metadata about tables returned from database
  */
 
-    const setDbInfo = (dbName, schemaInfo) => {
+    const setDbInfo = (schemaInfo) => {
       // this array will contain all the table objects
       const dbCopy = [];
       // table object to create each table, then push onto dbCopy array
@@ -486,27 +486,21 @@ class MainContainer extends Component {
     let prodDb;
     let diffDb;
 
-
-    // ********************    HERE IS WHERE WE LEFT OFF COMMENTING    ********************
-
-
-    // Query new and current database for schema information.
-    // Run diffing algorithm.
+    // query dev database for schema info
     devDbConn.any(query2).then((schemaInfo) => {
-      devDb = setDbInfo('devDb', schemaInfo);
+      devDb = setDbInfo(schemaInfo);
 
-      // inputLinkSchema1 = inputLinkSchema2;
+      // query production database for schema info
       prodDbConn
         .any(query)
         .then((schemaInfo2) => {
-          prodDb = setDbInfo('prodDb', schemaInfo2);
+          prodDb = setDbInfo(schemaInfo2);
         })
-        // Determine differences between databases.
         .then(() => {
-          console.log(devDb, prodDb);
+          // Determine differences between databases.
           diffDb = diffDatabases(devDb, prodDb);
 
-          // Sort database arrays so that common tables appear first.
+          // Create database arrays to sort so that common tables appear first for easier visual comparison
           let commonTablesArray = [];
           let differentTablesArray = [];
 
@@ -514,13 +508,16 @@ class MainContainer extends Component {
           devDb.forEach((table) => {
             const foundTable = _.find(prodDb, { name: table.name });
 
+            // tables that in both databases:
             if (foundTable !== undefined) {
               commonTablesArray.push(table);
             } else {
+              // tables only in one database or the other
               differentTablesArray.push(table);
             }
           });
 
+          // combine arrays of databases (tables in both databases appear first)
           const sortedDevDb = commonTablesArray.concat(differentTablesArray);
           commonTablesArray = [];
           differentTablesArray = [];
@@ -528,14 +525,16 @@ class MainContainer extends Component {
           // Sort prodDb.
           prodDb.forEach((table) => {
             const foundTable = _.find(devDb, { name: table.name });
-
+            // tables in both databases
             if (foundTable !== undefined) {
               commonTablesArray.push(table);
             } else {
+              // tables only in one db or the other
               differentTablesArray.push(table);
             }
           });
 
+          // combine arrays of databases (tables in both databases appear first)
           const sortedProdDb = commonTablesArray.concat(differentTablesArray);
           commonTablesArray = [];
           differentTablesArray = [];
@@ -586,6 +585,11 @@ class MainContainer extends Component {
     this.setState({ [display]: true });
   }
 
+  /**
+   * Function to add SQL command scripts to script window
+   * @param {string} id - id of the element to be changed
+   * @param {string} query - update SQL command script
+   */
   addScript(id, query) {
     const { script } = this.state;
     const scriptCopy = script.slice();
@@ -597,6 +601,7 @@ class MainContainer extends Component {
     this.setState({ script: scriptCopy });
   }
 
+  // removing from pop-up script window
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = script.filter(query => query.id !== id);
@@ -607,8 +612,8 @@ class MainContainer extends Component {
     this.setState({ script: scriptCopy });
   }
 
+  // removing all from script window AND de-selects all.
   removeAllChanges() {
-    console.log('this.removeAllChanges');
     const backgroundColors = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
     const ids = Object.keys(backgroundColorsCopy);
@@ -621,7 +626,7 @@ class MainContainer extends Component {
     this.setState({ script: [], backgroundColors: backgroundColorsCopy });
   }
 
-
+  // selects all and adds all scripts to window
   addAllChanges(script) {
     const { diffDbColors } = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(diffDbColors));
@@ -638,6 +643,8 @@ class MainContainer extends Component {
   openScriptWindow() {
     main.createScriptWindow();
   }
+
+  // ************************************  STOPPED COMMENTING HERE   ************************************
 
   render() {
     const {
