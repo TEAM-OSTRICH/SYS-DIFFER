@@ -22,6 +22,8 @@ class DbDisplayContainer extends Component {
     // this.drawLines();
     
     window.addEventListener('resize', this.updateDimensions);
+    window.addEventListener('scroll', this.updateDimensions);
+
     
     console.log(this.state.width,this.state.height,'w,h')
     const { db } = this.props;
