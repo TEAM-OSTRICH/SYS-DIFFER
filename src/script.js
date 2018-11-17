@@ -1,4 +1,5 @@
 const electron = require('electron');
+const { clipboard } = require('electron');
 
 const { ipcRenderer } = electron;
 
@@ -19,4 +20,10 @@ const addAll = () => {
 
 const removeAll = () => {
   ipcRenderer.send('removeAll');
+};
+
+const copyToClipBoard = () => {
+  const script = document.getElementById('scriptTextArea').value;
+
+  clipboard.writeText(script);
 };
