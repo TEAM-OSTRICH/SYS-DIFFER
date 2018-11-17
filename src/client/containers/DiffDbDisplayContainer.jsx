@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import DiffDbDisplay from '../components/DiffDbDisplay.jsx';
-import selectAll from './SelectAll';
 
 const { remote } = require('electron');
 
