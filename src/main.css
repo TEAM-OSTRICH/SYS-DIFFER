@@ -4,21 +4,31 @@
   padding: .75rem 1.25rem;
   margin-bottom: -1px;
   /* background-color: #fff; */
-  background-color:white;
+  background-color:rgba(255,255,255,0.8);
   /* border: 2px solid rgba(0,0,0,.125); */
   border: 2px solid #f1f2f4;
   border-radius: 6px;
+  font-size:12px;
 }
-
+/* what can we do for hover???? */
+.list-group-item:hover{
+  /* background-color: #36383F; */
+}
 .list-group-item:first-child { 
-  /* background-color: pink; */
-  background-color: #b0e1f2;
+  background: linear-gradient(rgba(92, 114, 191, 0.75), rgba(35,43,85,0.95));
+  color:rgba(255,255,255,0.9);
+  font-size:15px;
+  /* text-transform: uppercase; */
+  font-style:italic;
+  font-weight: 400;
+  /* background-color: #b0e1f2; */
 }
 
 #dbDisplayContainer {
   display: grid;
   /* background-color: red; */
   margin: 6px 12px;
+  padding: 13px;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
@@ -61,8 +71,8 @@ span {
 
 #scriptContainer {
   padding-bottom: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
+  /* padding-left: 10px; */
+  padding-right: 7px;
 }
 
 .inputGridContainer {
@@ -245,7 +255,7 @@ ul {
 }
 
 #loading-box {
-  background-color: #b0e1f2;
+  /* background-color: #b0e1f2; */
   z-index: 5;
   border-radius: 10px;
   display: flex;
@@ -331,9 +341,10 @@ ul {
 }
 
 .mainContainerBtns{
-  margin-left: 1em;
+  /* margin-left: 2em; */
+  margin-left: 4.5%;
   display: flex;
-  width: 95%;
+  width: 92%;
 }
 
 /* .mainContainerBtns > button{
@@ -426,11 +437,12 @@ ul {
 }
 
 #scriptTextArea {
+  margin-top:10px;
   height: 90%;
-  width: 90%;
+  width: 100%;
   min-height: 90%;
   min-width: 90%;
-  background-color: seashell;
+  background-color: rgba(255,255,255,0.8);
   /* grid-column: 1 / 3; */
 }
 
@@ -468,7 +480,7 @@ ul {
   z-index: -5;
 }
 .singleTable{
-  padding: 10px;
+  padding: 8px;
 }
 
 /* ge is here to break your hard work */
@@ -485,7 +497,6 @@ body{
   color:rgba(255,255,255,.7);
   font-size: 12px;
   margin-right: 8px;
-  margin-b
 }
 
 .missingFields {
@@ -493,4 +504,143 @@ body{
   padding: 3px 0px 3px 3px;
   margin: 5px 1px 3px 0px;
   border: 1px solid rgba(255, 0, 0, 1);
+}
+
+ul{
+  padding-bottom:0;
+  padding-right:0;
+  box-shadow: 1px 20px 46px -34px;
+}
+
+
+
+.scriptWindowBtn {
+  border:2px solid rgb(20, 84, 233);
+  /* height: 100%; */
+  background: rgb(20, 84, 233);
+  text-align: center;
+  /* margin-left: 10%; */
+  float: 20%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  /* grid-column: 1 / 3; */
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-size: 11px;
+}
+
+.scriptWindowBtn:hover {
+  color: blue;
+  -webkit-transition: all 0.3s ease 0s; 
+}
+
+.scriptWindowBtn:after { 
+  content: "";
+  height: 100%; 
+  background-color: rgba(255,255,255,0.9);
+  left: 0; 
+  top: 0; 
+  width: 0px;  
+  position: absolute; 
+  border-radius: 10px;
+  transition: all 0.3s ease 0s; 
+  -webkit-transition: all 0.3s ease 0s; 
+  z-index: -1;
+}
+
+.scriptWindowBtn:hover:after {
+  width: 100%;
+}
+
+.style2Btns{
+  margin-left: 30%;
+}
+
+
+
+
+.gooSvg {
+  width: 0;
+  height: 0;
+}
+
+.gooContainer {
+  margin: 40px auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.goo2 {
+  -webkit-filter: url(#goo);
+}
+
+.gooContainer div {
+  background: blue;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+
+.goo2 > div {
+  transform: translateX(0);
+  animation: sideways 2s infinite ease;
+}
+
+.goo2 > div:nth-child(1) {
+  animation-delay: .1s;
+}
+
+.goo2 > div:nth-child(2) {
+  animation-delay: .25s;
+}
+
+.goo2 > div:nth-child(3) {
+  animation-delay: .4s;
+}
+
+.goo2 > div:nth-child(4) {
+  animation-delay: 0.65s;
+}
+
+.goo2 > div:nth-child(5) {
+  animation-delay: 0.7s
+}
+
+.goo2 {
+padding-left:40px;
+width: 200px;
+height:100px;
+}
+
+@keyframes circle {
+  50% {
+      width: 25px;
+      height: 25px;
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+@keyframes sideways {
+  33% {
+      transform: translateX(50px);
+  }
+  66% {
+      transform: translateX(-50px);
+  }
+}
+.firstSpan{
+  font-weight: 600;
+  color: royalblue;
+}
+.specialMom{
+  transition: all 0.3s ease 0s; 
+}
+.specialMom:hover{
+  transform: scale(1.2);
+
 }
