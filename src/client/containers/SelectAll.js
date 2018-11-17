@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import handleClick from './HandleClick';
+// import handleClick from './HandleClick';
 
 const selectAll = (db, diffDbColors, addScript, backgroundColors, setBackgroundColor, addAllChanges) => {
   const ids = Object.keys(diffDbColors);

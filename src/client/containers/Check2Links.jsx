@@ -131,8 +131,7 @@ class Check2Links extends Component {
       // .catch(err=>console.log(err, 'nooooo2'));
     Promise.all([promise1, promise2])
       .then(() => {
-        console.log('kevinnnn');
-        this.props.history.push('/kevin');
+        this.props.history.push('/main');
       })
       .catch((err) => {
         console.log(err, 'inside not links connection err');
@@ -145,53 +144,6 @@ class Check2Links extends Component {
           this.setState({ showConnectionFailedMsg1: true });
         }
       });
-
-
-    // const db1 = pgp(input1);
-    // db1.connect()
-    //   .then((obj) => {
-    //     obj.done(); // success, release the connection;
-    //     return 200;
-    //   })
-    //   .catch((error) => {
-    //     console.log('ERROR:', error.message || error);
-    //     throw error;
-    //   })
-
-    //   .then((response) => {
-    //     console.log(response, '1st one works');
-    //     if (response === 200) {
-    //       const db2 = pgp(input2);
-    //       db2.connect()
-    //         .then((obj) => {
-    //           obj.done(); // success, release the connection;
-    //           return 200;
-    //         })
-    //         .catch((error) => {
-    //           console.log('ERROR:', error.message || error);
-    //           throw error;
-    //         })
-    //         .then((response) => {
-    //           if (response === 200) {
-    //           // console.log('u1', u1, 'u2', u2);
-    //           // if (u1.length > 0 && u2.length > 0) {
-    //             console.log('2nd one also works!');
-    //             this.props.history.push('/kevin');
-    //           } else {
-    //             alert('Ge so smart');
-    //           }
-    //         // }
-    //         })
-    //         .catch((err) => {
-    //           console.log(err);
-    //         });
-    //     } else {
-    //       alert('Ges mistake');
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   }
 
   render() {
@@ -245,7 +197,7 @@ class Check2Links extends Component {
             <h5>DB 1</h5>
             <br />
             <span className="homePageFields">
-            
+
             Username:
             </span>
             {' '}
@@ -254,7 +206,7 @@ class Check2Links extends Component {
             <span style={{ visibility: displayMissing.inputObj1User ? 'visible' : 'hidden' }}>◀</span>
             <br />
             <span className="homePageFields">
-            
+
             Password:
             </span>
             {' '}

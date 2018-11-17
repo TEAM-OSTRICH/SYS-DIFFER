@@ -47,16 +47,7 @@ class App extends Component {
 
     this.changeLinkSchema1 = this.changeLinkSchema1.bind(this);
     this.changeLinkSchema2 = this.changeLinkSchema2.bind(this);
-
-    // this.setInput = this.setInput.bind(this);
   }
-
-  // if it still works delete this:
-  // setInput(input1, input2, inputLinkSchema1, inputLinkSchema2) {
-  //   this.setState({
-  //     input1, input2, inputLinkSchema1, inputLinkSchema2,
-  //   });
-  // }
 
   // update state to most recent entries
   change1(event) {
@@ -210,7 +201,7 @@ class App extends Component {
         <div>
           <Switch>
             <Route
-              path="/kevin"
+              path="/main"
               render={
                 props => (
                   <MainContainer
