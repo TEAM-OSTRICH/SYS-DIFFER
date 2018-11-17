@@ -52,9 +52,9 @@ class MainContainer extends Component {
       // saveLoadMenu: false,
       backgroundColors: {},
       showLoadingScreen: true,
-      addColor: 'green',
-      deleteColor: 'red',
-      modifyColor: 'yellow',
+      addColor: 'rgba(60, 171, 119, 0.8)',
+      deleteColor: 'rgba(212, 95, 106, 0.8)',
+      modifyColor: 'rgba(226, 212, 108, 0.8)',
       devDbConn: null,
       prodDbConn: null,
     };
@@ -440,7 +440,7 @@ class MainContainer extends Component {
   setBackgroundColor(id) {
     const { backgroundColors } = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
-
+    console.log('hey', id)
     backgroundColorsCopy[id] = !backgroundColorsCopy[id];
     this.setState({ backgroundColors: backgroundColorsCopy });
   }
@@ -485,7 +485,7 @@ class MainContainer extends Component {
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = script.filter(query => query.id !== id);
-
+    console.log('remove', id, script, 'and',scriptCopy)
     main.createScriptWindow();
     setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 500);
     this.setState({ script: scriptCopy });
@@ -534,6 +534,10 @@ class MainContainer extends Component {
     const colors = ['navy', 'blue', 'aqua', 'teal', 'olive', 'green', 'lime', 'yellow', 'orange', 'red', 'maroon', 'fuscia', 'purples'];
     let colorIndex = 0;
 
+    const rand1 = [-3,5,-7,10,6,-5,2,-1,8,4,-8,0,-4,1,4,-10,9,-2,-6,7,3,-9]
+    const rand2 = [3,5,7,1,9,4,8,0,6,2,10]
+    let ran1i = 0;
+    let ran2i = 0;
     d3.selectAll('svg').remove();
 
     setTimeout(() => {
@@ -546,20 +550,21 @@ class MainContainer extends Component {
           for (let j = 0; j < domElement.length; j += 1) {
             if (domElement[j].textContent.includes(tt[tt.indexOf('REFERENCES') + 1]) && (!domElement[j].textContent.includes('REFERENCES')) && (domElement[j].parentNode.childNodes[0].textContent === (tt[tt.indexOf('REFERENCES') + 3]))) {
               // The data for our line
+             
               const lineData = [
-                { x: domElement[i].getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y },
-                { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y },
-                { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x, y: domElement[i].parentNode.parentNode.getBoundingClientRect().y },
-                { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x, y: domElement[i].parentNode.parentNode.getBoundingClientRect().y },
-                { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x, y: domElement[i].parentNode.parentNode.getBoundingClientRect().y },
-                { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y },
-                { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y }];
-
+                { x: domElement[i].getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y + rand2[ran2i%(rand2.length)] },
+                { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].getBoundingClientRect().y + rand2[ran2i%(rand2.length)] },
+                { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i%(rand2.length)] },
+                { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i%(rand2.length)] },
+                { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[j].getBoundingClientRect().y + rand2[ran2i%(rand2.length)] },
+                { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i%(rand2.length)] }];
+                ran2i++;
+                ran1i++;
               // This is the accessor function we talked about above
               const lineFunction = d3.line()
                 .x(d => d.x)
                 .y(d => d.y)
-                .curve(d3.curveBasis);
+                // .curve(d3.curveBasis);
 
               const bodyCanvas = document.getElementById('dbDisplayContainer');
               const svgContainer = d3.select(bodyCanvas)
@@ -586,7 +591,7 @@ class MainContainer extends Component {
               svgContainer.append('path')
                 .attr('d', lineFunction(lineData))
                 .attr('stroke', colors[colorIndex++ % (colors.length)])
-                .attr('stroke-width', 2)
+                .attr('stroke-width', 1.5)
                 .attr('fill', 'none');
             }
           }
@@ -612,9 +617,11 @@ class MainContainer extends Component {
       target = parentNode;
     }
     if (diffDbColors[id] !== undefined) {
+      console.log(target.style.backgroundColor, diffDbColors[id])
       if (target.style.backgroundColor === diffDbColors[id]) {
         // Background color is set meaning change is selected.
         // Deselect change and remove query from script.
+        console.log('test if')
         setBackgroundColor(id);
         removeScript(id);
       } else {
@@ -975,7 +982,28 @@ class MainContainer extends Component {
       <div>
         <div id="loading-screen" style={{visibility: showLoadingScreen ? 'visible' : 'hidden'}}>
           <div id="loading-box">
-            <h1 className="blinking" id="loading-message">Loading... </h1>
+          <h1 className="blinking" id="loading-message">Loading... </h1>
+          
+          {/* ge's loading balls */}
+          <svg className="gooSvg">
+              <defs>
+                  <filter id="goo">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+                      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                      
+                  </filter>
+              </defs>
+          </svg>
+          
+          <div class="gooContainer goo2">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+          </div>
+          {/* ge's loading ball end */}
+            
             <img src={loadingIcon} style={{width: '20px',height: '20px'}}/>
           </div>
         </div>

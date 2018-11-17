@@ -12,7 +12,7 @@ class DbDisplay extends Component {
           {
             columns.map(column => (
               <li className="list-group-item">
-                {column.name}
+                <span className="firstSpan">{column.name}</span>
                 {' '}
                 {column.dataType}
                 {' '}
