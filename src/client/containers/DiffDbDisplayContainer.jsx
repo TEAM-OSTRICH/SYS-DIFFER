@@ -38,6 +38,13 @@ class DiffDbDisplayContainer extends Component {
     window.addEventListener('scroll', drawLines);
   }
 
+  componentWillUnmount() {
+    const { drawLines } = this.props;
+
+    window.removeEventListener('resize', drawLines);
+    window.removeEventListener('scroll', drawLines);
+  }
+
   render() {
     const {
       db, diffDbColors, addScript, removeScript, backgroundColors, setBackgroundColor, handleSelect,

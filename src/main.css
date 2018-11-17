@@ -309,19 +309,27 @@ ul {
   left: 6px;
 }
 
-.prettierBtn{
-  /* border-radius: 50% 50% 50% 50%;
+#title-bar-btns:hover button span {
+  visibility: visible;
+}
 
-  height: 20px;
+.prettierBtn{
+  /* border-radius: 13px;
+  width: 13px;
+  height: 13px;
+  border: none; */
+
   text-align: center;
-  width: 20px;
-  vertical-align:middle;
-  display:table-cell */
-  
   border-radius: 13px;
   width: 13px;
   height: 13px;
   border: none;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  font-size: 12px;
 }
 
 .prettierBtn:focus{
@@ -403,18 +411,6 @@ ul {
   text-align: center;
 }
 
-#close-btn:hover span {
-  visibility: visible;
-}
-
-#min-btn:hover span {
-  visibility: visible;
-}
-
-#max-btn:hover span {
-  visibility: visible;
-}
-
 #close-span {
   visibility: hidden;
 }
@@ -460,6 +456,7 @@ ul {
   background-color: seashell;
   /* grid-column: 1 / 3; */
 }
+
 /* svg{
   position: absolute;
   top:0;
@@ -474,6 +471,7 @@ ul {
   vertical-align: top;
   overflow: hidden;
 } */
+
 .svg-content-responsive {
   display: inline-block;
   position: fixed;
@@ -494,11 +492,20 @@ body{
     url(https://images.pexels.com/photos/515294/pexels-photo-515294.jpeg) no-repeat center center fixed;
   background-size: cover;
 }
+
 .homePageFields{
   color:rgba(255,255,255,.7);
   font-size: 12px;
   margin-right: 8px;
 }
+
+.missingFields {
+  box-shadow: 0 0 5px rgba(255, 0, 0, 1);
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+  border: 1px solid rgba(255, 0, 0, 1);
+}
+
 ul{
   padding-bottom:0;
   padding-right:0;
