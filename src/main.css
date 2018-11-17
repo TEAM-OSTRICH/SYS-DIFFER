@@ -4,18 +4,22 @@
   padding: .75rem 1.25rem;
   margin-bottom: -1px;
   /* background-color: #fff; */
-  background-color:rgba(255,255,255,0.7);
+  background-color:rgba(255,255,255,0.8);
   /* border: 2px solid rgba(0,0,0,.125); */
   border: 2px solid #f1f2f4;
   border-radius: 6px;
   font-size:12px;
 }
-
+/* what can we do for hover???? */
+.list-group-item:hover{
+  /* background-color: #36383F; */
+}
 .list-group-item:first-child { 
-  background: linear-gradient(rgba(64, 177, 241, 0.2), rgba(26, 34, 132, 0.7));
+  background: linear-gradient(rgba(92, 114, 191, 0.75), rgba(35,43,85,0.95));
   color:rgba(255,255,255,0.9);
-  font-size:13px;
-  text-transform: uppercase;
+  font-size:15px;
+  /* text-transform: uppercase; */
+  font-style:italic;
   font-weight: 400;
   /* background-color: #b0e1f2; */
 }
@@ -329,7 +333,10 @@ ul {
 }
 
 .mainContainerBtns{
-  margin-left: 2em;
+  /* margin-left: 2em; */
+  margin-left: 4.5%;
+  display: flex;
+  width: 92%;
 }
 
 /* .mainContainerBtns > button{
@@ -439,7 +446,7 @@ ul {
   width: 100%;
   min-height: 90%;
   min-width: 90%;
-  background-color: seashell;
+  background-color: rgba(255,255,255,0.8);
   /* grid-column: 1 / 3; */
 }
 
@@ -543,45 +550,7 @@ ul{
   margin-left: 30%;
 }
 
-.LoaderBalls {
-	width: 90px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 
-	&__item {
-		// .LoaderBalls__wrapper__item
-		$anim-drt: 0.4s;
-		$anim-ease: cubic-bezier(.6,.05,.15,.95);
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-		background: #00f1ca;
-
-		&:nth-child(1) {
-			animation: bouncing $anim-drt alternate infinite $anim-ease;
-		}
-
-		&:nth-child(2) {
-			animation: bouncing $anim-drt $anim-drt/4 alternate infinite $anim-ease backwards;
-		}
-
-		&:nth-child(3) {
-			animation: bouncing $anim-drt $anim-drt/2 alternate infinite $anim-ease backwards;
-		}
-	}
-}
-
-@keyframes bouncing {
-
-	0% {
-		transform: translate3d(0, 10px, 0) scale(1.2, 0.85);
-	}
-
-	100% {
-		transform: translate3d(0, -20px, 0) scale(0.9, 1.1);
-	}
-}
 
 
 .gooSvg {
@@ -656,4 +625,15 @@ height:100px;
   66% {
       transform: translateX(-50px);
   }
+}
+.firstSpan{
+  font-weight: 600;
+  color: royalblue;
+}
+.specialMom{
+  transition: all 0.3s ease 0s; 
+}
+.specialMom:hover{
+  transform: scale(1.2);
+
 }
