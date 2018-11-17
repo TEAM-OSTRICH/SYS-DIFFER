@@ -55,20 +55,22 @@ class DbDisplayContainer extends Component {
             // console.log(tt[tt.indexOf('REFERENCES') + 3], tt[tt.indexOf('REFERENCES') + 1]);
             if (test[j].textContent.includes(tt[tt.indexOf('REFERENCES') + 1]) && (!test[j].textContent.includes('REFERENCES')) && (test[j].parentNode.childNodes[0].textContent === (tt[tt.indexOf('REFERENCES') + 3]))) {
               // The data for our line
+              const randomNum = -10 + Math.random() * 20;
+              const randomNum2 = Math.random() * 15;
+              console.log(randomNum, 'kevin what');
               const lineData = [
-                { x: test[i].getBoundingClientRect().x, y: test[i].getBoundingClientRect().y + 10 },
-                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].getBoundingClientRect().y + 10 },
-                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
-                { x: test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
-                { x: test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 },
-                { x: test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[j].getBoundingClientRect().y + 10 },
-                { x: test[j].getBoundingClientRect().x, y: test[j].getBoundingClientRect().y + 10 }];
+                { x: test[i].getBoundingClientRect().x, y: test[i].getBoundingClientRect().y + 10 + randomNum2 },
+                { x: randomNum + test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].getBoundingClientRect().y + 10 + randomNum2 },
+                { x: randomNum + test[i].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 + randomNum2 },
+                { x: randomNum + test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[i].parentNode.parentNode.getBoundingClientRect().y + 10 + randomNum2 },
+                { x: randomNum + test[j].parentNode.parentNode.getBoundingClientRect().x, y: test[j].getBoundingClientRect().y + 10 + randomNum2 },
+                { x: test[j].getBoundingClientRect().x, y: test[j].getBoundingClientRect().y + 10 + randomNum2 }];
 
               // This is the accessor function we talked about above
               const lineFunction = d3.line()
                 .x(d => d.x)
-                .y(d => d.y)
-                .curve(d3.curveBasis);
+                .y(d => d.y);
+                // .curve(d3.curveBasis);
 
               const bodyCanvas = document.getElementById('dbDisplayContainer');
               const svgContainer = d3.select(bodyCanvas)
@@ -94,7 +96,7 @@ class DbDisplayContainer extends Component {
               const lineGraph = svgContainer.append('path')
                 .attr('d', lineFunction(lineData))
                 .attr('stroke', this.state.colors[i % (this.state.colors.length)])
-                .attr('stroke-width', 2)
+                .attr('stroke-width', 1)
                 .attr('fill', 'none');
             }
           }

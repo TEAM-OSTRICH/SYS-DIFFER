@@ -183,7 +183,7 @@ const DiffDbDisplay = (props) => {
   const { name, columns } = tableInfo;
 /* eslint-disable */
   return (
-    <div>      
+    <div className="singleTable">   
     {/* // <ul className="list-group-item"> */}
     <ul>
       <li

@@ -599,7 +599,7 @@ class MainContainer extends Component {
     scriptCopy.push({ id, query });
 
     main.createScriptWindow();
-    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 200);
+    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 500);
     this.setState({ script: scriptCopy });
   }
 
@@ -609,8 +609,8 @@ class MainContainer extends Component {
     const scriptCopy = script.filter(query => query.id !== id);
 
     main.createScriptWindow();
-    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 200);
-    ipcRenderer.send('updateScript', scriptCopy);
+    setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 500);
+    // ipcRenderer.send('updateScript', scriptCopy);
     this.setState({ script: scriptCopy });
   }
 
@@ -646,7 +646,7 @@ class MainContainer extends Component {
     const { script } = this.state;
 
     main.createScriptWindow();
-    setTimeout(() => ipcRenderer.send('updateScript', script), 200);
+    setTimeout(() => ipcRenderer.send('updateScript', script), 500);
   }
 
   // ************************************  STOPPED COMMENTING HERE   ************************************
@@ -675,7 +675,28 @@ class MainContainer extends Component {
       <div>
         <div id="loading-screen" style={{visibility: showLoadingScreen ? 'visible' : 'hidden'}}>
           <div id="loading-box">
-            <h1 className="blinking" id="loading-message">Loading... </h1>
+          <h1 className="blinking" id="loading-message">Loading... </h1>
+          
+          {/* ge's loading balls */}
+          <svg className="gooSvg">
+              <defs>
+                  <filter id="goo">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+                      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                      
+                  </filter>
+              </defs>
+          </svg>
+          
+          <div class="gooContainer goo2">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+          </div>
+          {/* ge's loading ball end */}
+            
             <img src={loadingIcon} style={{width: '20px',height: '20px'}}/>
           </div>
         </div>
@@ -732,6 +753,7 @@ class MainContainer extends Component {
           >
             Save / Load
           </Button>
+          </div>
           {/* render page depending on which tab is selected (only one can be selected) */}
           {devDbDisplay ? <DbDisplayContainer db={devDb} /> : null}
           {prodDbDisplay ? <DbDisplayContainer db={prodDb} /> : null}
@@ -753,7 +775,7 @@ class MainContainer extends Component {
           {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
           {saveLoadDisplay ? <SaveLoadDisplay testData={this.state}/> : null}
         </div>
-      </div>
+      
     );
     /* eslint-enable */
   }

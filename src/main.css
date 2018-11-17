@@ -4,21 +4,27 @@
   padding: .75rem 1.25rem;
   margin-bottom: -1px;
   /* background-color: #fff; */
-  background-color:white;
+  background-color:rgba(255,255,255,0.7);
   /* border: 2px solid rgba(0,0,0,.125); */
   border: 2px solid #f1f2f4;
   border-radius: 6px;
+  font-size:12px;
 }
 
 .list-group-item:first-child { 
-  /* background-color: pink; */
-  background-color: #b0e1f2;
+  background: linear-gradient(rgba(64, 177, 241, 0.2), rgba(26, 34, 132, 0.7));
+  color:rgba(255,255,255,0.9);
+  font-size:13px;
+  text-transform: uppercase;
+  font-weight: 400;
+  /* background-color: #b0e1f2; */
 }
 
 #dbDisplayContainer {
   display: grid;
   /* background-color: red; */
   margin: 6px 12px;
+  padding: 13px;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
@@ -61,8 +67,8 @@ span {
 
 #scriptContainer {
   padding-bottom: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
+  /* padding-left: 10px; */
+  padding-right: 7px;
 }
 
 .inputGridContainer {
@@ -245,7 +251,7 @@ ul {
 }
 
 #loading-box {
-  background-color: #b0e1f2;
+  /* background-color: #b0e1f2; */
   z-index: 5;
   border-radius: 10px;
   display: flex;
@@ -323,7 +329,7 @@ ul {
 }
 
 .mainContainerBtns{
-  margin-left: 1em;
+  margin-left: 2em;
 }
 
 /* .mainContainerBtns > button{
@@ -428,8 +434,9 @@ ul {
 }
 
 #scriptTextArea {
+  margin-top:10px;
   height: 90%;
-  width: 90%;
+  width: 100%;
   min-height: 90%;
   min-width: 90%;
   background-color: seashell;
@@ -468,7 +475,7 @@ ul {
   z-index: -5;
 }
 .singleTable{
-  padding: 10px;
+  padding: 8px;
 }
 
 /* ge is here to break your hard work */
@@ -484,4 +491,169 @@ body{
   color:rgba(255,255,255,.7);
   font-size: 12px;
   margin-right: 8px;
+}
+ul{
+  padding-bottom:0;
+  padding-right:0;
+  box-shadow: 1px 20px 46px -34px;
+}
+
+
+
+.scriptWindowBtn {
+  border:2px solid rgb(20, 84, 233);
+  /* height: 100%; */
+  background: rgb(20, 84, 233);
+  text-align: center;
+  /* margin-left: 10%; */
+  float: 20%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  /* grid-column: 1 / 3; */
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-size: 11px;
+}
+
+.scriptWindowBtn:hover {
+  color: blue;
+  -webkit-transition: all 0.3s ease 0s; 
+}
+
+.scriptWindowBtn:after { 
+  content: "";
+  height: 100%; 
+  background-color: rgba(255,255,255,0.9);
+  left: 0; 
+  top: 0; 
+  width: 0px;  
+  position: absolute; 
+  border-radius: 10px;
+  transition: all 0.3s ease 0s; 
+  -webkit-transition: all 0.3s ease 0s; 
+  z-index: -1;
+}
+
+.scriptWindowBtn:hover:after {
+  width: 100%;
+}
+
+.style2Btns{
+  margin-left: 30%;
+}
+
+.LoaderBalls {
+	width: 90px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	&__item {
+		// .LoaderBalls__wrapper__item
+		$anim-drt: 0.4s;
+		$anim-ease: cubic-bezier(.6,.05,.15,.95);
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: #00f1ca;
+
+		&:nth-child(1) {
+			animation: bouncing $anim-drt alternate infinite $anim-ease;
+		}
+
+		&:nth-child(2) {
+			animation: bouncing $anim-drt $anim-drt/4 alternate infinite $anim-ease backwards;
+		}
+
+		&:nth-child(3) {
+			animation: bouncing $anim-drt $anim-drt/2 alternate infinite $anim-ease backwards;
+		}
+	}
+}
+
+@keyframes bouncing {
+
+	0% {
+		transform: translate3d(0, 10px, 0) scale(1.2, 0.85);
+	}
+
+	100% {
+		transform: translate3d(0, -20px, 0) scale(0.9, 1.1);
+	}
+}
+
+
+.gooSvg {
+  width: 0;
+  height: 0;
+}
+
+.gooContainer {
+  margin: 40px auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.goo2 {
+  -webkit-filter: url(#goo);
+}
+
+.gooContainer div {
+  background: blue;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+
+.goo2 > div {
+  transform: translateX(0);
+  animation: sideways 2s infinite ease;
+}
+
+.goo2 > div:nth-child(1) {
+  animation-delay: .1s;
+}
+
+.goo2 > div:nth-child(2) {
+  animation-delay: .25s;
+}
+
+.goo2 > div:nth-child(3) {
+  animation-delay: .4s;
+}
+
+.goo2 > div:nth-child(4) {
+  animation-delay: 0.65s;
+}
+
+.goo2 > div:nth-child(5) {
+  animation-delay: 0.7s
+}
+
+.goo2 {
+padding-left:40px;
+width: 200px;
+height:100px;
+}
+
+@keyframes circle {
+  50% {
+      width: 25px;
+      height: 25px;
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+@keyframes sideways {
+  33% {
+      transform: translateX(50px);
+  }
+  66% {
+      transform: translateX(-50px);
+  }
 }
