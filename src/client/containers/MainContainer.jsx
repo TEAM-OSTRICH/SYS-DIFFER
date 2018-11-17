@@ -40,6 +40,8 @@ class MainContainer extends Component {
   constructor(props) {
     super(props);
 
+    this.queued = false;
+
     this.state = {
       devDb: [],
       prodDb: [],
@@ -57,6 +59,10 @@ class MainContainer extends Component {
       modifyColor: 'rgba(226, 212, 108, 0.8)',
       devDbConn: null,
       prodDbConn: null,
+      currentDevDb: '',
+      currentProdDb: '',
+      timer: null,
+      isMounted: false,
     };
 
     this.buildDbObjects = this.buildDbObjects.bind(this);
@@ -73,12 +79,13 @@ class MainContainer extends Component {
     this.refreshPage = this.refreshPage.bind(this);
     this.setDbInfo = this.setDbInfo.bind(this);
     this.diffDatabases = this.diffDatabases.bind(this);
+    this.drawLines = this.drawLines.bind(this);
   }
 
   /**
    * Getting database URL from entry page (either entire URL at top, or by creating URL from inputs)
    */
-  componentWillMount() {
+  componentDidMount() {
     this.buildDbObjects();
   }
 
@@ -125,25 +132,131 @@ class MainContainer extends Component {
 
     const query = getQuery(inputLinkSchema1);
     const query2 = getQuery(inputLinkSchema2);
+    
+    let devDbConn;
+    let prodDbConn;
 
     // connect to each database
-    const devDbConn = pgp(input1);
-    const prodDbConn = pgp(input2);
+    if (this.state.devDbConn === null) {
+      console.log('connecting to dev db');
+      devDbConn = pgp(input1);
+    } else {
+      devDbConn = this.state.devDbConn;
+    }
+
+    if (this.state.prodDbConn === null) {
+      console.log('connecting to prod db');
+      prodDbConn = pgp(input2);
+    } else {
+      prodDbConn = this.state.prodDbConn;
+    }
 
     const { setDbInfo, diffDatabases } = this;
     let devDb;
     let prodDb;
     let diffDb;
 
-    // query dev database for schema info
-    devDbConn.any(query2).then((schemaInfo) => {
-      devDb = setDbInfo(schemaInfo);
+    // // query dev database for schema info
+    // devDbConn.any(query2).then((schemaInfo) => {
+    //   devDb = setDbInfo(schemaInfo);
 
+    //   // query production database for schema info
+    //   prodDbConn.any(query).then((schemaInfo2) => {
+    //       prodDb = setDbInfo(schemaInfo2);
+    //     })
+    //     .then(() => {
+    //       // Determine differences between databases.
+    //       diffDb = diffDatabases(devDb, prodDb);
+
+    //       // Create database arrays to sort so that common tables appear first for easier visual comparison
+    //       let commonTablesArray = [];
+    //       let differentTablesArray = [];
+
+    //       // Sort devDb.
+    //       devDb.forEach((table) => {
+    //         const foundTable = _.find(prodDb, { name: table.name });
+
+    //         // tables that in both databases:
+    //         if (foundTable !== undefined) {
+    //           commonTablesArray.push(table);
+    //         } else {
+    //           // tables only in one database or the other
+    //           differentTablesArray.push(table);
+    //         }
+    //       });
+
+    //       // combine arrays of databases (tables in both databases appear first)
+    //       const sortedDevDb = commonTablesArray.concat(differentTablesArray);
+    //       commonTablesArray = [];
+    //       differentTablesArray = [];
+
+    //       // Sort prodDb.
+    //       prodDb.forEach((table) => {
+    //         const foundTable = _.find(devDb, { name: table.name });
+    //         // tables in both databases
+    //         if (foundTable !== undefined) {
+    //           commonTablesArray.push(table);
+    //         } else {
+    //           // tables only in one db or the other
+    //           differentTablesArray.push(table);
+    //         }
+    //       });
+
+    //       // combine arrays of databases (tables in both databases appear first)
+    //       const sortedProdDb = commonTablesArray.concat(differentTablesArray);
+    //       commonTablesArray = [];
+    //       differentTablesArray = [];
+
+    //       // Sort diffDb.
+    //       diffDb.forEach((table) => {
+    //         const foundTable1 = _.find(devDb, { name: table.name });
+    //         const foundTable2 = _.find(prodDb, { name: table.name });
+
+    //         if (foundTable1 !== undefined && foundTable2 !== undefined) {
+    //           commonTablesArray.push(table);
+    //         } else {
+    //           differentTablesArray.push(table);
+    //         }
+    //       });
+
+    //       const sortedDiffDb = commonTablesArray.concat(differentTablesArray);
+
+    //       devDbConn.end();
+    //       prodDbConn.end();
+
+    //       this.setState({
+    //         devDb: sortedDevDb,
+    //         prodDb: sortedProdDb,
+    //         diffDb: sortedDiffDb,
+    //         showLoadingScreen: false,
+    //       });
+    //     });
+    // });
+
+    let sco;
+    let sco2;
+
+    // query dev database for schema info
+    devDbConn.connect()
+    .then(obj => {
+      console.log(obj,'1111');
+        sco = obj;
+        return sco.any(query2);
+      })
+      .then((schemaInfo) => {
+      devDb = setDbInfo(schemaInfo);
+        console.log(schemaInfo, devDb,'dead')
       // query production database for schema info
-      prodDbConn
-        .any(query)
-        .then((schemaInfo2) => {
+      prodDbConn.connect()
+      .then(obj2 => {
+        
+        console.log(obj2,'222');
+        sco2 = obj2;
+        return sco2.any(query);
+      })
+      .then((schemaInfo2) => {
           prodDb = setDbInfo(schemaInfo2);
+          console.log(schemaInfo2, prodDb,'dead2')
         })
         .then(() => {
           // Determine differences between databases.
@@ -207,8 +320,20 @@ class MainContainer extends Component {
             prodDb: sortedProdDb,
             diffDb: sortedDiffDb,
             showLoadingScreen: false,
+            devDbConn,
+            prodDbConn,
           });
+        })
+        .finally(() => {
+          if (sco2) {
+            sco2.done();
+          }
         });
+    })
+    .finally(() => {
+      if (sco) {
+        sco.done();
+      }
     });
   }
 
@@ -440,7 +565,7 @@ class MainContainer extends Component {
   setBackgroundColor(id) {
     const { backgroundColors } = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
-    console.log('hey', id)
+    console.log('hey', id);
     backgroundColorsCopy[id] = !backgroundColorsCopy[id];
     this.setState({ backgroundColors: backgroundColorsCopy });
   }
@@ -485,7 +610,7 @@ class MainContainer extends Component {
   removeScript(id) {
     const { script } = this.state;
     const scriptCopy = script.filter(query => query.id !== id);
-    console.log('remove', id, script, 'and',scriptCopy)
+    console.log('remove', id, script, 'and', scriptCopy);
     main.createScriptWindow();
     setTimeout(() => ipcRenderer.send('updateScript', scriptCopy), 500);
     this.setState({ script: scriptCopy });
@@ -531,73 +656,84 @@ class MainContainer extends Component {
    */
   /* eslint-disable */
   drawLines() {
-    const colors = ['navy', 'blue', 'aqua', 'teal', 'olive', 'green', 'lime', 'yellow', 'orange', 'red', 'maroon', 'fuscia', 'purples'];
-    let colorIndex = 0;
+    // let queued = false;
+    // return () => {
+    if (!this.queued) {
+      this.queued = true;
+      console.log(this.queued);
+      const colors = ['navy', 'blue', 'aqua', 'teal', 'olive', 'green', 'lime', 'yellow', 'orange', 'red', 'maroon', 'fuscia', 'purples'];
+      let colorIndex = 0;
 
-    const rand1 = [-3,5,-7,10,6,-5,2,-1,8,4,-8,0,-4,1,4,-10,9,-2,-6,7,3,-9]
-    const rand2 = [3,5,7,1,9,4,8,0,6,2,10]
-    let ran1i = 0;
-    let ran2i = 0;
-    d3.selectAll('svg').remove();
+      const rand1 = [-3, 5, -7, 10, 6, -5, 2, -1, 8, 4, -8, 0, -4, 1, 4, -10, 9, -2, -6, 7, 3, -9];
+      const rand2 = [3, 5, 7, 1, 9, 4, 8, 0, 6, 2, 10];
+      let ran1i = 0;
+      let ran2i = 0;
 
-    setTimeout(() => {
-      const domElement = document.getElementsByClassName('list-group-item');
+      d3.selectAll('svg').remove();
 
-      for (let i = 0; i < domElement.length; i += 1) {
-        if (domElement[i].textContent.includes('REFERENCES')) {
-          const tt = domElement[i].textContent.split(' ');
+      // const timer = setTimeout(() => {
+      setTimeout(() => {
+        const domElement = document.getElementsByClassName('list-group-item');
+        // console.log('from drawLines', domElement);
+        for (let i = 0; i < domElement.length; i += 1) {
+          if (domElement[i].textContent.includes('REFERENCES')) {
+            const tt = domElement[i].textContent.split(' ');
 
-          for (let j = 0; j < domElement.length; j += 1) {
-            if (domElement[j].textContent.includes(tt[tt.indexOf('REFERENCES') + 1]) && (!domElement[j].textContent.includes('REFERENCES')) && (domElement[j].parentNode.childNodes[0].textContent === (tt[tt.indexOf('REFERENCES') + 3]))) {
+            for (let j = 0; j < domElement.length; j += 1) {
+              if (domElement[j].textContent.includes(tt[tt.indexOf('REFERENCES') + 1]) && (!domElement[j].textContent.includes('REFERENCES')) && (domElement[j].parentNode.childNodes[0].textContent === (tt[tt.indexOf('REFERENCES') + 3]))) {
               // The data for our line
-             
-              const lineData = [
-                { x: domElement[i].getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y + rand2[ran2i%(rand2.length)] },
-                { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].getBoundingClientRect().y + rand2[ran2i%(rand2.length)] },
-                { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i%(rand2.length)] },
-                { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i%(rand2.length)] },
-                { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[j].getBoundingClientRect().y + rand2[ran2i%(rand2.length)] },
-                { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i%(rand2.length)] }];
+
+                const lineData = [
+                  { x: domElement[i].getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                  { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                  { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                  { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                  { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                  { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] }];
                 ran2i++;
                 ran1i++;
-              // This is the accessor function we talked about above
-              const lineFunction = d3.line()
-                .x(d => d.x)
-                .y(d => d.y)
+                // This is the accessor function we talked about above
+                const lineFunction = d3.line()
+                  .x(d => d.x)
+                  .y(d => d.y);
                 // .curve(d3.curveBasis);
 
-              const bodyCanvas = document.getElementById('dbDisplayContainer');
-              const svgContainer = d3.select(bodyCanvas)
-                .append('div')
-                .classed('svg-container', true)
-                .append('svg')
-                .attr('width', '100%')
-                .attr('height', '100%')
+                const bodyCanvas = document.getElementById('dbDisplayContainer');
+                const svgContainer = d3.select(bodyCanvas)
+                  .append('div')
+                  .classed('svg-container', true)
+                  .append('svg')
+                  .attr('width', '100%')
+                  .attr('height', '100%')
                 // .attr('preserveAspectRatio', 'xMinYMin meet')
                 // .attr("viewBox", "0 0 600 400")
-                .classed('svg-content-responsive', true);
+                  .classed('svg-content-responsive', true);
 
-              // function getRandomColor() {
-              //   var letters = '0123456789ABCDEF';
-              //   var color = '#';
-              //   for (var i = 0; i < 6; i++) {
-              //     color += letters[Math.floor(Math.random() * 16)];
-              //   }
-              //   return color;
-              // }
+                // function getRandomColor() {
+                //   var letters = '0123456789ABCDEF';
+                //   var color = '#';
+                //   for (var i = 0; i < 6; i++) {
+                //     color += letters[Math.floor(Math.random() * 16)];
+                //   }
+                //   return color;
+                // }
 
-              // let color = ['pink', 'lightblue', 'indigo', 'darkcyan']
-              // The line SVG Path we draw
-              svgContainer.append('path')
-                .attr('d', lineFunction(lineData))
-                .attr('stroke', colors[colorIndex++ % (colors.length)])
-                .attr('stroke-width', 1.5)
-                .attr('fill', 'none');
+                // let color = ['pink', 'lightblue', 'indigo', 'darkcyan']
+                // The line SVG Path we draw
+                svgContainer.append('path')
+                  .attr('d', lineFunction(lineData))
+                  .attr('stroke', colors[colorIndex++ % (colors.length)])
+                  .attr('stroke-width', 1.5)
+                  .attr('fill', 'none');
+              }
             }
           }
         }
-      }
-    }, 1000);
+
+        this.queued = false;
+      }, 2000);
+    }
+    // };
   }
 
   /**
@@ -617,11 +753,11 @@ class MainContainer extends Component {
       target = parentNode;
     }
     if (diffDbColors[id] !== undefined) {
-      console.log(target.style.backgroundColor, diffDbColors[id])
+      console.log(target.style.backgroundColor, diffDbColors[id]);
       if (target.style.backgroundColor === diffDbColors[id]) {
         // Background color is set meaning change is selected.
         // Deselect change and remove query from script.
-        console.log('test if')
+        console.log('test if');
         setBackgroundColor(id);
         removeScript(id);
       } else {
@@ -724,7 +860,7 @@ class MainContainer extends Component {
             name, dataType, constraintTypes, constraintNames,
           } = column;
           const tableName = tableInfo.name;
-          console.log('qParams2', queryParams, 'column2', column, 'tableInfo2', tableInfo);
+
           // Add or remove a constraint.
           if (queryParams[2] === 'constraintType') {
             let columnString = `ALTER TABLE "${tableName}" `;
@@ -778,27 +914,27 @@ class MainContainer extends Component {
     // Create query.
     const queryParams = id.split('-');
     const { addColor, deleteColor, modifyColor } = this.state;
-  
+
     // One query parameter means add or delete a table.
     if (queryParams.length === 1) {
       const { name, columns } = tableInfo;
       if (diffDbColors[id] === addColor) {
         // Add a table.
         let columnString = '';
-  
+
         // Build columns part of query.
         columns.forEach((column) => {
           const {
             name, dataType, isNullable, constraintTypes,
           } = column;
-  
+
           columnString += `"${name}" ${dataType}`;
-  
+
           // Add NOT NULL constraint if it exists.
           if (!isNullable) {
             columnString += ' NOT NULL';
           }
-  
+
           if (constraintTypes !== undefined) {
             // Loop through and add all constraint types.
             constraintTypes.forEach((constraintType) => {
@@ -811,13 +947,13 @@ class MainContainer extends Component {
               }
             });
           }
-  
+
           columnString += ', ';
         });
-  
+
         // Remove last comma.
         columnString = columnString.slice(0, columnString.length - 2);
-  
+
         // Add script to create a table.
         return `CREATE TABLE ${name} (${columnString});`;
       } if (diffDbColors[id] === deleteColor) {
@@ -825,7 +961,7 @@ class MainContainer extends Component {
         return `DROP TABLE "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`;
       }
     }
-  
+
     // Two query params means add or delete column from table
     if (queryParams.length === 2) {
       const {
@@ -836,12 +972,12 @@ class MainContainer extends Component {
       if (diffDbColors[id] === addColor) {
         // Add a column
         columnString += `ADD COLUMN "${name}" ${dataType}`;
-  
+
         // Add NOT NULL constraint if it exists.
         if (!isNullable) {
           columnString += ' NOT NULL';
         }
-  
+
         if (constraintTypes !== undefined) {
           // Loop through and add all constraint types.
           constraintTypes.forEach((constraintType) => {
@@ -854,34 +990,34 @@ class MainContainer extends Component {
             }
           });
         }
-  
+
         columnString += ';';
-  
+
         return columnString;
       }
       // Must be deleteColor so delete a column
       return `ALTER TABLE "${tableName}" DROP COLUMN "${name}";\n/*  ALERT: THIS WILL ALSO CASCADE DELETE ALL ASSOCIATED DATA  */`;
     }
-  
+
     // Four query params means add or delete data-type or constraint
     if (queryParams.length === 4) {
       const {
         name, dataType, constraintTypes, constraintNames,
       } = column;
       const tableName = tableInfo.name;
-      // console.log('qParams2', queryParams, 'column2', column, 'tableInfo2', tableInfo);
+
       // Add or remove a constraint.
       if (queryParams[2] === 'constraintType') {
         let columnString = `ALTER TABLE "${tableName}" `;
-  
+
         if (diffDbColors[id] === addColor) {
           // add a constraint
           columnString += 'ADD';
-  
+
           if (queryParams[3].includes('REFERENCES')) {
             const constraintTypeArray = queryParams[3].split(' ');
             const foreignKey = ` FOREIGN KEY (${queryParams[1]}) REFERENCES ${constraintTypeArray[3]} (${constraintTypeArray[1]})`;
-  
+
             columnString += `${foreignKey}`;
           } else {
             columnString += ` ${queryParams[3]} ("${name}");`;
@@ -892,13 +1028,13 @@ class MainContainer extends Component {
         columnString += `DROP "${constraintNames[constraintTypes.indexOf(queryParams[3])]}";`;
         return columnString;
       }
-  
+
       // Modify a data type.
       if (queryParams[2] === 'dataType') {
         // add a dataType
         return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" TYPE ${dataType} USING "${name}"::${dataType};`;
       }
-  
+
       // Add or remove NOT NULL constraint.
       if (queryParams[2] === 'nullable') {
         if (diffDbColors[id] === addColor) {
@@ -911,7 +1047,7 @@ class MainContainer extends Component {
         return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" DROP NOT NULL;`;
       }
     }
-  };  
+  }
 
   selectAll(db, diffDbColors, addAllChanges) {
     const { handleSelectWithId } = this;
@@ -923,7 +1059,7 @@ class MainContainer extends Component {
       const idArray = id.split('-');
       const tableName = idArray[0];
       const foundTable = _.find(db, { name: tableName });
-  
+
       if (idArray.length === 1) {
         script.push({ id, query: handleSelectWithId(id, diffDbColors, foundTable) });
       } else {
@@ -934,7 +1070,7 @@ class MainContainer extends Component {
     });
 
     addAllChanges(script);
-  };
+  }
   /* eslint-enable */
 
   /**
@@ -976,7 +1112,12 @@ class MainContainer extends Component {
       selectAll,
       refreshPage,
     } = this;
-
+    console.log(devDbDisplay,
+      prodDbDisplay,
+      diffDbDisplay);
+    console.log(devDb,
+      prodDb,
+      diffDb);
     /* eslint-disable */
     return (
       <div>
@@ -1012,6 +1153,7 @@ class MainContainer extends Component {
             variant="outlined" color="primary"
             onClick={() => {
               main.closeScriptWindow();
+              this.setState({ devDbConn: null, prodDbConn: null});
               return this.props.history.push("/");
             }}
           >

@@ -12,8 +12,16 @@ class DbDisplayContainer extends Component {
     window.addEventListener('scroll', drawLines);
   }
 
+  componentWillUnmount() {
+    const { drawLines } = this.props;
+
+    window.removeEventListener('resize', drawLines);
+    window.removeEventListener('scroll', drawLines);
+  }
+
   render() {
     const { db } = this.props;
+    console.log(db);
     const tables = db.map(tableInfo => <DbDisplay key={tableInfo.name} tableInfo={tableInfo} />);
 
     return (
