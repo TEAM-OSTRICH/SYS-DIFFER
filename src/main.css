@@ -631,7 +631,17 @@ height:100px;
   color: royalblue;
 }
 .specialMom{
+  /* border-radius: 7px; */
+  /* overflow: hidden; */
   transition: all 0.3s ease 0s; 
+  display: inline-block;
+}
+span{
+  border-radius: 7px;
+}
+.basicDiv{
+  display: inline-block;
+
 }
 .specialMom:hover{
   transform: scale(1.2);

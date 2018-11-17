@@ -10,8 +10,11 @@ const DiffDbDisplay = (props) => {
     <div className="singleTable">   
     {/* // <ul className="list-group-item"> */}
     <ul>
+    
       <li
         id={name}
+        className= { diffDbColors[`${diffDbColors[name]}`]
+        ? 'specialMom':'basicDiv' } 
         className="list-group-item"
         style={
           {
@@ -27,7 +30,9 @@ const DiffDbDisplay = (props) => {
       >
         <span>{name}</span>
       </li>
+  
       {columns.map(column => (
+        
         <li
           id={`${name}-${column.name}`}
           className="list-group-item"
@@ -43,8 +48,12 @@ const DiffDbDisplay = (props) => {
           }
           onClick={(event) => {handleSelect(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)}}
         >
+        
           <span class="firstSpan">{column.name}</span>
+       
           {' '}
+          <div className= { diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
+                ? 'specialMom':'basicDiv' } >
           <span
             id={`${name}-${column.name}-dataType-${column.dataType}`}
             className="column-property"
@@ -64,12 +73,13 @@ const DiffDbDisplay = (props) => {
           >
             {column.dataType}
           </span>
+          </div>
           {' '}
           {
             !column.isNullable
               ? (
                 <div className= { diffDbColors[`${name}-${column.name}-nullable-${column.isNullable}`]
-                ? 'specialMom':null } >
+                ? 'specialMom':'basicDiv' } >
                 
                 <span
                   id={`${name}-${column.name}-nullable-${column.isNullable}`}
@@ -101,6 +111,8 @@ const DiffDbDisplay = (props) => {
             column.constraintTypes
               ? (
                 column.constraintTypes.map((constraintType, index) => (
+                  <div className= { diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`]
+                ? 'specialMom':'basicDiv' } >
                   <span
                     id={`${name}-${column.name}-constraintType-${constraintType}`}
                     className="column-property"
@@ -120,6 +132,7 @@ const DiffDbDisplay = (props) => {
                     {constraintType}
                     {index !== column.constraintTypes - 1 ? ' ' : null }
                   </span>
+                  </div>
                   )
                 )
               )
