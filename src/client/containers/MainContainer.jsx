@@ -7,6 +7,7 @@ import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
 // import SaveLoadDisplay from '../components/SaveLoadDisplay.jsx';
 import loadingIcon from '../../assets/5pSf.gif';
+import getQuery from '../query';
 
 const { remote } = require('electron');
 
@@ -54,9 +55,11 @@ class MainContainer extends Component {
       addColor: 'green',
       deleteColor: 'red',
       modifyColor: 'yellow',
+      devDbConn: null,
+      prodDbConn: null,
     };
 
-    this.buildDatabaseObjects = this.buildDatabaseObjects.bind(this);
+    this.buildDbObjects = this.buildDbObjects.bind(this);
     this.changeDisplay = this.changeDisplay.bind(this);
     this.addScript = this.addScript.bind(this);
     this.removeScript = this.removeScript.bind(this);
@@ -67,20 +70,23 @@ class MainContainer extends Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleSelectWithId = this.handleSelectWithId.bind(this);
     this.selectAll = this.selectAll.bind(this);
+    this.refreshPage = this.refreshPage.bind(this);
+    this.setDbInfo = this.setDbInfo.bind(this);
+    this.diffDatabases = this.diffDatabases.bind(this);
   }
 
   /**
    * Getting database URL from entry page (either entire URL at top, or by creating URL from inputs)
    */
   componentWillMount() {
-    this.buildDatabaseObjects();
+    this.buildDbObjects();
   }
 
   /* eslint-disable */
   /**
    * Query databases for metadata and build table objects for devDb, prodDb, and diffDb arrays.
    */
-  buildDatabaseObjects() {
+  buildDbObjects() {
     let {
       input1,
       input2,
@@ -117,217 +123,176 @@ class MainContainer extends Component {
       inputLinkSchema2 = inputObj2Schema;
     }
 
-    const query = `
-      SELECT 
-      table_name,
-      column_name,
-      is_nullable,
-      data_type,
-      character_maximum_length,
-      string_agg(constraint_type, ', ') AS constraint_types,
-      string_agg(foreign_table_name, ', ') AS foreign_table_name,
-      string_agg(foreign_column_name, ', ') AS foreign_column_name,
-      string_agg(constraint_name, ', ') AS constraint_names
-      FROM
-        (
-          SELECT
-          tc.constraint_name,
-          t.table_name,
-          c.column_name,
-          c.is_nullable,
-          c.data_type,
-          c.character_maximum_length,
-          tc.constraint_type,
-          null AS foreign_table_name,
-          null AS foreign_column_name
-          FROM
-          information_schema.tables AS t JOIN information_schema.columns AS c
-            ON t.table_name = c.table_name
-          LEFT JOIN information_schema.key_column_usage AS kcu
-            ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-          LEFT JOIN information_schema.table_constraints AS tc
-            ON kcu.constraint_name = tc.constraint_name
-          LEFT JOIN information_schema.constraint_column_usage AS ccu 
-            ON tc.constraint_name = ccu.constraint_name
-          WHERE t.table_type = 'BASE TABLE'
-          AND t.table_schema = '${inputLinkSchema1}'
-          AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
-          UNION ALL
-          SELECT
-          tc.constraint_name,
-          t.table_name,
-          c.column_name,
-          c.is_nullable,
-          c.data_type,
-          c.character_maximum_length,
-          tc.constraint_type,
-          ccu.table_name AS foreign_table_name,
-          ccu.column_name AS foreign_column_name
-          FROM
-          information_schema.tables AS t JOIN information_schema.columns as c
-            ON t.table_name = c.table_name
-          LEFT JOIN information_schema.key_column_usage as kcu
-            ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-          LEFT JOIN information_schema.table_constraints as tc
-            ON kcu.constraint_name = tc.constraint_name
-          LEFT JOIN information_schema.constraint_column_usage AS ccu
-            ON tc.constraint_name = ccu.constraint_name
-          WHERE t.table_type = 'BASE TABLE'
-          AND t.table_schema = '${inputLinkSchema1}'
-          AND tc.constraint_type = 'FOREIGN KEY'
-        ) AS subquery
-      GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
-      ORDER BY table_name, column_name
-      `;
-
-    const query2 = `
-        SELECT 
-        table_name,
-        column_name,
-        is_nullable,
-        data_type,
-        character_maximum_length,
-        string_agg(constraint_type, ', ') AS constraint_types,
-        string_agg(foreign_table_name, ', ') AS foreign_table_name,
-        string_agg(foreign_column_name, ', ') AS foreign_column_name,
-        string_agg(constraint_name, ', ') AS constraint_names
-        FROM
-          (
-            SELECT
-            tc.constraint_name,
-            t.table_name,
-            c.column_name,
-            c.is_nullable,
-            c.data_type,
-            c.character_maximum_length,
-            tc.constraint_type,
-            null AS foreign_table_name,
-            null AS foreign_column_name
-            FROM
-            information_schema.tables AS t JOIN information_schema.columns AS c
-              ON t.table_name = c.table_name
-            LEFT JOIN information_schema.key_column_usage AS kcu
-              ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-            LEFT JOIN information_schema.table_constraints AS tc
-              ON kcu.constraint_name = tc.constraint_name
-            LEFT JOIN information_schema.constraint_column_usage AS ccu 
-              ON tc.constraint_name = ccu.constraint_name
-            WHERE t.table_type = 'BASE TABLE'
-            AND t.table_schema = '${inputLinkSchema2}'
-            AND (tc.constraint_type is null OR tc.constraint_type <> 'FOREIGN KEY')
-            UNION ALL
-            SELECT
-            tc.constraint_name,
-            t.table_name,
-            c.column_name,
-            c.is_nullable,
-            c.data_type,
-            c.character_maximum_length,
-            tc.constraint_type,
-            ccu.table_name AS foreign_table_name,
-            ccu.column_name AS foreign_column_name
-            FROM
-            information_schema.tables AS t JOIN information_schema.columns as c
-              ON t.table_name = c.table_name
-            LEFT JOIN information_schema.key_column_usage as kcu
-              ON t.table_name = kcu.table_name AND c.column_name = kcu.column_name
-            LEFT JOIN information_schema.table_constraints as tc
-              ON kcu.constraint_name = tc.constraint_name
-            LEFT JOIN information_schema.constraint_column_usage AS ccu
-              ON tc.constraint_name = ccu.constraint_name
-            WHERE t.table_type = 'BASE TABLE'
-            AND t.table_schema = '${inputLinkSchema2}'
-            AND tc.constraint_type = 'FOREIGN KEY'
-          ) AS subquery
-        GROUP BY table_name, column_name,  is_nullable, data_type, character_maximum_length
-        ORDER BY table_name, column_name
-        `;
+    const query = getQuery(inputLinkSchema1);
+    const query2 = getQuery(inputLinkSchema2);
 
     // connect to each database
     const devDbConn = pgp(input1);
     const prodDbConn = pgp(input2);
 
-    /**
-     * Parse schemaInfo to create table objects.
-     * @param {string} dbName - name of the database (dev or prod)
-     * @param {object} schemaInfo - the metadata about tables returned from database
-     */
-    const setDbInfo = (schemaInfo) => {
-      // this array will contain all the table objects
-      const dbCopy = [];
-      // table object to create each table, then push onto dbCopy array
-      let table = {};
-      schemaInfo.forEach((row) => {
-        const {
-          table_name,
-          column_name,
-          is_nullable,
-          data_type,
-          character_maximum_length,
-          constraint_types,
-          foreign_table_name,
-          foreign_column_name,
-          constraint_names,
-        } = row;
+    const { setDbInfo, diffDatabases } = this;
+    let devDb;
+    let prodDb;
+    let diffDb;
 
-        if (table.name === undefined) {
-          table.name = table_name;
-        }
+    // query dev database for schema info
+    devDbConn.any(query2).then((schemaInfo) => {
+      devDb = setDbInfo(schemaInfo);
 
-        if (table.name !== undefined && table.name !== table_name) {
-          // Add table to oldDb array.
-          dbCopy.push(table);
-          // Reset table.
-          table = {};
-          table.name = table_name;
-        }
+      // query production database for schema info
+      prodDbConn
+        .any(query)
+        .then((schemaInfo2) => {
+          prodDb = setDbInfo(schemaInfo2);
+        })
+        .then(() => {
+          // Determine differences between databases.
+          diffDb = diffDatabases(devDb, prodDb);
 
-        // Create new column object to push into table object.
-        const column = {};
-        column.name = column_name;
-        column.isNullable = (is_nullable === 'YES');
+          // Create database arrays to sort so that common tables appear first for easier visual comparison
+          let commonTablesArray = [];
+          let differentTablesArray = [];
 
-        // This is for data-types only:
-        column.dataType = data_type;
-        if (data_type === 'character varying') { column.dataType = `varchar (${character_maximum_length})`; }
-        if (data_type === 'double precision') column.dataType = 'float';
+          // Sort devDb.
+          devDb.forEach((table) => {
+            const foundTable = _.find(prodDb, { name: table.name });
 
-        // For contraints only:
-        if (constraint_types !== null) {
-          const constraintTypesArray = constraint_types.split(', ');
-          const constraintNamesArray = constraint_names.split(', ');
-          column.constraintTypes = [];
-          column.constraintNames = [];
-
-          constraintTypesArray.forEach((constraintType, index) => {
-            let constraintTypeTemp = constraintType;
-
-            // create Foreign Key statement
-            if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
-
-            // add another key in column obj
-            column.constraintTypes.push(constraintTypeTemp);
-            column.constraintNames.push(constraintNamesArray[index]);
+            // tables that in both databases:
+            if (foundTable !== undefined) {
+              commonTablesArray.push(table);
+            } else {
+              // tables only in one database or the other
+              differentTablesArray.push(table);
+            }
           });
-        }
 
-        // Add new column object to table.
-        if (table.columns === undefined) table.columns = [column];
-        else table.columns.push(column);
-      });
+          // combine arrays of databases (tables in both databases appear first)
+          const sortedDevDb = commonTablesArray.concat(differentTablesArray);
+          commonTablesArray = [];
+          differentTablesArray = [];
 
-      // Push the last table.
-      dbCopy.push(table);
+          // Sort prodDb.
+          prodDb.forEach((table) => {
+            const foundTable = _.find(devDb, { name: table.name });
+            // tables in both databases
+            if (foundTable !== undefined) {
+              commonTablesArray.push(table);
+            } else {
+              // tables only in one db or the other
+              differentTablesArray.push(table);
+            }
+          });
 
-      return dbCopy;
-    };
+          // combine arrays of databases (tables in both databases appear first)
+          const sortedProdDb = commonTablesArray.concat(differentTablesArray);
+          commonTablesArray = [];
+          differentTablesArray = [];
 
-    /**
+          // Sort diffDb.
+          diffDb.forEach((table) => {
+            const foundTable1 = _.find(devDb, { name: table.name });
+            const foundTable2 = _.find(prodDb, { name: table.name });
+
+            if (foundTable1 !== undefined && foundTable2 !== undefined) {
+              commonTablesArray.push(table);
+            } else {
+              differentTablesArray.push(table);
+            }
+          });
+
+          const sortedDiffDb = commonTablesArray.concat(differentTablesArray);
+
+          this.setState({
+            devDb: sortedDevDb,
+            prodDb: sortedProdDb,
+            diffDb: sortedDiffDb,
+            showLoadingScreen: false,
+          });
+        });
+    });
+  }
+
+  /**
+   * Parse schemaInfo to create table objects.
+   * @param {string} dbName - name of the database (dev or prod)
+   * @param {object} schemaInfo - the metadata about tables returned from database
+   */
+  setDbInfo(schemaInfo) {
+    // this array will contain all the table objects
+    const dbCopy = [];
+    // table object to create each table, then push onto dbCopy array
+    let table = {};
+    schemaInfo.forEach((row) => {
+      const {
+        table_name,
+        column_name,
+        is_nullable,
+        data_type,
+        character_maximum_length,
+        constraint_types,
+        foreign_table_name,
+        foreign_column_name,
+        constraint_names,
+      } = row;
+
+      if (table.name === undefined) {
+        table.name = table_name;
+      }
+
+      if (table.name !== undefined && table.name !== table_name) {
+        // Add table to oldDb array.
+        dbCopy.push(table);
+        // Reset table.
+        table = {};
+        table.name = table_name;
+      }
+
+      // Create new column object to push into table object.
+      const column = {};
+      column.name = column_name;
+      column.isNullable = (is_nullable === 'YES');
+
+      // This is for data-types only:
+      column.dataType = data_type;
+      if (data_type === 'character varying') { column.dataType = `varchar (${character_maximum_length})`; }
+      if (data_type === 'double precision') column.dataType = 'float';
+
+      // For contraints only:
+      if (constraint_types !== null) {
+        const constraintTypesArray = constraint_types.split(', ');
+        const constraintNamesArray = constraint_names.split(', ');
+        column.constraintTypes = [];
+        column.constraintNames = [];
+
+        constraintTypesArray.forEach((constraintType, index) => {
+          let constraintTypeTemp = constraintType;
+
+          // create Foreign Key statement
+          if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
+
+          // add another key in column obj
+          column.constraintTypes.push(constraintTypeTemp);
+          column.constraintNames.push(constraintNamesArray[index]);
+        });
+      }
+
+      // Add new column object to table.
+      if (table.columns === undefined) table.columns = [column];
+      else table.columns.push(column);
+    });
+
+    // Push the last table.
+    dbCopy.push(table);
+
+    return dbCopy;
+  };
+
+  /**
      * Create diffDb by comparing table objects in database arrays.
      * @param {array} devDb
      * @param {array} prodDb
      */
-    const diffDatabases = (devDb, prodDb) => {
+    diffDatabases(devDb, prodDb) {
       // make a deep copy of prodDb
       const diffDb = JSON.parse(JSON.stringify(prodDb));
       const diffDbColors = {};
@@ -470,87 +435,6 @@ class MainContainer extends Component {
       this.setState({ diffDbColors, backgroundColors });
       return diffDb;
     };
-
-    let devDb;
-    let prodDb;
-    let diffDb;
-
-    // query dev database for schema info
-    devDbConn.any(query2).then((schemaInfo) => {
-      devDb = setDbInfo(schemaInfo);
-
-      // query production database for schema info
-      prodDbConn
-        .any(query)
-        .then((schemaInfo2) => {
-          prodDb = setDbInfo(schemaInfo2);
-        })
-        .then(() => {
-          // Determine differences between databases.
-          diffDb = diffDatabases(devDb, prodDb);
-
-          // Create database arrays to sort so that common tables appear first for easier visual comparison
-          let commonTablesArray = [];
-          let differentTablesArray = [];
-
-          // Sort devDb.
-          devDb.forEach((table) => {
-            const foundTable = _.find(prodDb, { name: table.name });
-
-            // tables that in both databases:
-            if (foundTable !== undefined) {
-              commonTablesArray.push(table);
-            } else {
-              // tables only in one database or the other
-              differentTablesArray.push(table);
-            }
-          });
-
-          // combine arrays of databases (tables in both databases appear first)
-          const sortedDevDb = commonTablesArray.concat(differentTablesArray);
-          commonTablesArray = [];
-          differentTablesArray = [];
-
-          // Sort prodDb.
-          prodDb.forEach((table) => {
-            const foundTable = _.find(devDb, { name: table.name });
-            // tables in both databases
-            if (foundTable !== undefined) {
-              commonTablesArray.push(table);
-            } else {
-              // tables only in one db or the other
-              differentTablesArray.push(table);
-            }
-          });
-
-          // combine arrays of databases (tables in both databases appear first)
-          const sortedProdDb = commonTablesArray.concat(differentTablesArray);
-          commonTablesArray = [];
-          differentTablesArray = [];
-
-          // Sort diffDb.
-          diffDb.forEach((table) => {
-            const foundTable1 = _.find(devDb, { name: table.name });
-            const foundTable2 = _.find(prodDb, { name: table.name });
-
-            if (foundTable1 !== undefined && foundTable2 !== undefined) {
-              commonTablesArray.push(table);
-            } else {
-              differentTablesArray.push(table);
-            }
-          });
-
-          const sortedDiffDb = commonTablesArray.concat(differentTablesArray);
-
-          this.setState({
-            devDb: sortedDevDb,
-            prodDb: sortedProdDb,
-            diffDb: sortedDiffDb,
-            showLoadingScreen: false,
-          });
-        });
-    });
-  }
   /* eslint-enable */
 
   setBackgroundColor(id) {
@@ -1046,6 +930,16 @@ class MainContainer extends Component {
   };
   /* eslint-enable */
 
+  /**
+   * Queries the database metadata to update the visuals.
+   */
+  refreshPage() {
+    const { buildDbObjects } = this;
+
+    this.setState({ showLoadingScreen: true });
+    buildDbObjects();
+  }
+
   render() {
     const {
       devDb,
@@ -1073,6 +967,7 @@ class MainContainer extends Component {
       drawLines,
       handleSelect,
       selectAll,
+      refreshPage,
     } = this;
 
     /* eslint-disable */
@@ -1121,13 +1016,23 @@ class MainContainer extends Component {
           >
             DB Diff
           </Button>
-          <Button
-            variant="outlined" color="primary"
-            id="scriptDisplay"
-            onClick={openScriptWindow}
-          >
-            Script
-          </Button>
+          <div style={{'marginLeft': 'auto'}}>
+            <Button
+              variant="outlined" color="primary"
+              id="scriptDisplay"
+              onClick={openScriptWindow}
+            >
+              Script
+            </Button>
+            <Button
+              variant="outlined" color="primary"
+              id="scriptDisplay"
+              onClick={refreshPage}
+            >
+              Refresh
+            </Button>
+          </div>
+          </div>
           {/* <Button
             variant="outlined" color="primary"
             id="saveLoadDisplay"
@@ -1160,7 +1065,6 @@ class MainContainer extends Component {
             : null}
           {/* {scriptDisplay ? <ScriptContainer script={script} /> : null} */}
           {/* {saveLoadDisplay ? <SaveLoadDisplay testData={this.state}/> : null} */}
-        </div>
       </div>
     );
     /* eslint-enable */
