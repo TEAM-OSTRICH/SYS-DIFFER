@@ -126,23 +126,123 @@ class MainContainer extends Component {
     const query = getQuery(inputLinkSchema1);
     const query2 = getQuery(inputLinkSchema2);
 
+    let devDbConn;
+    let prodDbConn;
+
     // connect to each database
-    const devDbConn = pgp(input1);
-    const prodDbConn = pgp(input2);
+    if (this.state.devDbConn === null) {
+      devDbConn = pgp(input1);
+    } else {
+      devDbConn = this.state.devDbConn;
+    }
+
+    if (this.state.devDbConn === null) {
+      prodDbConn = pgp(input2);
+    } else {
+      prodDbConn = this.state.devDbConn;
+    }
 
     const { setDbInfo, diffDatabases } = this;
     let devDb;
     let prodDb;
     let diffDb;
 
+    // // query dev database for schema info
+    // devDbConn.any(query2).then((schemaInfo) => {
+    //   devDb = setDbInfo(schemaInfo);
+
+    //   // query production database for schema info
+    //   prodDbConn.any(query).then((schemaInfo2) => {
+    //       prodDb = setDbInfo(schemaInfo2);
+    //     })
+    //     .then(() => {
+    //       // Determine differences between databases.
+    //       diffDb = diffDatabases(devDb, prodDb);
+
+    //       // Create database arrays to sort so that common tables appear first for easier visual comparison
+    //       let commonTablesArray = [];
+    //       let differentTablesArray = [];
+
+    //       // Sort devDb.
+    //       devDb.forEach((table) => {
+    //         const foundTable = _.find(prodDb, { name: table.name });
+
+    //         // tables that in both databases:
+    //         if (foundTable !== undefined) {
+    //           commonTablesArray.push(table);
+    //         } else {
+    //           // tables only in one database or the other
+    //           differentTablesArray.push(table);
+    //         }
+    //       });
+
+    //       // combine arrays of databases (tables in both databases appear first)
+    //       const sortedDevDb = commonTablesArray.concat(differentTablesArray);
+    //       commonTablesArray = [];
+    //       differentTablesArray = [];
+
+    //       // Sort prodDb.
+    //       prodDb.forEach((table) => {
+    //         const foundTable = _.find(devDb, { name: table.name });
+    //         // tables in both databases
+    //         if (foundTable !== undefined) {
+    //           commonTablesArray.push(table);
+    //         } else {
+    //           // tables only in one db or the other
+    //           differentTablesArray.push(table);
+    //         }
+    //       });
+
+    //       // combine arrays of databases (tables in both databases appear first)
+    //       const sortedProdDb = commonTablesArray.concat(differentTablesArray);
+    //       commonTablesArray = [];
+    //       differentTablesArray = [];
+
+    //       // Sort diffDb.
+    //       diffDb.forEach((table) => {
+    //         const foundTable1 = _.find(devDb, { name: table.name });
+    //         const foundTable2 = _.find(prodDb, { name: table.name });
+
+    //         if (foundTable1 !== undefined && foundTable2 !== undefined) {
+    //           commonTablesArray.push(table);
+    //         } else {
+    //           differentTablesArray.push(table);
+    //         }
+    //       });
+
+    //       const sortedDiffDb = commonTablesArray.concat(differentTablesArray);
+
+    //       devDbConn.end();
+    //       prodDbConn.end();
+
+    //       this.setState({
+    //         devDb: sortedDevDb,
+    //         prodDb: sortedProdDb,
+    //         diffDb: sortedDiffDb,
+    //         showLoadingScreen: false,
+    //       });
+    //     });
+    // });
+
+    let sco;
+    let sco2;
+
     // query dev database for schema info
-    devDbConn.any(query2).then((schemaInfo) => {
+    devDbConn.connect()
+      .then(obj => {
+        sco = obj;
+        return sco.any(query2);
+      })
+      .then((schemaInfo) => {
       devDb = setDbInfo(schemaInfo);
 
       // query production database for schema info
-      prodDbConn
-        .any(query)
-        .then((schemaInfo2) => {
+      prodDbConn.connect()
+      .then(obj => {
+        sco2 = obj;
+        return sco2.any(query);
+      })
+      .then((schemaInfo2) => {
           prodDb = setDbInfo(schemaInfo2);
         })
         .then(() => {
@@ -207,8 +307,20 @@ class MainContainer extends Component {
             prodDb: sortedProdDb,
             diffDb: sortedDiffDb,
             showLoadingScreen: false,
+            devDbConn,
+            prodDbConn,
           });
+        })
+        .finally(() => {
+          if (sco2) {
+            sco2.done();
+          }
         });
+    })
+    .finally(() => {
+      if (sco) {
+        sco.done();
+      }
     });
   }
 
@@ -538,7 +650,7 @@ class MainContainer extends Component {
 
     setTimeout(() => {
       const domElement = document.getElementsByClassName('list-group-item');
-
+console.log(domElement)
       for (let i = 0; i < domElement.length; i += 1) {
         if (domElement[i].textContent.includes('REFERENCES')) {
           const tt = domElement[i].textContent.split(' ');
@@ -592,7 +704,7 @@ class MainContainer extends Component {
           }
         }
       }
-    }, 1000);
+    }, 2000);
   }
 
   /**
