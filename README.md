@@ -17,3 +17,6 @@ Run npm start to initiate the app.
 ```
 npm start
 ```
+
+# Usage
+Simply provide the URLs or connection parameters to connect to your source and target databases.
