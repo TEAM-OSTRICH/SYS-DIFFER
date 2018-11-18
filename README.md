@@ -8,6 +8,6 @@ Clone or download the repo.
 
 Run npm install to download the required libraries.
 
-<div style="background-color:lightgrey">npm install</div>
+> npm install
 
 Run npm start to initiate the app.
