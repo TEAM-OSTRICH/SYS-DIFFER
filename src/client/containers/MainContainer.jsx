@@ -8,6 +8,9 @@ import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
 // import SaveLoadDisplay from '../components/SaveLoadDisplay.jsx';
 import loadingIcon from '../../assets/5pSf.gif';
 import getQuery from '../query';
+import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import compose from 'recompose/compose';
 
 const { remote } = require('electron');
 
@@ -1149,6 +1152,7 @@ class MainContainer extends Component {
           </div>
         </div>
         <div className="mainContainerBtns">
+        <Tooltip title="Reset Application">
           <Button
             variant="outlined" color="primary"
             onClick={() => {
@@ -1159,7 +1163,12 @@ class MainContainer extends Component {
           >
             Home
           </Button>
+        </Tooltip>
           <Button
+            style={{
+              backgroundColor: devDbDisplay ? 'rgb(20, 84, 233)' : null,
+              color: devDbDisplay ? 'rgba(255,255,255,0.85' : null,
+            }}
             variant="outlined" color="primary"
             id="devDbDisplay"
             onClick={() => {
@@ -1169,6 +1178,10 @@ class MainContainer extends Component {
             Dev DB
           </Button>
           <Button
+          style={{
+            backgroundColor: prodDbDisplay ? 'rgb(20, 84, 233)' : null,
+            color: prodDbDisplay ? 'rgba(255,255,255,0.85' : null,
+          }}
             variant="outlined" color="primary"
             id="prodDbDisplay"
             onClick={() => {
@@ -1178,6 +1191,10 @@ class MainContainer extends Component {
             Prod DB
           </Button>
           <Button
+          style={{
+            backgroundColor: diffDbDisplay ? 'rgb(20, 84, 233)' : null,
+            color: diffDbDisplay ? 'rgba(255,255,255,0.85' : null,
+          }}
             variant="outlined" color="primary"
             id="diffDbDisplay"
             onClick={() => {
@@ -1241,4 +1258,8 @@ class MainContainer extends Component {
   }
 }
 
-export default withRouter(MainContainer);
+//export default withRouter(MainContainer);
+export default compose(
+  withRouter,
+  withStyles(),
+)(MainContainer);
