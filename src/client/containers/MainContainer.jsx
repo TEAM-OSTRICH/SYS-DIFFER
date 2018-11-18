@@ -716,18 +716,6 @@ class MainContainer extends Component {
                 // .attr("viewBox", "0 0 600 400")
                   .classed('svg-content-responsive', true);
 
-                svgContainer.append("svg:defs").append("svg:marker")
-                .attr("id", "triangle")
-                .attr("refX", 6)
-                .attr("refY", 6)
-                .attr("markerWidth", 30)
-                .attr("markerHeight", 30)
-                .attr("markerUnits","userSpaceOnUse")
-                .attr("orient", "auto")
-                .append("path")
-                .attr("d", "M 0 0 12 6 0 12 3 6")
-                .style("fill", 'black');
-
                 // The line SVG Path we draw
                 let path = svgContainer.append('path')
                   // .attr("marker-end", "url(#triangle)")
@@ -735,58 +723,25 @@ class MainContainer extends Component {
                   .attr('stroke', colors[colorIndex++ % (colors.length)])
                   .attr('stroke-width', 1.5)
                   .attr('fill', 'none');
-
-                  
-                //   var arrow = svg.append("path")
-                //   .attr("d", d3.svg.symbol().type("triangle-down")(10,1));
-                
-                
-                
-                //   arrow.transition()
-                //       .duration(2000)
-                //       .ease(d3.easeLinear)
-                //       .attrTween("transform", translateAlong(path.node()))
-                //       //.each("end", transition);
-                
-                
-                // // Returns an attrTween for translating along the specified path element.
-                // function translateAlong(path) {
-                //   var l = path.getTotalLength();
-                //     var ps = path.getPointAtLength(0);
-                //     var pe = path.getPointAtLength(l);
-                //     var angl = Math.atan2(pe.y - ps.y, pe.x - ps.x) * (180 / Math.PI) - 90;
-                //     var rot_tran = "rotate(" + angl + ")";
-                //   return function(d, i, a) {
-                //     console.log(d);
-                    
-                //     return function(t) {
-                //       var p = path.getPointAtLength(t * l);
-                //       return "translate(" + p.x + "," + p.y + ") " + rot_tran;
-                //     };
-                //   };
-                // } 
                   
                   var totalLength = path.node().getTotalLength();
 
+                  // animate the line
                   path
                     .attr("stroke-dasharray", totalLength + " " + totalLength)
                     .attr("stroke-dashoffset", totalLength)
                     .transition()
                       .duration(2000)
-                      // .ease(d3.easeLinear)
+                      .ease(d3.easeLinear)
                       // .ease(d3.easeBounce) 
                       .attr("stroke-dashoffset", 0);
-
-
-                
-
               }
             }
           }
         }
 
         this.queued = false;
-      }, 1500);
+      }, 2000);
     }
     // };
   }
