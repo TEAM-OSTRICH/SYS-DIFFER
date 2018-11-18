@@ -20,3 +20,9 @@ npm start
 
 # Usage
 Simply provide the URLs or connection parameters to connect to your source and target databases.
+
+# Features
+
+View the structure of your databases along 
+
+See the differences 
