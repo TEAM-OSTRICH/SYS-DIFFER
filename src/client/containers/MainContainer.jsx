@@ -1199,7 +1199,7 @@ class MainContainer extends Component {
               id="scriptDisplay"
               onClick={refreshPage}
             >
-              Refresh
+              <i class="fas fa-sync-alt"></i>
             </Button>
           </div>
           </div>
