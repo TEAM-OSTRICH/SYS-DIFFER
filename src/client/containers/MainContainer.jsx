@@ -667,8 +667,8 @@ class MainContainer extends Component {
       const colors = ['navy', 'blue', 'aqua', 'teal', 'olive', 'green', 'lime', 'yellow', 'orange', 'red', 'maroon', 'fuscia', 'purples'];
       let colorIndex = 0;
 
-      const rand1 = [-3, 5, -7, 10, 6, -5, 2, -1, 8, 4, -8, 0, -4, 1, 4, -10, 9, -2, -6, 7, 3, -9];
-      const rand2 = [3, 5, 7, 1, 9, 4, 8, 0, 6, 2, 10];
+      const rand1 = [-2, 5, -7, 10, 6, -5, 2, -1, 8, 4, -8, 0, -4, 1, 4, -10, 9, -3, -6, 7, 3, -9];
+      const rand2 = [13, 16, 7, 12, 9, 4, 6, 5, 8, 14, 10];
       let ran1i = 0;
       let ran2i = 0;
 
@@ -695,6 +695,9 @@ class MainContainer extends Component {
                   { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] }];
                 ran2i++;
                 ran1i++;
+
+
+            
                 // This is the accessor function we talked about above
                 const lineFunction = d3.line()
                   .x(d => d.x)
@@ -703,6 +706,7 @@ class MainContainer extends Component {
 
                 const bodyCanvas = document.getElementById('dbDisplayContainer');
                 const svgContainer = d3.select(bodyCanvas)
+                // .attr("transform", "translate(100,50)")
                   .append('div')
                   .classed('svg-container', true)
                   .append('svg')
@@ -712,29 +716,77 @@ class MainContainer extends Component {
                 // .attr("viewBox", "0 0 600 400")
                   .classed('svg-content-responsive', true);
 
-                // function getRandomColor() {
-                //   var letters = '0123456789ABCDEF';
-                //   var color = '#';
-                //   for (var i = 0; i < 6; i++) {
-                //     color += letters[Math.floor(Math.random() * 16)];
-                //   }
-                //   return color;
-                // }
+                svgContainer.append("svg:defs").append("svg:marker")
+                .attr("id", "triangle")
+                .attr("refX", 6)
+                .attr("refY", 6)
+                .attr("markerWidth", 30)
+                .attr("markerHeight", 30)
+                .attr("markerUnits","userSpaceOnUse")
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M 0 0 12 6 0 12 3 6")
+                .style("fill", 'black');
 
-                // let color = ['pink', 'lightblue', 'indigo', 'darkcyan']
                 // The line SVG Path we draw
-                svgContainer.append('path')
+                let path = svgContainer.append('path')
+                  // .attr("marker-end", "url(#triangle)")
                   .attr('d', lineFunction(lineData))
                   .attr('stroke', colors[colorIndex++ % (colors.length)])
                   .attr('stroke-width', 1.5)
                   .attr('fill', 'none');
+
+                  
+                //   var arrow = svg.append("path")
+                //   .attr("d", d3.svg.symbol().type("triangle-down")(10,1));
+                
+                
+                
+                //   arrow.transition()
+                //       .duration(2000)
+                //       .ease(d3.easeLinear)
+                //       .attrTween("transform", translateAlong(path.node()))
+                //       //.each("end", transition);
+                
+                
+                // // Returns an attrTween for translating along the specified path element.
+                // function translateAlong(path) {
+                //   var l = path.getTotalLength();
+                //     var ps = path.getPointAtLength(0);
+                //     var pe = path.getPointAtLength(l);
+                //     var angl = Math.atan2(pe.y - ps.y, pe.x - ps.x) * (180 / Math.PI) - 90;
+                //     var rot_tran = "rotate(" + angl + ")";
+                //   return function(d, i, a) {
+                //     console.log(d);
+                    
+                //     return function(t) {
+                //       var p = path.getPointAtLength(t * l);
+                //       return "translate(" + p.x + "," + p.y + ") " + rot_tran;
+                //     };
+                //   };
+                // } 
+                  
+                  var totalLength = path.node().getTotalLength();
+
+                  path
+                    .attr("stroke-dasharray", totalLength + " " + totalLength)
+                    .attr("stroke-dashoffset", totalLength)
+                    .transition()
+                      .duration(2000)
+                      // .ease(d3.easeLinear)
+                      // .ease(d3.easeBounce) 
+                      .attr("stroke-dashoffset", 0);
+
+
+                
+
               }
             }
           }
         }
 
         this.queued = false;
-      }, 2000);
+      }, 1500);
     }
     // };
   }

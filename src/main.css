@@ -488,7 +488,6 @@ ul {
   padding: 8px;
 }
 
-/* ge is here to break your hard work */
 body{
   background:
     linear-gradient(
@@ -617,7 +616,7 @@ ul{
 }
 
 .goo2 {
-padding-left:40px;
+padding-left:130px;
 width: 200px;
 height:100px;
 }
@@ -644,13 +643,13 @@ height:100px;
   font-weight: 600;
   color: royalblue;
 }
-.specialMom{
+.hoverEffect{
   /* border-radius: 7px; */
   /* overflow: hidden; */
   transition: all 0.3s ease 0s; 
   display: inline-block;
 }
-.specialMom2{
+.hoverEffect2{
   /* border-radius: 7px; */
   /* overflow: hidden; */
   transition: all 0.3s ease 0s; 
@@ -663,10 +662,27 @@ span{
   display: inline-block;
 
 }
-.specialMom:hover{
+.hoverEffect:hover{
   transform: scale(1.2);
 }
-.specialMom2:hover{
+.hoverEffect2:hover{
   transform: scale(1.1);
   z-index: 2;
+}
+
+.arrow{
+  stroke-width:5;
+  stroke:#000;
+  stroke-dasharray:5, 5;
+}
+
+circle{
+  stroke-width:5;
+  stroke:#000;
+  fill:#FFF;
+}
+
+#turtle-icon, #arrow{
+  stroke-width:1;
+  stroke-dasharray:0;	
 }

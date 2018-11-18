@@ -10,16 +10,16 @@ const DiffDbDisplay = (props) => {
     <div className="singleTable">   
     {/* // <ul className="list-group-item"> */}
     <ul className= { diffDbColors[name]
-          ? 'specialMom2':null }>
+          ? 'hoverEffect2':null }>
     
       <li
         id={name}
         // className= { diffDbColors[name]
-        //   ? 'list-group-item specialMom2':'list-group-item' }
+        //   ? 'list-group-item hoverEffect2':'list-group-item' }
         className="list-group-item"
         style={
           {
-            'box-shadow': diffDbColors[name]
+            'boxShadow': diffDbColors[name]
               ? `inset  0px 82px 7px ${diffDbColors[name].replace(diffDbColors[name].split(',')[3], '0.3)')}`
               : null,
             background: backgroundColors[name]
@@ -38,10 +38,10 @@ const DiffDbDisplay = (props) => {
           id={`${name}-${column.name}`}
           // className="list-group-item"
           className= { diffDbColors[`${name}-${column.name}`]
-          ? 'list-group-item specialMom2':'list-group-item' }
+          ? 'list-group-item hoverEffect2':'list-group-item' }
           style={
             {
-              'box-shadow': diffDbColors[`${name}-${column.name}`]
+              'boxShadow': diffDbColors[`${name}-${column.name}`]
               ? `inset 0px 82px 7px ${diffDbColors[`${name}-${column.name}`].replace(diffDbColors[`${name}-${column.name}`].split(',')[3], '0.3)')}`
                 : null,
               background: backgroundColors[`${name}-${column.name}`]
@@ -56,14 +56,14 @@ const DiffDbDisplay = (props) => {
        
           {' '}
           <div className= { diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
-                ? 'specialMom':'basicDiv' } >
+                ? 'hoverEffect':'basicDiv' } >
           <span
             id={`${name}-${column.name}-dataType-${column.dataType}`}
             className="column-property"
             className = { diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]?'specialShit':null }
             style={
               {
-                'box-shadow':
+                'boxShadow':
                   diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`]
                     ? `inset 0px 82px 7px ${diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`].replace(diffDbColors[`${name}-${column.name}-dataType-${column.dataType}`].split(',')[3], '0.3)')}`
                     : null,
@@ -82,7 +82,7 @@ const DiffDbDisplay = (props) => {
             !column.isNullable
               ? (
                 <div className= { diffDbColors[`${name}-${column.name}-nullable-${column.isNullable}`]
-                ? 'specialMom':'basicDiv' } >
+                ? 'hoverEffect':'basicDiv' } >
                 
                 <span
                   id={`${name}-${column.name}-nullable-${column.isNullable}`}
@@ -91,7 +91,7 @@ const DiffDbDisplay = (props) => {
                   ? 'specialShit':null }
                   style={
                     {
-                      'box-shadow':
+                      'boxShadow':
                         diffDbColors[`${name}-${column.name}-nullable-${column.isNullable}`]
                           ? `inset  0px 82px 7px ${diffDbColors[`${name}-${column.name}-nullable-${column.isNullable}`].replace(diffDbColors[`${name}-${column.name}-nullable-${column.isNullable}`].split(',')[3], '0.3)')}`
                           : null,
@@ -115,13 +115,13 @@ const DiffDbDisplay = (props) => {
               ? (
                 column.constraintTypes.map((constraintType, index) => (
                   <div className= { diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`]
-                ? 'specialMom':'basicDiv' } >
+                ? 'hoverEffect':'basicDiv' } >
                   <span
                     id={`${name}-${column.name}-constraintType-${constraintType}`}
                     className="column-property"
                     style={
                       {
-                        'box-shadow':
+                        'boxShadow':
                           diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`]
                             ? `inset  0px 82px 7px ${diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`].replace(diffDbColors[`${name}-${column.name}-constraintType-${constraintType}`].split(',')[3], '0.3)')}`
                             : null,
