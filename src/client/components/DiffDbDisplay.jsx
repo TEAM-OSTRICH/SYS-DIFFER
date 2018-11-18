@@ -9,12 +9,13 @@ const DiffDbDisplay = (props) => {
   return (
     <div className="singleTable">   
     {/* // <ul className="list-group-item"> */}
-    <ul>
+    <ul className= { diffDbColors[name]
+          ? 'specialMom2':null }>
     
       <li
         id={name}
-        className= { diffDbColors[`${diffDbColors[name]}`]
-        ? 'specialMom':'basicDiv' } 
+        // className= { diffDbColors[name]
+        //   ? 'list-group-item specialMom2':'list-group-item' }
         className="list-group-item"
         style={
           {
@@ -35,7 +36,9 @@ const DiffDbDisplay = (props) => {
         
         <li
           id={`${name}-${column.name}`}
-          className="list-group-item"
+          // className="list-group-item"
+          className= { diffDbColors[`${name}-${column.name}`]
+          ? 'list-group-item specialMom2':'list-group-item' }
           style={
             {
               'box-shadow': diffDbColors[`${name}-${column.name}`]
