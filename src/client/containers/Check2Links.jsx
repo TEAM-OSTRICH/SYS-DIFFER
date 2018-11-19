@@ -159,10 +159,14 @@ class Check2Links extends Component {
 
     return (
       <div>
-        
         <h1 className="centerText">CHRISDIFFER</h1>
-        <img src={cdf} calssName="logo" style={{width: '80px',position:'absolute','top':'58px',right:'26%'}}/>
-     
+        <img
+          src={cdf}
+          className="logo"
+          style={{
+            width: '80px', position: 'absolute', top: '58px', right: '26%',
+          }}
+        />
         <h2 className="centerText">PROVIDE LINKS</h2>
         <div className="inputGridContainer">
           <div className="inputGrid">
@@ -309,6 +313,5 @@ class Check2Links extends Component {
     );
   }
 }
-
 
 export default withRouter(Check2Links);
