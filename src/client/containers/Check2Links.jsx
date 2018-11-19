@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink, Redirect, withRouter } from 'react-router-dom';
+import cdf from '../../assets/cdf.svg';
 
 const initOptions = {
   connect(client, dc, useCount) {
@@ -158,7 +159,10 @@ class Check2Links extends Component {
 
     return (
       <div>
-        <h1 className="centerText">❤CHRISDIFFER❤</h1>
+        
+        <h1 className="centerText">CHRISDIFFER</h1>
+        <img src={cdf} calssName="logo" style={{width: '80px',position:'absolute','top':'58px',right:'26%'}}/>
+     
         <h2 className="centerText">PROVIDE LINKS</h2>
         <div className="inputGridContainer">
           <div className="inputGrid">
