@@ -698,13 +698,23 @@ circle{
   top:58px;
   right:26%
 }
-@media only screen and (min-width:1024px) {
+@media only screen and (min-width:1100px) and (max-width:1300px){
   .inputGrid > input {
 
     margin-right: 27%;
     /* width: 50%; */
   }
   .logo{
-    right:35%;
+    right:30%;
+  }
+}
+@media only screen and (min-width:1300px) {
+  .inputGrid > input {
+
+    margin-right: 30%;
+    /* width: 50%; */
+  }
+  .logo{
+    right:33%;
   }
 }
