@@ -692,3 +692,19 @@ circle{
   stroke-width:1;
   stroke-dasharray:0;	
 }
+.logo{
+  width: 80px;
+  position:absolute;
+  top:58px;
+  right:26%
+}
+@media only screen and (min-width:1024px) {
+  .inputGrid > input {
+
+    margin-right: 27%;
+    /* width: 50%; */
+  }
+  .logo{
+    right:35%;
+  }
+}

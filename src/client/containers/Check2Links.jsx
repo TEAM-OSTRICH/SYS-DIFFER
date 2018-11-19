@@ -161,7 +161,7 @@ class Check2Links extends Component {
       <div>
         
         <h1 className="centerText">CHRISDIFFER</h1>
-        <img src={cdf} calssName="logo" style={{width: '80px',position:'absolute','top':'58px',right:'26%'}}/>
+        <img src={cdf} className="logo" />
      
         <h2 className="centerText">PROVIDE LINKS</h2>
         <div className="inputGridContainer">

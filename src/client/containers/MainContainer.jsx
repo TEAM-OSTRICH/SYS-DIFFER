@@ -733,7 +733,7 @@ class MainContainer extends Component {
                     .attr("stroke-dashoffset", totalLength)
                     .transition()
                       .duration(2000)
-                      .ease(d3.easeLinear)
+                      // .ease(d3.easeLinear)
                       // .ease(d3.easeBounce) 
                       .attr("stroke-dashoffset", 0);
               }
@@ -755,6 +755,7 @@ class MainContainer extends Component {
     let id;
     let target;
     const { parentNode } = event.target;
+    const grandmaNode = parentNode.parentNode;
 
     if (diffDbColors[event.target.id] !== undefined) {
       id = event.target.id;
@@ -762,6 +763,9 @@ class MainContainer extends Component {
     } else if (diffDbColors[parentNode.id] !== undefined) {
       id = parentNode.id;
       target = parentNode;
+    } else if (diffDbColors[grandmaNode.id] !== undefined) {
+      id = grandmaNode.id;
+      target = grandmaNode;
     }
     if (diffDbColors[id] !== undefined) {
       console.log(target.style.backgroundColor, diffDbColors[id]);
