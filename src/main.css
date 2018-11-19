@@ -671,12 +671,34 @@ span{
 
 }
 .hoverEffect:hover{
-  transform: scale(1.2);
+  backface-visibility: hidden;
+  transform: translateZ(0) scale(1.2);
+  will-change: auto;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-perspective: 1000;
+  -moz-osx-font-smoothing: grayscale;
 }
 .hoverEffect2:hover{
-  transform: scale(1.1);
-  z-index: 2;
+  backface-visibility: hidden;
+  transform: translateZ(0) scale(1.1);
+  will-change: auto;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-perspective: 1000;
+  -moz-osx-font-smoothing: grayscale;
+  /* z-index: 2; */
 }
+
+/* .hoverEffect:hover{
+  backface-visibility: hidden;
+  transform: translateZ(0) scale(1.1666667);
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+.hoverEffect2:hover{
+  z-index: 2;
+  backface-visibility: hidden;
+  transform: translateZ(0) scale(1.1666667);
+  -webkit-font-smoothing: subpixel-antialiased;
+} */
 
 .arrow{
   stroke-width:5;
