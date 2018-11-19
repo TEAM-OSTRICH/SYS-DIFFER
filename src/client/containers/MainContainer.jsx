@@ -668,8 +668,8 @@ class MainContainer extends Component {
       const colors = ['navy', 'blue', 'aqua', 'teal', 'olive', 'green', 'lime', 'yellow', 'orange', 'red', 'maroon', 'fuscia', 'purples'];
       let colorIndex = 0;
 
-      const rand1 = [-3, 5, -7, 10, 6, -5, 2, -1, 8, 4, -8, 0, -4, 1, 4, -10, 9, -2, -6, 7, 3, -9];
-      const rand2 = [3, 5, 7, 1, 9, 4, 8, 0, 6, 2, 10];
+      const rand1 = [-2, 5, -7, 10, 6, -5, 2, -1, 8, 4, -8, 0, -4, 1, 4, -10, 9, -3, -6, 7, 3, -9];
+      const rand2 = [13, 16, 7, 12, 9, 4, 6, 5, 8, 14, 10];
       let ran1i = 0;
       let ran2i = 0;
 
@@ -696,6 +696,9 @@ class MainContainer extends Component {
                   { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] }];
                 ran2i++;
                 ran1i++;
+
+
+            
                 // This is the accessor function we talked about above
                 const lineFunction = d3.line()
                   .x(d => d.x)
@@ -704,6 +707,7 @@ class MainContainer extends Component {
 
                 const bodyCanvas = document.getElementById('dbDisplayContainer');
                 const svgContainer = d3.select(bodyCanvas)
+                // .attr("transform", "translate(100,50)")
                   .append('div')
                   .classed('svg-container', true)
                   .append('svg')
@@ -713,22 +717,25 @@ class MainContainer extends Component {
                 // .attr("viewBox", "0 0 600 400")
                   .classed('svg-content-responsive', true);
 
-                // function getRandomColor() {
-                //   var letters = '0123456789ABCDEF';
-                //   var color = '#';
-                //   for (var i = 0; i < 6; i++) {
-                //     color += letters[Math.floor(Math.random() * 16)];
-                //   }
-                //   return color;
-                // }
-
-                // let color = ['pink', 'lightblue', 'indigo', 'darkcyan']
                 // The line SVG Path we draw
-                svgContainer.append('path')
+                let path = svgContainer.append('path')
+                  // .attr("marker-end", "url(#triangle)")
                   .attr('d', lineFunction(lineData))
                   .attr('stroke', colors[colorIndex++ % (colors.length)])
                   .attr('stroke-width', 1.5)
                   .attr('fill', 'none');
+                  
+                  var totalLength = path.node().getTotalLength();
+
+                  // animate the line
+                  path
+                    .attr("stroke-dasharray", totalLength + " " + totalLength)
+                    .attr("stroke-dashoffset", totalLength)
+                    .transition()
+                      .duration(2000)
+                      .ease(d3.easeLinear)
+                      // .ease(d3.easeBounce) 
+                      .attr("stroke-dashoffset", 0);
               }
             }
           }
