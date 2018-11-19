@@ -395,13 +395,23 @@ class MainContainer extends Component {
 
         constraintTypesArray.forEach((constraintType, index) => {
           let constraintTypeTemp = constraintType;
-
+          if (constraintType === 'PRIMARY KEY') {
+            column.constraintTypes.unshift(constraintTypeTemp);
+            column.constraintNames.unshift(constraintNamesArray[index]);
+       
+          }
           // create Foreign Key statement
-          if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
-
-          // add another key in column obj
-          column.constraintTypes.push(constraintTypeTemp);
-          column.constraintNames.push(constraintNamesArray[index]);
+          else if (constraintType === 'FOREIGN KEY') { 
+            constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; 
+            column.constraintTypes.push(constraintTypeTemp);
+            column.constraintNames.push(constraintNamesArray[index]);
+          }
+            // add another key in column obj
+          else {
+            column.constraintTypes.push(constraintTypeTemp);
+            column.constraintNames.push(constraintNamesArray[index]);
+          }
+          
         });
       }
 
