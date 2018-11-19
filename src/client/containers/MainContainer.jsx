@@ -3,14 +3,15 @@ import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import * as d3 from 'd3';
+import Zoom from '@material-ui/core/Zoom';
+import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import compose from 'recompose/compose';
 import DbDisplayContainer from './DbDisplayContainer.jsx';
 import DiffDbDisplayContainer from './DiffDbDisplayContainer.jsx';
 // import SaveLoadDisplay from '../components/SaveLoadDisplay.jsx';
 import loadingIcon from '../../assets/5pSf.gif';
 import getQuery from '../query';
-import { withStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import compose from 'recompose/compose';
 
 const { remote } = require('electron');
 
@@ -1152,7 +1153,10 @@ class MainContainer extends Component {
           </div>
         </div>
         <div className="mainContainerBtns">
-        <Tooltip title="Reset Application">
+        <Tooltip 
+          title="Reset Application"
+          TransitionComponent={Zoom}
+        >
           <Button
             variant="outlined" color="primary"
             onClick={() => {
@@ -1211,13 +1215,18 @@ class MainContainer extends Component {
             >
               Script
             </Button>
-            <Button
-              variant="outlined" color="primary"
-              id="scriptDisplay"
-              onClick={refreshPage}
+            <Tooltip 
+              title="Refresh"
+              TransitionComponent={Zoom}
             >
-              <i class="fas fa-sync-alt"></i>
-            </Button>
+              <Button
+                variant="outlined" color="primary"
+                id="scriptDisplay"
+                onClick={refreshPage}
+              >
+                <i class="fas fa-sync-alt"></i>
+              </Button>
+            </Tooltip>
           </div>
           </div>
           {/* <Button
@@ -1257,6 +1266,7 @@ class MainContainer extends Component {
     /* eslint-enable */
   }
 }
+
 
 //export default withRouter(MainContainer);
 export default compose(
