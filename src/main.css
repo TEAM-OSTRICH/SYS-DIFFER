@@ -127,6 +127,7 @@ span {
   z-index: 2;
   color:white;
   font-size: 12px;  
+  box-shadow: 2px 2px 7px grey;
 }
 
 .buttonGrid:hover {
@@ -540,6 +541,7 @@ ul{
   z-index: 2;
   color: white;
   font-size: 11px;
+  box-shadow: 2px 2px 5px grey;
 }
 
 .scriptWindowBtn:hover {
