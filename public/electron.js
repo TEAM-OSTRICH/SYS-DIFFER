@@ -24,8 +24,8 @@ function createMainWindow() {
     height: 760,
     x: 50,
     y: 0,
-    // minWidth: 960,
-    // minHeight: 760,
+    minWidth: 960,
+    minHeight: 760,
     // backgroundColor: '#b5beda',
     backgroundColor: '#f1f2f4',
   });

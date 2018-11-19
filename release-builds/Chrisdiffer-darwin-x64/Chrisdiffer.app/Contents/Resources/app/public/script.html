@@ -5,6 +5,7 @@
     <head>
         <link rel='stylesheet' href="./../src/main.css">
         <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,500,700" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Chrisdiffer</title>
@@ -36,9 +37,13 @@
             <textarea id="scriptTextArea" readonly>
             </textarea>
             <!-- buttons to add and remove all scripts -->
-          <button onclick="addAll()">Add All</button>
-          <button onclick="removeAll()">Remove All</button>
+            <div class="style2Btns">
+                <button class="scriptWindowBtn" onclick="addAll()">Add All</button>
+                <button class="scriptWindowBtn" onclick="removeAll()">Remove All</button>
+                    <button  title="Copy" class="scriptWindowBtn" onclick="copyToClipBoard()"><i class="far fa-copy" style="font-size: 13px"></i></button>
+            </div>
         </div>
+        <script src="https://unpkg.com/@material-ui/core/umd/material-ui.production.min.js" crossorigin="anonymous"></script>
         <script src='./../src/script.js'></script>
 
         <!-- ge's homemade window bar's logic -->
