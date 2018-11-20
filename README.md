@@ -27,7 +27,7 @@ npm start
 
 Simply provide the URLs or connection parameters to connect to your source and target databases. 
 
-![](chrisdiffer1.gif)
+![](chisdiffer1.gif)
 
 Tab between **'Source'** and **'Target'** to see representations of each database's schema.
 
