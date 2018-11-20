@@ -14,7 +14,7 @@
     "start": "electron public/electron.js",
     "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 3000 --config=./webpack.config.js",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=src/assets/icons/mac/skchris.icns --prune=true --out=release-builds",
-    "package-win": "electron-packager . Chrisdiffer --overwrite --asar=true --platform=win32 --arch=ia32 --icon=src/assets/icons/win/database.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Chrisdiffer\"",
+    "package-win": "electron-packager . Chrisdiffer --overwrite --asar=true --platform=win32 --arch=ia32 --icon=src/assets/icons/win/skchris.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Chrisdiffer\"",
     "package-linux": "electron-packager . Chrisdiffer --overwrite --asar=true --platform=linux --arch=x64 --icon=src/assets/icons/png/database.png --prune=true --out=release-builds"
   },
   "jest": {

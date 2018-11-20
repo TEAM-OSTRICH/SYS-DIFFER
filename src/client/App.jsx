@@ -9,8 +9,8 @@ class App extends Component {
 
     this.state = {
       // the top two links on entry page
-      input1: 'postgres://qycgeurz:EWz1OdxTyn2M3QpeC_RYlycDSjLlVSZp@pellefant.db.elephantsql.com:5432/qycgeurz',
-      input2: 'postgres://aafcjjpk:kRa120MMxvgg_eahaRY4dnjeHKmS_jvh@stampy.db.elephantsql.com:5432/aafcjjpk',
+      input1: '',
+      input2: '',
       inputLinkSchema1: 'public',
       inputLinkSchema2: 'public',
 
