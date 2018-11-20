@@ -58,9 +58,9 @@ Lines are drawn to depict any foreign key relationships between data.
 The **Refresh** button queries your databases to update the visual representations. After making changes to your source database, for example, you can refresh to ensure that its schema is now identical to that of the target's.
 
 # Built With
-- **React**
-- **Electron**
-- **pg-promise**
+- **[React](https://github.com/facebook/react)**
+- **[Electron](https://github.com/electron/electron)**
+- **[pg-promise](https://github.com/vitaly-t/pg-promise)**
 
 # Issues
 Please let us know about any issues you're having [here](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) or visit our [website](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) for more info.
