@@ -59,7 +59,7 @@ The **Refresh** button queries your databases to update the visual representatio
 -- **pg-promise**
 
 # Issues
-Please let us know about any issues you're having [here](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) or visit our [website](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) website for more info.
+Please let us know about any issues you're having [here](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) or visit our [website](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) for more info.
 
 # License
 ```
