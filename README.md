@@ -47,7 +47,7 @@ Select the **'DB Diff'** tab to highlight all the differences between the two sc
 
 ![](chrisdiff03.gif)
 
-Clicking on differences will generate the SQL scripts necessary to update your source database's schema to match that of your target's. 
+Click on differences to generate the SQL scripts necessary to update your source database's schema to match that of your target's. 
 
 # Features
 
@@ -60,7 +60,7 @@ The **Refresh** button queries your databases to update the visual representatio
 # Built With
 - **React**
 - **Electron**
--- **pg-promise**
+- **pg-promise**
 
 # Issues
 Please let us know about any issues you're having [here](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) or visit our [website](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) for more info.
