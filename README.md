@@ -68,7 +68,7 @@ The **Refresh** button queries your databases to update the visual representatio
 Not compatible with Postgres 10.2+ hosted on AWS due to known bug with accessing the information_schema tables.
 
 # Issues
-Please let us know about any issues you're having [here](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) or visit our [website](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) for more info.
+Please let us know about any issues you're having [here](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) or visit our [website](http://www.chrisdiffer.com/) for more info.
 
 # Future Updates
 - Support for other relational databases such as MySQL
