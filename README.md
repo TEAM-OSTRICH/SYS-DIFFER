@@ -50,6 +50,7 @@ Select the **'DB Diff'** tab to highlight all the differences between the two sc
 Click on differences to generate the SQL scripts necessary to update your source database's schema to match that of your target's. 
 
 # Features
+Compatible with any Postgres database (hosted on ElephantSQL, AWS, etc).
 
 Lines are drawn to depict any foreign key relationships between data.
 
@@ -61,6 +62,10 @@ The **Refresh** button queries your databases to update the visual representatio
 - **[React](https://github.com/facebook/react)** Javascript library for building responsive web apps
 - **[Electron](https://github.com/electron/electron)** Create cross platfrom desktop applications using HTML and JS
 - **[pg-promise](https://github.com/vitaly-t/pg-promise)** Library for interacting with Postgres database
+- **[D3](https://github.com/d3/d3)** Visualize and create animations from data
+
+# Known Issues
+Not compatible with Postgres 10.2+ hosted on AWS due to known bug with accessing the information_schema tables.
 
 # Issues
 Please let us know about any issues you're having [here](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) or visit our [website](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) for more info.
