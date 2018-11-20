@@ -58,24 +58,16 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-<<<<<<< HEAD
-        test: /\.(jpe?g|png|gif)$/,
-=======
 
         test: /\.(jpe?g|png|gif|svg)$/,
 
->>>>>>> master
         use: [{ loader: 'url-loader?name=assets/[name]__[hash:base64:5].[ext]' }],
         include: defaultInclude,
       },
       {
-<<<<<<< HEAD
-        test: /\.(eot|svg|ttf|woff|woff2)$/,
-=======
 
         test: /\.(eot|ttf|woff|woff2)$/,
 
->>>>>>> master
         use: [{ loader: 'file-loader?name=font/[name]__[hash:base64:5].[ext]' }],
         include: defaultInclude,
       },
