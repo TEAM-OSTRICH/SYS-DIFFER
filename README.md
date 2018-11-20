@@ -23,6 +23,10 @@ Run npm start to initiate the app.
 npm start
 ```
 
+**OR**
+
+Download the app for Mac or Windows from http://www.chrisdiffer.com/.
+
 # Usage
 
 Simply provide the URLs or connection parameters to connect to your source and target databases. 
