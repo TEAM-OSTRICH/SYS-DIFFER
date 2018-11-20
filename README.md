@@ -41,9 +41,9 @@ Select the **'DB Diff'** tab to highlight all the differences between the two sc
 
 **YELLOW** for modifications
 
-Clicking on differences will generate the SQL scripts necessary to update your source database's schema to match that of your target's. 
-
 ![](chrisdiff03.gif)
+
+Clicking on differences will generate the SQL scripts necessary to update your source database's schema to match that of your target's. 
 
 # Features
 
