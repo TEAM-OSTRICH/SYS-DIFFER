@@ -37,7 +37,7 @@ Select the **'DB Diff'** tab to highlight all the differences between the two sc
 
 **GREEN** for additions
 
-**rRED/PURPLE** for deletions
+**RED/PURPLE** for deletions
 
 **YELLOW** for modifications
 
@@ -52,7 +52,7 @@ Lines are drawn to depict any foreign key relationships between data.
 
 **'Add all'** allows you to generate all SQL scripts at once.
 
-The **refresh** button re-connects to your databases to update the visual representations. After making changes to your source database, for example, you can refresh to ensure that its schema is now identical to that of the target's.
+The **Refresh** button re-connects to your databases to update the visual representations. After making changes to your source database, for example, you can refresh to ensure that its schema is now identical to that of the target's.
 
 # License
 ```
