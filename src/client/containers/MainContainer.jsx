@@ -1160,7 +1160,13 @@ class MainContainer extends Component {
           </div>
           {/* ge's loading ball end */}
             
-            <img src={loadingIcon} style={{width: '20px',height: '20px'}}/>
+            <img
+              src={loadingIcon}
+              style={{
+                width: '20px',
+                height: '20px',
+              }}
+            />
           </div>
         </div>
         <div className="mainContainerBtns">
