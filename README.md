@@ -9,7 +9,7 @@ Chrisdiffer is a cross-platform desktop application to aid software engineers in
 
 # Installation
 
-Clone or download the repo.
+**Clone** or **Download** the repo.
 
 Run npm install to download the required libraries.
 
