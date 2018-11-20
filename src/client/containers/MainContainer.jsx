@@ -395,13 +395,23 @@ class MainContainer extends Component {
 
         constraintTypesArray.forEach((constraintType, index) => {
           let constraintTypeTemp = constraintType;
-
+          if (constraintType === 'PRIMARY KEY') {
+            column.constraintTypes.unshift(constraintTypeTemp);
+            column.constraintNames.unshift(constraintNamesArray[index]);
+       
+          }
           // create Foreign Key statement
-          if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
-
-          // add another key in column obj
-          column.constraintTypes.push(constraintTypeTemp);
-          column.constraintNames.push(constraintNamesArray[index]);
+          else if (constraintType === 'FOREIGN KEY') { 
+            constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; 
+            column.constraintTypes.push(constraintTypeTemp);
+            column.constraintNames.push(constraintNamesArray[index]);
+          }
+            // add another key in column obj
+          else {
+            column.constraintTypes.push(constraintTypeTemp);
+            column.constraintNames.push(constraintNamesArray[index]);
+          }
+          
         });
       }
 
@@ -409,6 +419,23 @@ class MainContainer extends Component {
       if (table.columns === undefined) table.columns = [column];
       else table.columns.push(column);
     });
+
+
+    // Sort column object so that primary key column appears first.
+    // table.columns.sort((a,b) => {
+    //   console.log('a, b', a, b)
+    //   console.log('a.c, b,c', a.constraintTypes, b.constraintTypes)
+    //   if(a.constraintTypes !== undefined && a.constraintTypes.includes('PRIMARY KEY')) {
+    //     console.log('a < b');
+    //     return -1
+    //   } else if (b.constraintTypes !== undefined && b.constraintTypes.includes('PRIMARY KEY')) {
+    //     console.log('a < b');
+    //     return 1;
+    //   } else {
+    //     console.log('a = b');
+    //     return 0;
+    //   }
+    // });
 
     // Push the last table.
     dbCopy.push(table);
@@ -732,7 +759,7 @@ class MainContainer extends Component {
                     .attr("stroke-dasharray", totalLength + " " + totalLength)
                     .attr("stroke-dashoffset", totalLength)
                     .transition()
-                      .duration(2000)
+                      .duration(1500)
                       // .ease(d3.easeLinear)
                       // .ease(d3.easeBounce) 
                       .attr("stroke-dashoffset", 0);
@@ -742,7 +769,7 @@ class MainContainer extends Component {
         }
 
         this.queued = false;
-      }, 2000);
+      }, 1500);
     }
     // };
   }
