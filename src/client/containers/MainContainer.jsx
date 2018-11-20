@@ -420,6 +420,23 @@ class MainContainer extends Component {
       else table.columns.push(column);
     });
 
+
+    // Sort column object so that primary key column appears first.
+    // table.columns.sort((a,b) => {
+    //   console.log('a, b', a, b)
+    //   console.log('a.c, b,c', a.constraintTypes, b.constraintTypes)
+    //   if(a.constraintTypes !== undefined && a.constraintTypes.includes('PRIMARY KEY')) {
+    //     console.log('a < b');
+    //     return -1
+    //   } else if (b.constraintTypes !== undefined && b.constraintTypes.includes('PRIMARY KEY')) {
+    //     console.log('a < b');
+    //     return 1;
+    //   } else {
+    //     console.log('a = b');
+    //     return 0;
+    //   }
+    // });
+
     // Push the last table.
     dbCopy.push(table);
 
@@ -742,7 +759,7 @@ class MainContainer extends Component {
                     .attr("stroke-dasharray", totalLength + " " + totalLength)
                     .attr("stroke-dashoffset", totalLength)
                     .transition()
-                      .duration(2000)
+                      .duration(1500)
                       // .ease(d3.easeLinear)
                       // .ease(d3.easeBounce) 
                       .attr("stroke-dashoffset", 0);
@@ -752,7 +769,7 @@ class MainContainer extends Component {
         }
 
         this.queued = false;
-      }, 2000);
+      }, 1500);
     }
     // };
   }
