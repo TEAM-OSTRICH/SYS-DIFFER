@@ -29,7 +29,7 @@ Simply provide the URLs or connection parameters to connect to your source and t
 
 <insert gif>
 
-Tab between 'Source' and 'Target' to see representations of each database's schema.
+Tab between **'Source'** and **'Target'** to see representations of each database's schema.
 
 <insert gif>
 
