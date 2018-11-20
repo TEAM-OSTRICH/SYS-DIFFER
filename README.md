@@ -58,12 +58,22 @@ Lines are drawn to depict any foreign key relationships between data.
 The **Refresh** button queries your databases to update the visual representations. After making changes to your source database, for example, you can refresh to ensure that its schema is now identical to that of the target's.
 
 # Built With
-- **[React](https://github.com/facebook/react)**
-- **[Electron](https://github.com/electron/electron)**
-- **[pg-promise](https://github.com/vitaly-t/pg-promise)**
+- **[React](https://github.com/facebook/react)** Javascript library for building responsive web apps.
+- **[Electron](https://github.com/electron/electron)** Create cross platfrom desktop applications using HTML and JS.
+- **[pg-promise](https://github.com/vitaly-t/pg-promise)** Library for interacting with Postgres database.
 
 # Issues
 Please let us know about any issues you're having [here](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) or visit our [website](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) for more info.
+
+# Upcoming Features
+- Support for other relational databases such as MySQL
+- Support for composite primary keys
+- Support for default values, checks, stored procedures
+
+# Authors
+- Ge Sun (https://github.com/g-es)
+- Edwin Lee Rogers (https://github.com/eleerogers)
+- Kevin Mui (https://github.com/kmui18)
 
 # License
 ```
