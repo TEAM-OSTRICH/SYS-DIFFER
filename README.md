@@ -65,7 +65,7 @@ The **Refresh** button queries your databases to update the visual representatio
 # Issues
 Please let us know about any issues you're having [here](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) or visit our [website](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) for more info.
 
-# Upcoming Features
+# Future Updates
 - Support for other relational databases such as MySQL
 - Support for composite primary keys
 - Support for default values, checks, stored procedures
