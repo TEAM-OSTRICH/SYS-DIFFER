@@ -1,5 +1,5 @@
 # CHRISDIFFER
-![alt text](https://drive.google.com/file/d/12Ss7B54NxD3d7Mf74K-RG_8LwHxJIVHO/view?usp=sharing)
+![alt text](https://drive.google.com/file/d/1IVS_33Ow-s8luwaqXJ_CkztKu5xjPffK/view?usp=sharing)
 Compare PostgreSQL Schemas and Generate Migration Scripts.
 
 Chrisdiffer is a cross-platform desktop application to aid software engineers in schema migrations. With Chrisdiffer you can visually compare your source and target databases, easily identify changes and generate the necessary scripts to update the target from the source. View and select changes using an intuitive GUI and copy the scripts to run in psql.
