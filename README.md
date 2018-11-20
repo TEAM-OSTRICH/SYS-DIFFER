@@ -34,11 +34,13 @@ Tab between **'Source'** and **'Target'** to see representations of each databas
 <insert gif>
 
 Select the **'DB Diff'** tab to highlight all the differences between the two schemas:
+<br/>
 **green** for additions
-<br/><br/>
+<br/>
 **red/purple** for deletions
-<br/><br/>
+<br/>
 **yellow** for modifications
+<span>hi</span>
 
 Clicking on differences will generate the SQL scripts necessary to update your source database's schema to match that of your target's. 
 
