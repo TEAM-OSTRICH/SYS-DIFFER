@@ -27,11 +27,11 @@ npm start
 
 Simply provide the URLs or connection parameters to connect to your source and target databases. 
 
-<insert gif>
+![](chrisdiff01.gif)
 
 Tab between **'Source'** and **'Target'** to see representations of each database's schema.
 
-<insert gif>
+![](chrisdiff02.gif)
 
 Select the **'DB Diff'** tab to highlight all the differences between the two schemas:
 
@@ -43,7 +43,7 @@ Select the **'DB Diff'** tab to highlight all the differences between the two sc
 
 Clicking on differences will generate the SQL scripts necessary to update your source database's schema to match that of your target's. 
 
-<insert gif>
+![](chrisdiff03.gif)
 
 # Features
 
