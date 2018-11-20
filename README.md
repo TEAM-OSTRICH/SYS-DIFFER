@@ -40,7 +40,7 @@ Select the **'DB Diff'** tab to highlight all the differences between the two sc
 **red/purple** for deletions
 <br/>
 **yellow** for modifications
-<span>hi</span>
+<span style="color:red">hi</span>
 
 Clicking on differences will generate the SQL scripts necessary to update your source database's schema to match that of your target's. 
 
