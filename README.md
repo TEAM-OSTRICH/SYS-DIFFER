@@ -29,7 +29,7 @@ Download the app for Mac or Windows from http://www.chrisdiffer.com/.
 
 # Usage
 
-Simply provide the URLs or connection parameters to connect to your source and target databases. 
+Simply provide the URLs or connection parameters to connect to your source and target databases (URLs to two test databases are provided as a demo).
 
 ![](chrisdiff01.gif)
 
