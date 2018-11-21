@@ -711,18 +711,33 @@ class MainContainer extends Component {
             const tt = domElement[i].textContent.split(' ');
 
             for (let j = 0; j < domElement.length; j += 1) {
+
               if (domElement[j].textContent.includes(tt[tt.indexOf('REFERENCES') + 1]) && (!domElement[j].textContent.includes('REFERENCES')) && (domElement[j].parentNode.childNodes[0].textContent === (tt[tt.indexOf('REFERENCES') + 3]))) {
               // The data for our line
+                let lineData = [];
+                if (domElement[i].parentNode.parentNode.getBoundingClientRect().y < domElement[j].parentNode.parentNode.getBoundingClientRect().y) {
+                  lineData = [
+                    { x: domElement[i].getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().bottom + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().bottom + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] }];
+                  ran2i++;
+                  ran1i++;
+                }
+                else{
 
-                const lineData = [
-                  { x: domElement[i].getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
-                  { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
-                  { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
-                  { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
-                  { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
-                  { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] }];
-                ran2i++;
-                ran1i++;
+                  lineData = [
+                    { x: domElement[i].getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] }];
+                  ran2i++;
+                  ran1i++;
+                }
 
 
             
