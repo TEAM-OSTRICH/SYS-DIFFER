@@ -1,13 +1,15 @@
 # CHRISDIFFER
 
+![alt text](https://drive.google.com/uc?export=view&id=1IVS_33Ow-s8luwaqXJ_CkztKu5xjPffK)
+
 Compare PostgreSQL Schemas and Generate Migration Scripts.
 
-Chrisdiffer is a cross-platform desktop application to aid software engineers in schema migrations. With Chrisdiffer you can visually compare your source and target databases, easily identify changes and generate the necessary scripts to update the target from the source. View and select changes using an intuitive GUI and copy the scripts to run in psql.
+Chrisdiffer is a cross-platform desktop application to aid software engineers in schema migrations. With Chrisdiffer you can visually compare your source and target Postgres databases, easily identify changes and generate the necessary scripts to update the target from the source. View and select changes using an intuitive GUI and copy the scripts to run in psql.
 
 
 # Installation
 
-Clone or download the repo.
+**Clone** or **Download** the repo.
 
 Run npm install to download the required libraries.
 
@@ -21,49 +23,66 @@ Run npm start to initiate the app.
 npm start
 ```
 
+**OR**
+
+Download the app for Mac or Windows from http://www.chrisdiffer.com/.
+
 # Usage
 
-Simply provide the URLs or connection parameters to connect to your source and target databases. 
+Simply provide the URLs or connection parameters to connect to your source and target databases (URLs to two test databases are provided as a demo).
 
-<insert gif>
+![](chrisdiff01.gif)
 
-Tab between 'Source' and 'Target' to see representations of each database's schema.
+Tab between **'Source'** and **'Target'** to see representations of each database's schema.
 
-<insert gif>
+![](chrisdiff02.gif)
 
-Select the 'DB Diff' tab to highlight all the differences between the two schemas: red/purple for deletions, green for additions and yellow for modifications. Clicking on differences will generate the SQL scripts necessary to update your source database's schema to match that of your target's. 
+Select the **'DB Diff'** tab to highlight all the differences between the two schemas:
 
-<insert gif>
+**GREEN** for additions
 
+**RED/PURPLE** for deletions
+
+**YELLOW** for modifications
+
+![](chrisdiff03.gif)
+
+Click on differences to generate the SQL scripts necessary to update your source database's schema to match that of your target's. 
 
 # Features
+Compatible with any Postgres database (hosted on ElephantSQL, AWS, etc).
 
 Lines are drawn to depict any foreign key relationships between data.
 
-'Add all' allows you to generate all SQL scripts at once.
+**'Add All'** allows you to generate all SQL scripts at once.
 
-The refresh button re-connects to your databases to update the visual representations. After making changes to your source database, for example, you can refresh to ensure that its schema is now identical to that of the target's.
+The **Refresh** button queries your databases to update the visual representations. After making changes to your source database, for example, you can refresh to ensure that its schema is now identical to that of the target's.
+
+# Built With
+- **[React](https://github.com/facebook/react)** Javascript library for building responsive web apps
+- **[Electron](https://github.com/electron/electron)** Create cross platfrom desktop applications using HTML and JS
+- **[pg-promise](https://github.com/vitaly-t/pg-promise)** Library for interacting with Postgres database
+- **[D3](https://github.com/d3/d3)** Visualize and create animations from data
+
+# Known Issues
+Not compatible with Postgres 10.2+ hosted on AWS due to known bug with accessing the information_schema tables.
+
+# Issues
+Please let us know about any issues you're having [here](https://github.com/TEAM-OSTRICH/CHRISDIFFER/issues) or visit our [website](http://www.chrisdiffer.com/) for more info.
+
+# Future Updates
+- Support for other relational databases such as MySQL
+- Support for composite primary keys
+- Support for default values, checks, stored procedures
+
+# Authors
+- Ge Sun (https://github.com/g-es)
+- Edwin Lee Rogers (https://github.com/eleerogers)
+- Kevin Mui (https://github.com/kmui18)
 
 # License
 ```
 The MIT License (MIT)
-Copyright © 2014 moznion, http://moznion.net/ <moznion@gmail.com>
+Copyright © 2018 TEAM-OSTRICH
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the “Software”), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
 ```
