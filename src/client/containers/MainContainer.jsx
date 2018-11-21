@@ -689,6 +689,12 @@ class MainContainer extends Component {
   drawLines() {
     // let queued = false;
     // return () => {
+      const svgContainers = document.getElementsByClassName('svg-container');
+      console.log(svgContainers);
+      for (let i = 0; i < svgContainers.length; i += 1) {
+        svgContainers[i].style.display = 'none';
+        svgContainers[i].parentNode.removeChild(svgContainers[i]);
+      }
     if (!this.queued) {
       this.queued = true;
       console.log(this.queued);
@@ -1139,6 +1145,7 @@ class MainContainer extends Component {
     console.log(svgContainers);
     for (let i = 0; i < svgContainers.length; i += 1) {
       svgContainers[i].style.display = 'none';
+      svgContainers[i].parentNode.removeChild(svgContainers[i]);
     }
     this.setState({ showLoadingScreen: true });
     buildDbObjects();
