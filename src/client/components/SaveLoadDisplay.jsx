@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 
-const remote = require('electron').remote;
+const { remote } = require('electron');
 
-const app = remote.app;
-
-const electronFs = remote.require('fs');
+const { app } = remote;
 const fs = require('fs');
-
-const electronDialog = remote.dialog;
-
 const storage = require('electron-storage');
 
 

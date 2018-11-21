@@ -21,7 +21,7 @@ class DbDisplayContainer extends Component {
 
   render() {
     const { db } = this.props;
-    console.log(db);
+    // console.log(db);
     const tables = db.map(tableInfo => <DbDisplay key={tableInfo.name} tableInfo={tableInfo} />);
 
     return (

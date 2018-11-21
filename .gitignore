@@ -2,4 +2,8 @@ node_modules
 dist
 .DS_Store
 package-lock.json
+<<<<<<< HEAD
 release-builds
+=======
+release-builds
+>>>>>>> 7dad425647dd0717c07a44b54da14f6ad9770168

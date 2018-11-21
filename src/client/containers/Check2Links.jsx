@@ -5,17 +5,14 @@ import cdf from '../../assets/cdf.svg';
 const initOptions = {
   connect(client, dc, useCount) {
     const cp = client.connectionParameters;
-    // console.log('Connected to database:', cp.database);
   },
   disconnect(client, dc) {
     const cp = client.connectionParameters;
-    // console.log('Disconnecting from database:', cp.database);
   },
   query(e) {
     // console.log('QUERY:', e.query);
   },
   receive(data, result, e) {
-    // console.log('DATA: ', data);
   },
 };
 
@@ -135,13 +132,13 @@ class Check2Links extends Component {
         this.props.history.push('/main');
       })
       .catch((err) => {
-        console.log(err, 'inside not links connection err');
+        // console.log(err, 'inside not links connection err');
         if (id === 'notLinks') {
-          console.log('this.state.showConnectionFailedMsg2', this.state.showConnectionFailedMsg2);
+          // console.log('this.state.showConnectionFailedMsg2', this.state.showConnectionFailedMsg2);
           this.setState({ showConnectionFailedMsg2: true });
         } else {
-          console.log(err, 'inside links connection err');
-          console.log('this.state.showConnectionFailedMsg1', this.state.showConnectionFailedMsg1);
+          // console.log(err, 'inside links connection err');
+          // console.log('this.state.showConnectionFailedMsg1', this.state.showConnectionFailedMsg1);
           this.setState({ showConnectionFailedMsg1: true });
         }
       });
@@ -159,14 +156,12 @@ class Check2Links extends Component {
 
     return (
       <div>
-        
         <h1 className="centerText">CHRISDIFFER</h1>
         <img src={cdf} className="logo" />
-     
         <h2 className="centerText">PROVIDE LINKS</h2>
         <div className="inputGridContainer">
           <div className="inputGrid">
-            <h5>DB 1</h5>
+            <h5>Source DB</h5>
             <br />
             <span className="homePageFields">Link 1: </span>
             <input value={input1} onChange={change1} />
@@ -179,7 +174,7 @@ class Check2Links extends Component {
             <span style={{ visibility: displayMissing.inputLinkSchema1 ? 'visible' : 'hidden' }}>◀</span>
           </div>
           <div className="inputGrid">
-            <h5>DB 2</h5>
+            <h5>Target DB</h5>
             <br />
             <span className="homePageFields">Link 2: </span>
             <input value={input2} onChange={change2} />
@@ -198,7 +193,7 @@ class Check2Links extends Component {
         <h2 className="centerText">OR</h2>
         <div className="inputGridContainer">
           <div className="inputGrid">
-            <h5>DB 1</h5>
+            <h5>Source DB</h5>
             <br />
             <span className="homePageFields">
 
@@ -251,7 +246,7 @@ class Check2Links extends Component {
             <span style={{ visibility: displayMissing.inputObj1Schema ? 'visible' : 'hidden' }}>◀</span>
           </div>
           <div className="inputGrid">
-            <h5>DB 2</h5>
+            <h5>Target DB</h5>
             <br />
             <span className="homePageFields">
             Username:
@@ -309,6 +304,5 @@ class Check2Links extends Component {
     );
   }
 }
-
 
 export default withRouter(Check2Links);

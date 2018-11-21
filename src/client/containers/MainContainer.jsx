@@ -60,7 +60,7 @@ class MainContainer extends Component {
       showLoadingScreen: true,
       addColor: 'rgba(60, 171, 119, 0.8)',
       deleteColor: 'rgba(212, 95, 106, 0.8)',
-      modifyColor: 'rgba(226, 212, 108, 0.8)',
+      modifyColor: 'rgba(241, 214, 8, 0.8)',
       devDbConn: null,
       prodDbConn: null,
       currentDevDb: '',
@@ -243,18 +243,15 @@ class MainContainer extends Component {
     // query dev database for schema info
     devDbConn.connect()
     .then(obj => {
-      console.log(obj,'1111');
         sco = obj;
         return sco.any(query2);
       })
       .then((schemaInfo) => {
       devDb = setDbInfo(schemaInfo);
-        console.log(schemaInfo, devDb,'dead')
       // query production database for schema info
       prodDbConn.connect()
       .then(obj2 => {
-        
-        console.log(obj2,'222');
+
         sco2 = obj2;
         return sco2.any(query);
       })
@@ -596,7 +593,6 @@ class MainContainer extends Component {
   setBackgroundColor(id) {
     const { backgroundColors } = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
-    console.log('hey', id);
     backgroundColorsCopy[id] = !backgroundColorsCopy[id];
     this.setState({ backgroundColors: backgroundColorsCopy });
   }
@@ -689,9 +685,15 @@ class MainContainer extends Component {
   drawLines() {
     // let queued = false;
     // return () => {
+      const svgContainers = document.getElementsByClassName('svg-container');
+      // console.log(svgContainers);
+      for (let i = 0; i < svgContainers.length; i += 1) {
+        svgContainers[i].style.display = 'none';
+        svgContainers[i].parentNode.removeChild(svgContainers[i]);
+      }
     if (!this.queued) {
       this.queued = true;
-      console.log(this.queued);
+      // console.log(this.queued);
       const colors = ['navy', 'blue', 'aqua', 'teal', 'olive', 'green', 'lime', 'yellow', 'orange', 'red', 'maroon', 'fuscia', 'purples'];
       let colorIndex = 0;
 
@@ -711,18 +713,33 @@ class MainContainer extends Component {
             const tt = domElement[i].textContent.split(' ');
 
             for (let j = 0; j < domElement.length; j += 1) {
+
               if (domElement[j].textContent.includes(tt[tt.indexOf('REFERENCES') + 1]) && (!domElement[j].textContent.includes('REFERENCES')) && (domElement[j].parentNode.childNodes[0].textContent === (tt[tt.indexOf('REFERENCES') + 3]))) {
               // The data for our line
+                let lineData = [];
+                if (domElement[i].parentNode.parentNode.getBoundingClientRect().y < domElement[j].parentNode.parentNode.getBoundingClientRect().y) {
+                  lineData = [
+                    { x: domElement[i].getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().bottom + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().bottom + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] }];
+                  ran2i++;
+                  ran1i++;
+                }
+                else{
 
-                const lineData = [
-                  { x: domElement[i].getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
-                  { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
-                  { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
-                  { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
-                  { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
-                  { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] }];
-                ran2i++;
-                ran1i++;
+                  lineData = [
+                    { x: domElement[i].getBoundingClientRect().x, y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[i].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[i].parentNode.parentNode.getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].parentNode.parentNode.getBoundingClientRect().x + rand1[ran1i % (rand1.length)], y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] },
+                    { x: domElement[j].getBoundingClientRect().x, y: domElement[j].getBoundingClientRect().y + rand2[ran2i % (rand2.length)] }];
+                  ran2i++;
+                  ran1i++;
+                }
 
 
             
@@ -795,11 +812,10 @@ class MainContainer extends Component {
       target = grandmaNode;
     }
     if (diffDbColors[id] !== undefined) {
-      console.log(target.style.backgroundColor, diffDbColors[id]);
+      // console.log(target.style.backgroundColor, diffDbColors[id]);
       if (target.style.backgroundColor === diffDbColors[id]) {
         // Background color is set meaning change is selected.
         // Deselect change and remove query from script.
-        console.log('test if');
         setBackgroundColor(id);
         removeScript(id);
       } else {
@@ -1081,11 +1097,9 @@ class MainContainer extends Component {
       if (queryParams[2] === 'nullable') {
         if (diffDbColors[id] === addColor) {
           // add a "NOT NULL"
-          // console.log('kill myself');
           return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" SET NOT NULL;`;
         }
         // remove a "NOT NULL"
-        // console.log('die');
         return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" DROP NOT NULL;`;
       }
     }
@@ -1120,7 +1134,12 @@ class MainContainer extends Component {
    */
   refreshPage() {
     const { buildDbObjects } = this;
-
+    const svgContainers = document.getElementsByClassName('svg-container');
+    // console.log(svgContainers);
+    for (let i = 0; i < svgContainers.length; i += 1) {
+      svgContainers[i].style.display = 'none';
+      svgContainers[i].parentNode.removeChild(svgContainers[i]);
+    }
     this.setState({ showLoadingScreen: true });
     buildDbObjects();
   }
@@ -1154,12 +1173,7 @@ class MainContainer extends Component {
       selectAll,
       refreshPage,
     } = this;
-    console.log(devDbDisplay,
-      prodDbDisplay,
-      diffDbDisplay);
-    console.log(devDb,
-      prodDb,
-      diffDb);
+
     /* eslint-disable */
     return (
       <div>
@@ -1223,7 +1237,7 @@ class MainContainer extends Component {
               changeDisplay('devDbDisplay');
             }}
           >
-            Dev DB
+            Source DB
           </Button>
           <Button
           style={{
@@ -1236,7 +1250,7 @@ class MainContainer extends Component {
               changeDisplay('prodDbDisplay');
             }}
           >
-            Prod DB
+            Target DB
           </Button>
           <Button
           style={{
@@ -1312,7 +1326,7 @@ class MainContainer extends Component {
 }
 
 
-//export default withRouter(MainContainer);
+// export default withRouter(MainContainer);
 export default compose(
   withRouter,
   withStyles(),
