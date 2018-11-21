@@ -22,7 +22,9 @@ const defaultInclude = [SRC_DIR];
 
 module.exports = {
 
-  entry: `${SRC_DIR}/index.js`,
+  entry: {
+    app: ['./src/index.js'],
+  },
 
   output: {
 

@@ -7,7 +7,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "build": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.config.js --mode production",
     "prestart": "npm run build",
     "start": "electron public/electron.js",
     "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 3000 --config=./webpack.config.js"
