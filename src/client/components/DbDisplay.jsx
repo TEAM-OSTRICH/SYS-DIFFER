@@ -21,9 +21,9 @@ class DbDisplay extends Component {
                 {column.constraintTypes
                   ? column.constraintTypes.map((constraintType, index) => {
                     if (index === column.constraintTypes.length - 1) {
-                      return constraintType;
+                      return constraintType === "PRIMARY KEY" ? "PRIMARY KEY 🔑" : constraintType.includes("REFERENCES") ? constraintType+' 🗝 ': constraintType;
                     }
-                    return `${constraintType} `;
+                    return `${constraintType === "PRIMARY KEY" ? "PRIMARY KEY 🔑" : constraintType.includes("REFERENCES") ? constraintType+' 🗝 ':constraintType} `;
                   })
                   : null}
               </li>

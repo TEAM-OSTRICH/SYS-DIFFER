@@ -395,13 +395,23 @@ class MainContainer extends Component {
 
         constraintTypesArray.forEach((constraintType, index) => {
           let constraintTypeTemp = constraintType;
-
+          if (constraintType === 'PRIMARY KEY') {
+            column.constraintTypes.unshift(constraintTypeTemp);
+            column.constraintNames.unshift(constraintNamesArray[index]);
+       
+          }
           // create Foreign Key statement
-          if (constraintType === 'FOREIGN KEY') { constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; }
-
-          // add another key in column obj
-          column.constraintTypes.push(constraintTypeTemp);
-          column.constraintNames.push(constraintNamesArray[index]);
+          else if (constraintType === 'FOREIGN KEY') { 
+            constraintTypeTemp = `REFERENCES ${foreign_column_name} IN ${foreign_table_name}`; 
+            column.constraintTypes.push(constraintTypeTemp);
+            column.constraintNames.push(constraintNamesArray[index]);
+          }
+            // add another key in column obj
+          else {
+            column.constraintTypes.push(constraintTypeTemp);
+            column.constraintNames.push(constraintNamesArray[index]);
+          }
+          
         });
       }
 
@@ -409,6 +419,23 @@ class MainContainer extends Component {
       if (table.columns === undefined) table.columns = [column];
       else table.columns.push(column);
     });
+
+
+    // Sort column object so that primary key column appears first.
+    // table.columns.sort((a,b) => {
+    //   console.log('a, b', a, b)
+    //   console.log('a.c, b,c', a.constraintTypes, b.constraintTypes)
+    //   if(a.constraintTypes !== undefined && a.constraintTypes.includes('PRIMARY KEY')) {
+    //     console.log('a < b');
+    //     return -1
+    //   } else if (b.constraintTypes !== undefined && b.constraintTypes.includes('PRIMARY KEY')) {
+    //     console.log('a < b');
+    //     return 1;
+    //   } else {
+    //     console.log('a = b');
+    //     return 0;
+    //   }
+    // });
 
     // Push the last table.
     dbCopy.push(table);
@@ -732,8 +759,8 @@ class MainContainer extends Component {
                     .attr("stroke-dasharray", totalLength + " " + totalLength)
                     .attr("stroke-dashoffset", totalLength)
                     .transition()
-                      .duration(2000)
-                      .ease(d3.easeLinear)
+                      .duration(1500)
+                      // .ease(d3.easeLinear)
                       // .ease(d3.easeBounce) 
                       .attr("stroke-dashoffset", 0);
               }
@@ -742,7 +769,7 @@ class MainContainer extends Component {
         }
 
         this.queued = false;
-      }, 2000);
+      }, 1500);
     }
     // };
   }
@@ -755,6 +782,7 @@ class MainContainer extends Component {
     let id;
     let target;
     const { parentNode } = event.target;
+    const grandmaNode = parentNode.parentNode;
 
     if (diffDbColors[event.target.id] !== undefined) {
       id = event.target.id;
@@ -762,6 +790,9 @@ class MainContainer extends Component {
     } else if (diffDbColors[parentNode.id] !== undefined) {
       id = parentNode.id;
       target = parentNode;
+    } else if (diffDbColors[grandmaNode.id] !== undefined) {
+      id = grandmaNode.id;
+      target = grandmaNode;
     }
     if (diffDbColors[id] !== undefined) {
       console.log(target.style.backgroundColor, diffDbColors[id]);
@@ -1089,7 +1120,11 @@ class MainContainer extends Component {
    */
   refreshPage() {
     const { buildDbObjects } = this;
-
+    const svgContainers = document.getElementsByClassName('svg-container');
+    console.log(svgContainers);
+    for (let i = 0; i < svgContainers.length; i += 1) {
+      svgContainers[i].style.display = 'none';
+    }
     this.setState({ showLoadingScreen: true });
     buildDbObjects();
   }
@@ -1186,7 +1221,7 @@ class MainContainer extends Component {
               changeDisplay('devDbDisplay');
             }}
           >
-            Dev DB
+            Source DB
           </Button>
           <Button
           style={{
@@ -1199,7 +1234,7 @@ class MainContainer extends Component {
               changeDisplay('prodDbDisplay');
             }}
           >
-            Prod DB
+            Target DB
           </Button>
           <Button
           style={{
@@ -1275,7 +1310,7 @@ class MainContainer extends Component {
 }
 
 
-//export default withRouter(MainContainer);
+// export default withRouter(MainContainer);
 export default compose(
   withRouter,
   withStyles(),

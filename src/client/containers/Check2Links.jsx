@@ -160,17 +160,11 @@ class Check2Links extends Component {
     return (
       <div>
         <h1 className="centerText">CHRISDIFFER</h1>
-        <img
-          src={cdf}
-          className="logo"
-          style={{
-            width: '80px', position: 'absolute', top: '58px', right: '26%',
-          }}
-        />
+        <img src={cdf} className="logo" />
         <h2 className="centerText">PROVIDE LINKS</h2>
         <div className="inputGridContainer">
           <div className="inputGrid">
-            <h5>DB 1</h5>
+            <h5>Source DB</h5>
             <br />
             <span className="homePageFields">Link 1: </span>
             <input value={input1} onChange={change1} />
@@ -183,7 +177,7 @@ class Check2Links extends Component {
             <span style={{ visibility: displayMissing.inputLinkSchema1 ? 'visible' : 'hidden' }}>◀</span>
           </div>
           <div className="inputGrid">
-            <h5>DB 2</h5>
+            <h5>Target DB</h5>
             <br />
             <span className="homePageFields">Link 2: </span>
             <input value={input2} onChange={change2} />
@@ -202,7 +196,7 @@ class Check2Links extends Component {
         <h2 className="centerText">OR</h2>
         <div className="inputGridContainer">
           <div className="inputGrid">
-            <h5>DB 1</h5>
+            <h5>Source DB</h5>
             <br />
             <span className="homePageFields">
 
@@ -255,7 +249,7 @@ class Check2Links extends Component {
             <span style={{ visibility: displayMissing.inputObj1Schema ? 'visible' : 'hidden' }}>◀</span>
           </div>
           <div className="inputGrid">
-            <h5>DB 2</h5>
+            <h5>Target DB</h5>
             <br />
             <span className="homePageFields">
             Username:

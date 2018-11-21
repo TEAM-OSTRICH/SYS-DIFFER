@@ -135,11 +135,11 @@ const DiffDbDisplay = (props) => {
                           : null,
                       }
                     }
-                      onClick={(event) => { handleSelect(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column); }}
-                    >
-                      {constraintType}
-                      {index !== column.constraintTypes - 1 ? ' ' : null }
-                    </span>
+                    onClick={(event) => {handleSelect(event, diffDbColors, addScript, removeScript, setBackgroundColor, tableInfo, column)}}
+                  >
+                    {constraintType === "PRIMARY KEY" ? "PRIMARY KEY 🔑" : constraintType.includes("REFERENCES") ? constraintType+' 🗝 ':constraintType}
+                    {index !== column.constraintTypes - 1 ? ' ' : null }
+                  </span>
                   </div>
                 ))
               )
