@@ -60,7 +60,7 @@ class MainContainer extends Component {
       showLoadingScreen: true,
       addColor: 'rgba(60, 171, 119, 0.8)',
       deleteColor: 'rgba(212, 95, 106, 0.8)',
-      modifyColor: 'rgba(226, 212, 108, 0.8)',
+      modifyColor: 'rgba(241, 214, 8, 0.8)',
       devDbConn: null,
       prodDbConn: null,
       currentDevDb: '',
@@ -1173,7 +1173,7 @@ class MainContainer extends Component {
       selectAll,
       refreshPage,
     } = this;
-  
+
     /* eslint-disable */
     return (
       <div>

@@ -9,13 +9,15 @@ class App extends Component {
 
     this.state = {
       // the top two links on entry page
-      input1: 'postgres://qycgeurz:EWz1OdxTyn2M3QpeC_RYlycDSjLlVSZp@pellefant.db.elephantsql.com:5432/qycgeurz',
-      input2: 'postgres://aafcjjpk:kRa120MMxvgg_eahaRY4dnjeHKmS_jvh@stampy.db.elephantsql.com:5432/aafcjjpk',
+      // input1: 'postgres://qycgeurz:EWz1OdxTyn2M3QpeC_RYlycDSjLlVSZp@pellefant.db.elephantsql.com:5432/qycgeurz',
+      // input2: 'postgres://aafcjjpk:kRa120MMxvgg_eahaRY4dnjeHKmS_jvh@stampy.db.elephantsql.com:5432/aafcjjpk',
+      input1: 'postgres://raluwdpv:qALK00g6KMhzqhaghnqyUuXNlhxZBTAB@baasu.db.elephantsql.com:5432/raluwdpv',
+      input2: 'postgres://klznohkc:DfZb09yicbdwT-YJ8ntHkCIt4tF5v7ci@baasu.db.elephantsql.com:5432/klznohkc',
 
       // New
       // input1: 'postgres://raluwdpv:qALK00g6KMhzqhaghnqyUuXNlhxZBTAB@baasu.db.elephantsql.com:5432/raluwdpv',
       // input2: 'postgres://klznohkc:DfZb09yicbdwT-YJ8ntHkCIt4tF5v7ci@baasu.db.elephantsql.com:5432/klznohkc',
-      
+
       inputLinkSchema1: 'public',
       inputLinkSchema2: 'public',
 
