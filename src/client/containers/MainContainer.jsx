@@ -243,18 +243,15 @@ class MainContainer extends Component {
     // query dev database for schema info
     devDbConn.connect()
     .then(obj => {
-      console.log(obj,'1111');
         sco = obj;
         return sco.any(query2);
       })
       .then((schemaInfo) => {
       devDb = setDbInfo(schemaInfo);
-        console.log(schemaInfo, devDb,'dead')
       // query production database for schema info
       prodDbConn.connect()
       .then(obj2 => {
-        
-        console.log(obj2,'222');
+
         sco2 = obj2;
         return sco2.any(query);
       })
@@ -596,7 +593,6 @@ class MainContainer extends Component {
   setBackgroundColor(id) {
     const { backgroundColors } = this.state;
     const backgroundColorsCopy = JSON.parse(JSON.stringify(backgroundColors));
-    console.log('hey', id);
     backgroundColorsCopy[id] = !backgroundColorsCopy[id];
     this.setState({ backgroundColors: backgroundColorsCopy });
   }
@@ -690,14 +686,14 @@ class MainContainer extends Component {
     // let queued = false;
     // return () => {
       const svgContainers = document.getElementsByClassName('svg-container');
-      console.log(svgContainers);
+      // console.log(svgContainers);
       for (let i = 0; i < svgContainers.length; i += 1) {
         svgContainers[i].style.display = 'none';
         svgContainers[i].parentNode.removeChild(svgContainers[i]);
       }
     if (!this.queued) {
       this.queued = true;
-      console.log(this.queued);
+      // console.log(this.queued);
       const colors = ['navy', 'blue', 'aqua', 'teal', 'olive', 'green', 'lime', 'yellow', 'orange', 'red', 'maroon', 'fuscia', 'purples'];
       let colorIndex = 0;
 
@@ -816,11 +812,10 @@ class MainContainer extends Component {
       target = grandmaNode;
     }
     if (diffDbColors[id] !== undefined) {
-      console.log(target.style.backgroundColor, diffDbColors[id]);
+      // console.log(target.style.backgroundColor, diffDbColors[id]);
       if (target.style.backgroundColor === diffDbColors[id]) {
         // Background color is set meaning change is selected.
         // Deselect change and remove query from script.
-        console.log('test if');
         setBackgroundColor(id);
         removeScript(id);
       } else {
@@ -1102,11 +1097,9 @@ class MainContainer extends Component {
       if (queryParams[2] === 'nullable') {
         if (diffDbColors[id] === addColor) {
           // add a "NOT NULL"
-          // console.log('kill myself');
           return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" SET NOT NULL;`;
         }
         // remove a "NOT NULL"
-        // console.log('die');
         return `ALTER TABLE "${tableName}" ALTER COLUMN "${name}" DROP NOT NULL;`;
       }
     }
@@ -1142,7 +1135,7 @@ class MainContainer extends Component {
   refreshPage() {
     const { buildDbObjects } = this;
     const svgContainers = document.getElementsByClassName('svg-container');
-    console.log(svgContainers);
+    // console.log(svgContainers);
     for (let i = 0; i < svgContainers.length; i += 1) {
       svgContainers[i].style.display = 'none';
       svgContainers[i].parentNode.removeChild(svgContainers[i]);
@@ -1180,12 +1173,7 @@ class MainContainer extends Component {
       selectAll,
       refreshPage,
     } = this;
-    console.log(devDbDisplay,
-      prodDbDisplay,
-      diffDbDisplay);
-    console.log(devDb,
-      prodDb,
-      diffDb);
+  
     /* eslint-disable */
     return (
       <div>
