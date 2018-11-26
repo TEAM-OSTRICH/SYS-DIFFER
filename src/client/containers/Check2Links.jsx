@@ -209,7 +209,7 @@ class Check2Links extends Component {
             Password:
             </span>
             {' '}
-            <input value={inputObj1Pass} onChange={changeInput1pass} />
+            <input value={inputObj1Pass} type="password" onChange={changeInput1pass} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj1Pass ? 'visible' : 'hidden' }}>◀</span>
             <br />
@@ -260,7 +260,7 @@ class Check2Links extends Component {
             Password:
             </span>
             {' '}
-            <input value={inputObj2Pass} onChange={changeInput2pass} />
+            <input value={inputObj2Pass} type="password" onChange={changeInput2pass} />
             {' '}
             <span style={{ visibility: displayMissing.inputObj2Pass ? 'visible' : 'hidden' }}>◀</span>
             <br />
