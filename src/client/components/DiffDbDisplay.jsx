@@ -16,8 +16,6 @@ const DiffDbDisplay = (props) => {
 
         <li
           id={name}
-        // className= { diffDbColors[name]
-        //   ? 'list-group-item hoverEffect2':'list-group-item' }
           className="list-group-item"
           style={
           {
