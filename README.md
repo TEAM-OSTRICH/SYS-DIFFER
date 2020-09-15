@@ -1,6 +1,6 @@
 # CHRISDIFFER
 
-![alt text](https://drive.google.com/uc?export=view&id=1IVS_33Ow-s8luwaqXJ_CkztKu5xjPffK)
+![](https://drive.google.com/uc?export=view&id=1IVS_33Ow-s8luwaqXJ_CkztKu5xjPffK)
 
 Compare PostgreSQL Schemas and Generate Migration Scripts.
 
